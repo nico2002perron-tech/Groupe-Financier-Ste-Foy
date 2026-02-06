@@ -371,13 +371,13 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const aiSection = document.querySelector('.ai-radar-section');
     const aiTextEl = document.getElementById('ai-news-list');
-    const typingIndicator = document.getElementById('ai-typing-indicator');
+    const introTextEl = document.getElementById('radar-intro-text');
     const refreshBtn = document.getElementById('refresh-ai-btn');
 
     const fallbackAnalyses = [
-        "<li><span class='news-bullet'></span><div class='news-item-body'><strong>Marchés Mondiaux :</strong> La volatilité reste élevée alors que les investisseurs surveillent les décisions des banques centrales. <a href='https://ici.radio-canada.ca/economie' target='_blank' class='news-source'>Source : Radio-Canada</a></div></li>",
-        "<li><span class='news-bullet'></span><div class='news-item-body'><strong>Secteur Technologique :</strong> Le secteur de l'IA continue de dominer les investissements malgré des risques de régulation accrus. <a href='https://ici.radio-canada.ca/techno' target='_blank' class='news-source'>Source : Radio-Canada</a></div></li>",
-        "<li><span class='news-bullet'></span><div class='news-item-body'><strong>Matières Premières :</strong> Les prix du pétrole et de l'or fluctuent en réponse aux tensions géopolitiques. <a href='https://fr.euronews.com/tag/matieres-premieres' target='_blank' class='news-source'>Source : Euronews</a></div></li>"
+        "<li><span class='radar-bullet'></span><div class='radar-item-content'><span class='radar-category'>Marchés Mondiaux</span> : <span class='radar-text'>La volatilité reste élevée alors que les investisseurs surveillent les décisions des banques centrales.</span> <a href='https://ici.radio-canada.ca/economie' target='_blank' class='radar-source'>Source : Radio-Canada</a></div></li>",
+        "<li><span class='radar-bullet'></span><div class='radar-item-content'><span class='radar-category'>Secteur Technologique</span> : <span class='radar-text'>Le secteur de l'IA continue de dominer les investissements malgré des risques de régulation accrus.</span> <a href='https://ici.radio-canada.ca/techno' target='_blank' class='radar-source'>Source : Radio-Canada</a></div></li>",
+        "<li><span class='radar-bullet'></span><div class='radar-item-content'><span class='radar-category'>Matières Premières</span> : <span class='radar-text'>Les prix du pétrole et de l'or fluctuent en réponse aux tensions géopolitiques.</span> <a href='https://fr.euronews.com/tag/matieres-premieres' target='_blank' class='radar-source'>Source : Euronews</a></div></li>"
     ];
 
     let aiAnalyses = [fallbackAnalyses.join('')]; // PRE-FILL TO AVOID UNDEFINED
@@ -462,9 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         const html = `
                             <li>
-                                <span class="news-bullet"></span>
-                                <div class="news-item-body">
-                                    <strong>${cleanTitle} :</strong> ${summary} <a href="${item.link}" target="_blank" class="news-source">Source : ${sourceLabel}</a>
+                                <span class="radar-bullet"></span>
+                                <div class="radar-item-content">
+                                    <span class="radar-category">${cleanTitle}</span> : <span class="radar-text">${summary}</span> <a href="${item.link}" target="_blank" class="radar-source">Source : ${sourceLabel}</a>
                                 </div>
                             </li>
                             `;
@@ -552,31 +552,16 @@ document.addEventListener('DOMContentLoaded', () => {
         isTyping = true;
         hasRun = true;
         aiTextEl.innerHTML = "";
-        typingIndicator.style.display = "flex";
-
-        // Wait a bit for "thinking" effect
-        await new Promise(r => setTimeout(r, 1200));
-        typingIndicator.style.display = "none";
 
         const now = new Date();
         const dateStr = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-        const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
         let index = Math.floor(Math.random() * aiAnalyses.length);
         if (aiAnalyses.length > 1 && index === lastAnalysisIndex) index = (index + 1) % aiAnalyses.length;
         lastAnalysisIndex = index;
 
-        const header = `<div class='radar-date-intro'>Nouvelles du ${dateStr} à ${timeStr} :</div>`;
-        const fullContent = header + aiAnalyses[index];
-
-        // Safety: If typewriter fails or tabs out, force show content after 5s
-        const safetyTimer = setTimeout(() => {
-            if (isTyping) {
-                console.warn("AI Typewriter stuck, forcing display.");
-                aiTextEl.innerHTML = fullContent;
-                isTyping = false;
-            }
-        }, 5000);
+        if (introTextEl) introTextEl.textContent = `Nouvelles d'aujourd'hui, ${dateStr} :`;
+        const fullContent = aiAnalyses[index];
 
         try {
             await typeWriterDOM(fullContent, aiTextEl);
@@ -584,7 +569,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("AI Typewriter Error:", e);
             aiTextEl.innerHTML = fullContent;
         } finally {
-            clearTimeout(safetyTimer);
             isTyping = false;
         }
     }

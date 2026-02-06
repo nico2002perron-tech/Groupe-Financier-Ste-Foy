@@ -642,15 +642,15 @@
     </section>
 
     <!-- AI Radar Strategic Section -->
-    <section class="ai-radar-section section-padding">
-        <div class="container">
+    <section class="ai-radar-section">
+        <div class="ai-radar-container">
             <div class="ai-radar-card fade-in-scroll">
                 <div class="radar-header">
-                    <div class="radar-title-group">
-                        <div class="radar-icon-box">
-                            <!-- Bot Icon SVG Inline -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <div class="radar-header-left">
+                        <div class="radar-logo-box">
+                            <!-- Robot Icon SVG -->
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 8V4H8" />
                                 <rect width="16" height="12" x="4" y="8" rx="2" />
                                 <path d="M2 14h2" />
@@ -659,44 +659,32 @@
                                 <path d="M9 13v2" />
                             </svg>
                         </div>
-                        <div class="radar-title-text">
-                            <h3>Radar Stratégique <span class="text-gradient">I.A.</span></h3>
-                            <span class="radar-date-label">Nouvelles d'aujourd'hui, 06 février 2026 :</span>
-                        </div>
+                        <h2 class="radar-title">Radar Stratégique <span class="text-ia">I.A.</span></h2>
                     </div>
-                    <div class="radar-status">
-                        <span class="badge-live">EN DIRECT</span>
-                    </div>
+                    <span class="radar-live-badge">EN DIRECT</span>
                 </div>
 
-                <div class="radar-content">
-                    <div id="ai-typing-indicator"
-                        style="display: none; align-items: center; gap: 8px; margin-bottom: 20px;">
-                        <span style="font-size: 0.9rem; color: #64748b;">Analyse des flux financiers en cours...</span>
-                        <div class="typing-dots">
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                        </div>
-                    </div>
-                    <ul id="ai-news-list" class="radar-news-list">
+                <div class="radar-body">
+                    <p id="radar-intro-text" class="radar-intro">Nouvelles d'aujourd'hui, 06 février 2026 :</p>
+                    <ul id="ai-news-list" class="radar-list">
                         <!-- Les nouvelles seront injectées ici par main.js -->
                         <li>
-                            <span class="news-bullet"></span>
-                            <div class="news-item-body">
-                                Chargement des dernières analyses stratégiques...
+                            <span class="radar-bullet"></span>
+                            <div class="radar-item-content">
+                                Chargement des analyses stratégiques...
                             </div>
                         </li>
                     </ul>
                 </div>
 
                 <div class="radar-footer">
-                    <div class="radar-footer-left">
-                        <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #10b981;"></i>
+                    <div class="radar-ai-label">
+                        <i data-lucide="sparkles"></i>
                         <span>Analyse générée par Intelligence Artificielle</span>
                     </div>
                     <button id="refresh-ai-btn" class="radar-refresh-btn">
-                        <i data-lucide="refresh-cw"></i> Actualiser
+                        <i data-lucide="refresh-cw"></i>
+                        Actualiser
                     </button>
                 </div>
 
