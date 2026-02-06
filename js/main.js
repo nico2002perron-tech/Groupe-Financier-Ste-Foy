@@ -385,8 +385,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Reliable Feeds priority
         const feeds = [
-            'https://api.rss2json.com/v1/api.json?rss_url=https://ici.radio-canada.ca/rss/1000524', // Techno/Science
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lapresse.ca/affaires/rss'      // Affaires
+            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lesaffaires.com/rss/mieux-investir', // Investissement
+            'https://api.rss2json.com/v1/api.json?rss_url=https://ici.radio-canada.ca/rss/1000524',       // Techno/Science
+            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lapresse.ca/affaires/rss'            // Affaires
         ];
 
         let articles = [];
