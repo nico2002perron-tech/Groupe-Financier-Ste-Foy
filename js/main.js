@@ -367,233 +367,106 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- AI Analyst Simulation ---
+// --- Featured AI Radar Logic (Fun & Pop) ---
 document.addEventListener('DOMContentLoaded', () => {
-    const aiSection = document.querySelector('.ai-radar-section');
-    const aiTextEl = document.getElementById('ai-news-list');
-    const introTextEl = document.getElementById('radar-intro-text');
+    const aiListEl = document.getElementById('ai-news-list');
     const refreshBtn = document.getElementById('refresh-ai-btn');
 
-    const fallbackAnalyses = [
-        "<li><span class='radar-bullet'></span><div class='radar-item-content'><span class='radar-category'>Marchés Mondiaux</span> : <span class='radar-text'>La volatilité reste élevée alors que les investisseurs surveillent les décisions des banques centrales.</span> <a href='https://ici.radio-canada.ca/economie' target='_blank' class='radar-source'>Source : Radio-Canada</a></div></li>",
-        "<li><span class='radar-bullet'></span><div class='radar-item-content'><span class='radar-category'>Secteur Technologique</span> : <span class='radar-text'>Le secteur de l'IA continue de dominer les investissements malgré des risques de régulation accrus.</span> <a href='https://ici.radio-canada.ca/techno' target='_blank' class='radar-source'>Source : Radio-Canada</a></div></li>",
-        "<li><span class='radar-bullet'></span><div class='radar-item-content'><span class='radar-category'>Matières Premières</span> : <span class='radar-text'>Les prix du pétrole et de l'or fluctuent en réponse aux tensions géopolitiques.</span> <a href='https://fr.euronews.com/tag/matieres-premieres' target='_blank' class='radar-source'>Source : Euronews</a></div></li>"
+    if (!aiListEl) return;
+
+    // 1. Fun Fallback Data
+    const fallbackData = [
+        { title: "Marchés Wow", summary: "Les bourses mondiales s'affolent ! Les investisseurs ont les yeux rivés sur les banques centrales.", link: "#", emoji: "🌍" },
+        { title: "L'IA en Feu", summary: "La tech ne s'arrête jamais. De nouveaux sommets atteints malgré les régulations.", link: "#", emoji: "🤖" },
+        { title: "Or & Pétrole", summary: "Ça bouge côté matières premières. L'or brille de mille feux cette semaine.", link: "#", emoji: "💰" }
     ];
 
-    let aiAnalyses = [fallbackAnalyses.join('')]; // PRE-FILL TO AVOID UNDEFINED
-    let hasRun = false;
-    let isTyping = false;
-    let lastAnalysisIndex = -1;
+    // 2. Emoji Helper
+    function getEmoji(text) {
+        const t = text.toLowerCase();
+        if (t.includes('ia') || t.includes('tech') || t.includes('apple') || t.includes('nvidia')) return '🤖';
+        if (t.includes('bourse') || t.includes('marché') || t.includes('dow') || t.includes('sp500')) return '📈';
+        if (t.includes('or') || t.includes('pétrole') || t.includes('argent') || t.includes('bitcoin')) return '💰';
+        if (t.includes('chine') || t.includes('europe') || t.includes('monde')) return '🌍';
+        if (t.includes('immobilier') || t.includes('maison') || t.includes('taux')) return '🏠';
+        if (t.includes('politique') || t.includes('loi') || t.includes('trudeau')) return '⚖️';
+        return '🗞️';
+    }
 
-    async function fetchLiveNews() {
-        // 1. Check Daily Cache (v10 - Guaranteed 3 articles & Longer Text)
-        const todayStr = new Date().toISOString().split('T')[0];
-        const cached = localStorage.getItem('gfstefoy_ai_daily_cache_v10');
-        if (cached) {
-            try {
-                const parsed = JSON.parse(cached);
-                if (parsed.date === todayStr && !window.forceRefreshAI) {
-                    aiAnalyses = [parsed.html];
-                    return;
-                }
-            } catch (e) { localStorage.removeItem('gfstefoy_ai_daily_cache_v10'); }
-        }
+    // 3. Main Fetch Function
+    async function fetchFeaturedNews() {
+        // Loading State
+        aiListEl.style.opacity = '0.5';
 
         const feeds = [
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.fool.com/investing/index.aspx?format=rss',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://ici.radio-canada.ca/rss/1000524',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.ledevoir.com/rss/section/economie.xml',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lemonde.fr/economie/rss_full.xml',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://fr.euronews.com/rss?level=theme&name=business',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lapresse.ca/affaires/rss',
             'https://api.rss2json.com/v1/api.json?rss_url=https://www.lesaffaires.com/rss/mieux-investir',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.tvanouvelles.ca/rss/argent',
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.boursorama.com/rss/actualites/'
+            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lapresse.ca/affaires/rss',
+            'https://api.rss2json.com/v1/api.json?rss_url=https://ici.radio-canada.ca/rss/1000524'
         ];
 
-        const excludeKeywords = ['Hockey', 'Canadien', 'LNH', 'NHL', 'Sport', 'Match', 'Tournoi', 'Olympiques', 'Baseball', 'Football', 'Soccer', 'Météo', 'Police', 'Accident'];
-        const boostKeywords = ['Bourse', 'Marché', 'Wall Street', 'Taux', 'Inflation', 'PIB', 'Dette', 'Récession', 'Investissement', 'Banque', 'Économie', 'Finance', 'Politique', 'Trump', 'Chine'];
-
-        let pool = [];
-        let motleyFoolPriority = [];
-        const processedLinks = new Set();
-
-        for (const feed of feeds) {
-            try {
-                const response = await fetch(feed + '&_t=' + Date.now());
-                const data = await response.json();
-                if (data.items) {
-                    data.items.forEach(item => {
-                        if (!item.link || !item.link.startsWith('http') || processedLinks.has(item.link)) return;
-                        processedLinks.add(item.link);
-
-                        const isMotleyFool = item.link.includes("fool.com");
-                        const isBreakfastNews = isMotleyFool && item.title.includes("Breakfast News");
-
-                        const pubDate = new Date(item.pubDate);
-                        const daysOld = (Date.now() - pubDate) / 86400000;
-                        if (isBreakfastNews) { if (daysOld > 2.5) return; }
-                        else { if (daysOld > 10) return; }
-
-                        const cleanTitle = item.title.split(' | ')[0].split(' - ')[0];
-                        let summary = (item.description || "").replace(/<[^>]*>?/gm, '');
-
-                        // LONGER SUMMARIES REQUEST: Increased limit
-                        if (summary.length > 650) {
-                            let cutIndex = summary.lastIndexOf('.', 650);
-                            summary = (cutIndex > 400) ? summary.substring(0, cutIndex + 1) : summary.substring(0, 650) + "...";
-                        }
-
-                        const scanText = (cleanTitle + " " + summary);
-                        if (excludeKeywords.some(kw => scanText.includes(kw))) return;
-
-                        let sourceLabel = "Source";
-                        if (isMotleyFool) sourceLabel = "The Motley Fool";
-                        else if (item.link.includes("ledevoir")) sourceLabel = "Le Devoir";
-                        else if (item.link.includes("lemonde")) sourceLabel = "Le Monde";
-                        else if (item.link.includes("euronews")) sourceLabel = "Euronews";
-                        else if (item.link.includes("radio-canada")) sourceLabel = "Radio-Canada";
-                        else if (item.link.includes("lapresse")) sourceLabel = "La Presse";
-                        else if (item.link.includes("lesaffaires")) sourceLabel = "Les Affaires";
-                        else if (item.link.includes("tvanouvelles")) sourceLabel = "TVA Argent";
-                        else if (item.link.includes("boursorama")) sourceLabel = "Boursorama";
-
-                        const dateFormatted = pubDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-
-                        const html = `
-                            <li>
-                                <span class="radar-bullet"></span>
-                                <div class="radar-item-content">
-                                    <span class="radar-category">${cleanTitle}</span> : <span class="radar-text">${summary}</span> <a href="${item.link}" target="_blank" class="radar-source">Source : ${sourceLabel}</a>
-                                </div>
-                            </li>
-                            `;
-
-                        if (isBreakfastNews) motleyFoolPriority.unshift(html);
-                        else pool.push(html);
-                    });
-                }
-            } catch (err) { console.warn("Feed Error:", feed); }
-        }
-
-        // Final Selection: FILTER OUT UNDEFINED
-        let finalItems = [...motleyFoolPriority, ...pool.sort(() => 0.5 - Math.random())]
-            .filter(item => item && typeof item === 'string' && !item.includes("undefined"));
-
-        // STRIKING GUARANTEE: If less than 3, we MUST add from fallbacks
-        if (finalItems.length < 3) {
-            let i = 0;
-            while (finalItems.length < 3) {
-                finalItems.push(fallbackAnalyses[i % fallbackAnalyses.length]);
-                i++;
-            }
-        }
-
-        // Final Slice to exactly 3
-        const resultHTML = finalItems.slice(0, 3).join('');
-
-        // Safety validation
-        if (!resultHTML || resultHTML.includes("undefined")) {
-            console.error("CRITICAL: Result HTML contains undefined!");
-            aiAnalyses = [fallbackAnalyses.join('')]; // Nuclear fallback
-        } else {
-            aiAnalyses = [resultHTML];
-        }
-
-        console.log("AI Analysis Update: Generated " + finalItems.length + " items (Showing 3)");
-
-        localStorage.setItem('gfstefoy_ai_daily_cache_v10', JSON.stringify({
-            date: todayStr,
-            html: aiAnalyses[0]
-        }));
-    }
-
-    async function typeWriterDOM(html, targetElement) {
-        // FORCE CSS VISIBILITY
-        targetElement.style.height = "auto";
-        targetElement.style.maxHeight = "none";
-        targetElement.style.overflow = "visible";
-        targetElement.style.display = "block";
-
-        const template = document.createElement('div');
-        template.innerHTML = html;
-
-        targetElement.innerHTML = "";
-
-        async function revealNode(sourceNode, targetNode) {
-            if (sourceNode.nodeType === Node.TEXT_NODE) {
-                const text = sourceNode.nodeValue;
-                const textNode = document.createTextNode("");
-                targetNode.appendChild(textNode);
-                for (let i = 0; i < text.length; i++) {
-                    textNode.nodeValue += text[i];
-                    let delay = 1;
-                    if ('.!?'.includes(text[i])) delay = 5;
-                    await new Promise(r => setTimeout(r, delay));
-                }
-            } else if (sourceNode.nodeType === Node.ELEMENT_NODE) {
-                const newNode = document.createElement(sourceNode.tagName);
-                for (let i = 0; i < sourceNode.attributes.length; i++) {
-                    newNode.setAttribute(sourceNode.attributes[i].name, sourceNode.attributes[i].value);
-                }
-                targetNode.appendChild(newNode);
-                for (let i = 0; i < sourceNode.childNodes.length; i++) {
-                    await revealNode(sourceNode.childNodes[i], newNode);
-                }
-            }
-        }
-
-        for (let i = 0; i < template.childNodes.length; i++) {
-            await revealNode(template.childNodes[i], targetElement);
-        }
-    }
-    async function runAIAnalysis(force = false) {
-        if (isTyping || (hasRun && !force)) return;
-        isTyping = true;
-        hasRun = true;
-        aiTextEl.innerHTML = "";
-
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-
-        let index = Math.floor(Math.random() * aiAnalyses.length);
-        if (aiAnalyses.length > 1 && index === lastAnalysisIndex) index = (index + 1) % aiAnalyses.length;
-        lastAnalysisIndex = index;
-
-        if (introTextEl) introTextEl.textContent = `Nouvelles d'aujourd'hui, ${dateStr} :`;
-        const fullContent = aiAnalyses[index];
+        let articles = [];
 
         try {
-            await typeWriterDOM(fullContent, aiTextEl);
+            // Fetch random feed to keep it varied but fast
+            const randomFeed = feeds[Math.floor(Math.random() * feeds.length)];
+            const res = await fetch(randomFeed + '&_t=' + Date.now());
+            const data = await res.json();
+
+            if (data.items) {
+                articles = data.items.filter(item => !item.title.includes('Kijiji') && !item.title.includes('Météo'));
+            }
         } catch (e) {
-            console.error("AI Typewriter Error:", e);
-            aiTextEl.innerHTML = fullContent;
-        } finally {
-            isTyping = false;
+            console.warn("Feed error, utilizing fallbacks.");
         }
+
+        // Merge with fallbacks if needed to ensure 3 items
+        if (articles.length < 3) {
+            articles = [...articles, ...fallbackData];
+        }
+
+        // Limit to 3 and Render
+        const finalSelection = articles.slice(0, 3);
+
+        let html = '';
+        finalSelection.forEach(item => {
+            const cleanTitle = item.title.split(' | ')[0];
+            // Remove HTML tags from description and shorten
+            let summary = (item.description || item.summary || "Détails à suivre...").replace(/<[^>]*>?/gm, '');
+            if (summary.length > 120) summary = summary.substring(0, 120) + '...';
+
+            const emoji = item.emoji || getEmoji(cleanTitle + " " + summary);
+            const link = item.link || "#";
+
+            html += `
+                <li class="radar-item-featured">
+                    <span class="emoji-icon">${emoji}</span>
+                    <div class="radar-content">
+                        <h4>${cleanTitle}</h4>
+                        <p>${summary}</p>
+                        <a href="${link}" target="_blank" class="source-link">Lire l'article <i data-lucide="arrow-right" style="width:14px;"></i></a>
+                    </div>
+                </li>
+            `;
+        });
+
+        aiListEl.innerHTML = html;
+        aiListEl.style.opacity = '1';
+
+        // Re-init icons for the new arrow
+        if (window.lucide) window.lucide.createIcons();
     }
 
-    fetchLiveNews();
+    // 4. Init
+    fetchFeaturedNews();
 
-    if (aiSection) {
-        const obs = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) { runAIAnalysis(); obs.unobserve(aiSection); }
-        }, { threshold: 0.5 });
-        obs.observe(aiSection);
-    }
-
+    // 5. Refresh Logic
     if (refreshBtn) {
-        refreshBtn.addEventListener('click', async function () {
-            if (isTyping) return;
-            window.forceRefreshAI = true; // Signal to bypass cache
-            const icon = this.querySelector('i');
+        refreshBtn.addEventListener('click', () => {
+            const icon = refreshBtn.querySelector('i');
             icon.style.animation = "spin-ai 1s linear infinite";
-            aiTextEl.innerHTML = "<div class='typing-cursor'>Analyse des flux financiers en cours...</div>";
-            await fetchLiveNews();
-            icon.style.animation = "";
-            hasRun = false;
-            runAIAnalysis(true);
-            window.forceRefreshAI = false;
+            fetchFeaturedNews().then(() => {
+                setTimeout(() => icon.style.animation = "", 500);
+            });
         });
     }
 });
