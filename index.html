@@ -641,63 +641,71 @@
         </div>
     </section>
 
-    <!-- AI Analyst Section -->
-    <section class="ai-analyst-section section-padding"
-        style="background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+    <!-- AI Radar Strategic Section -->
+    <section class="ai-radar-section section-padding">
         <div class="container">
-            <div class="ai-analyst-container">
-                <!-- Enhanced Header -->
-                <div class="ai-header">
-                    <div class="ai-title-group">
-                        <div class="ai-icon-box">
-                            <i data-lucide="brain-circuit"></i>
+            <div class="ai-radar-card fade-in-scroll">
+                <div class="radar-header">
+                    <div class="radar-title-group">
+                        <div class="radar-icon-box">
+                            <!-- Bot Icon SVG Inline -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 8V4H8" />
+                                <rect width="16" height="12" x="4" y="8" rx="2" />
+                                <path d="M2 14h2" />
+                                <path d="M20 14h2" />
+                                <path d="M15 13v2" />
+                                <path d="M9 13v2" />
+                            </svg>
                         </div>
-                        <h3>Briefing Quotidien <span class="text-gradient">I.A.</span></h3>
+                        <div class="radar-title-text">
+                            <h3>Radar Stratégique <span class="text-gradient">I.A.</span></h3>
+                            <span class="radar-date-label">Nouvelles d'aujourd'hui, 06 février 2026 :</span>
+                        </div>
                     </div>
-
-                    <div class="ai-actions">
-                        <div class="ai-badge">EN DIRECT</div>
-                        <button id="refresh-ai-btn" aria-label="Actualiser l'analyse">
-                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Actualiser
-                        </button>
+                    <div class="radar-status">
+                        <span class="badge-live">EN DIRECT</span>
                     </div>
                 </div>
 
-                <!-- Clean Content Body -->
-                <div class="ai-content-body">
+                <div class="radar-content">
                     <div id="ai-typing-indicator"
-                        style="display: none; align-items: center; gap: 5px; margin-bottom: 25px;">
-                        <span style="font-size: 0.9rem; color: #64748b; margin-right: 10px;">Analyse en cours...</span>
-                        <span class="dot"
-                            style="width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; animation: bounce 1s infinite;"></span>
-                        <span class="dot"
-                            style="width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; animation: bounce 1s infinite 0.2s;"></span>
-                        <span class="dot"
-                            style="width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; animation: bounce 1s infinite 0.4s;"></span>
+                        style="display: none; align-items: center; gap: 8px; margin-bottom: 20px;">
+                        <span style="font-size: 0.9rem; color: #64748b;">Analyse des flux financiers en cours...</span>
+                        <div class="typing-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
                     </div>
-                    <div id="ai-summary-text">
-                        <!-- JS injects content here with .ai-news-item classes -->
+                    <ul id="ai-news-list" class="radar-news-list">
+                        <!-- Les nouvelles seront injectées ici par main.js -->
+                        <li>
+                            <span class="news-bullet"></span>
+                            <div class="news-item-body">
+                                Chargement des dernières analyses stratégiques...
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="radar-footer">
+                    <div class="radar-footer-left">
+                        <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #10b981;"></i>
+                        <span>Analyse générée par Intelligence Artificielle</span>
                     </div>
+                    <button id="refresh-ai-btn" class="radar-refresh-btn">
+                        <i data-lucide="refresh-cw"></i> Actualiser
+                    </button>
+                </div>
+
+                <div class="radar-disclaimer">
+                    <i data-lucide="alert-triangle"></i>
+                    <p>Attention : Ce contenu est généré à titre informatif uniquement et ne constitue pas un conseil
+                        financier ou une recommandation d'investissement.</p>
                 </div>
             </div>
-
-            <!-- Right: Content -->
-            <div class="ai-content" style="flex: 1;">
-                <div id="ai-typing-indicator"
-                    style="display: none; align-items: center; gap: 5px; margin-bottom: 20px;">
-                    <span class="dot"
-                        style="width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; animation: bounce 1s infinite;"></span>
-                    <span class="dot"
-                        style="width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; animation: bounce 1s infinite 0.2s;"></span>
-                    <span class="dot"
-                        style="width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; animation: bounce 1s infinite 0.4s;"></span>
-                </div>
-                <div id="ai-summary-text" style="font-size: 1.05rem; line-height: 1.7; color: #334155;">
-                    <!-- AI Typewriter content will go here -->
-                </div>
-            </div>
-
-        </div>
         </div>
     </section>
 

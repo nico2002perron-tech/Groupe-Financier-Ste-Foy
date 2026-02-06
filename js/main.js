@@ -369,15 +369,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- AI Analyst Simulation ---
 document.addEventListener('DOMContentLoaded', () => {
-    const aiSection = document.querySelector('.ai-analyst-container');
-    const aiTextEl = document.getElementById('ai-summary-text');
+    const aiSection = document.querySelector('.ai-radar-section');
+    const aiTextEl = document.getElementById('ai-news-list');
     const typingIndicator = document.getElementById('ai-typing-indicator');
-    const refreshBtn = document.getElementById('refresh-ai-btn'); // Updated ID
+    const refreshBtn = document.getElementById('refresh-ai-btn');
 
     const fallbackAnalyses = [
-        "<div style='margin-bottom:25px; border-bottom:2px solid rgba(0,0,0,0.03); padding-bottom:20px;'><div style='font-weight:700; color:#0284c7; margin-bottom:10px;'>Marchés Mondiaux</div><div style='color:#334155; line-height:1.6; margin-bottom:15px;'>La volatilité reste élevée alors que les investisseurs surveillent les décisions des banques centrales.</div><div style='display:flex; justify-content:space-between; align-items:center;'><span style='font-size:0.8em; color:#64748b; font-weight:600;'>Extrait : Radio-Canada</span><a href='https://ici.radio-canada.ca/economie' target='_blank' class='ai-link-btn' style='font-size:0.85em; font-weight:700; background:#0284c7; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;'>VOIR LA SOURCE</a></div></div>",
-        "<div style='margin-bottom:25px; border-bottom:2px solid rgba(0,0,0,0.03); padding-bottom:20px;'><div style='font-weight:700; color:#0284c7; margin-bottom:10px;'>Secteur Technologique</div><div style='color:#334155; line-height:1.6; margin-bottom:15px;'>Le secteur de l'IA continue de dominer les investissements malgré des risques de régulation accrus.</div><div style='display:flex; justify-content:space-between; align-items:center;'><span style='font-size:0.8em; color:#64748b; font-weight:600;'>Extrait : Radio-Canada</span><a href='https://ici.radio-canada.ca/techno' target='_blank' class='ai-link-btn' style='font-size:0.85em; font-weight:700; background:#0284c7; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;'>VOIR LA SOURCE</a></div></div>",
-        "<div style='margin-bottom:25px; border-bottom:2px solid rgba(0,0,0,0.03); padding-bottom:20px;'><div style='font-weight:700; color:#0284c7; margin-bottom:10px;'>Matières Premières</div><div style='color:#334155; line-height:1.6; margin-bottom:15px;'>Les prix du pétrole et de l'or fluctuent en réponse aux tensions géopolitiques.</div><div style='display:flex; justify-content:space-between; align-items:center;'><span style='font-size:0.8em; color:#64748b; font-weight:600;'>Extrait : Euronews</span><a href='https://fr.euronews.com/tag/matieres-premieres' target='_blank' class='ai-link-btn' style='font-size:0.85em; font-weight:700; background:#0284c7; color:white; padding:6px 14px; border-radius:6px; text-decoration:none;'>VOIR LA SOURCE</a></div></div>"
+        "<li><span class='news-bullet'></span><div class='news-item-body'><strong>Marchés Mondiaux :</strong> La volatilité reste élevée alors que les investisseurs surveillent les décisions des banques centrales. <a href='https://ici.radio-canada.ca/economie' target='_blank' class='news-source'>Source : Radio-Canada</a></div></li>",
+        "<li><span class='news-bullet'></span><div class='news-item-body'><strong>Secteur Technologique :</strong> Le secteur de l'IA continue de dominer les investissements malgré des risques de régulation accrus. <a href='https://ici.radio-canada.ca/techno' target='_blank' class='news-source'>Source : Radio-Canada</a></div></li>",
+        "<li><span class='news-bullet'></span><div class='news-item-body'><strong>Matières Premières :</strong> Les prix du pétrole et de l'or fluctuent en réponse aux tensions géopolitiques. <a href='https://fr.euronews.com/tag/matieres-premieres' target='_blank' class='news-source'>Source : Euronews</a></div></li>"
     ];
 
     let aiAnalyses = [fallbackAnalyses.join('')]; // PRE-FILL TO AVOID UNDEFINED
@@ -461,17 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         const dateFormatted = pubDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
                         const html = `
-                            <div class="ai-news-item">
-                                <div class="ai-news-title">${cleanTitle}</div>
-                                <div class="ai-news-summary">${summary}</div>
-                                <div class="ai-news-meta">
-                                    <span class="ai-news-source">
-                                        <i data-lucide="newspaper" style="width:14px; height:14px;"></i> 
-                                        ${sourceLabel} <span style="opacity:0.5; margin: 0 5px;">|</span> ${dateFormatted}
-                                    </span>
-                                    <a href="${item.link}" target="_blank" class="ai-news-link">VOIR LA SOURCE</a>
+                            <li>
+                                <span class="news-bullet"></span>
+                                <div class="news-item-body">
+                                    <strong>${cleanTitle} :</strong> ${summary} <a href="${item.link}" target="_blank" class="news-source">Source : ${sourceLabel}</a>
                                 </div>
-                            </div>
+                            </li>
                             `;
 
                         if (isBreakfastNews) motleyFoolPriority.unshift(html);
@@ -571,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (aiAnalyses.length > 1 && index === lastAnalysisIndex) index = (index + 1) % aiAnalyses.length;
         lastAnalysisIndex = index;
 
-        const header = `<strong>Nouvelles du ${dateStr} à ${timeStr} :</strong><br><br>`;
+        const header = `<div class='radar-date-intro'>Nouvelles du ${dateStr} à ${timeStr} :</div>`;
         const fullContent = header + aiAnalyses[index];
 
         // Safety: If typewriter fails or tabs out, force show content after 5s
