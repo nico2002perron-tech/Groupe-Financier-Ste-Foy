@@ -1,11 +1,22 @@
 // api/analyze-news.js
-// Fonction Vercel serverless qui appelle Groq de façon sécurisée
-
 export default async function handler(req, res) {
-    // Permettre CORS pour ton site
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    // CORS Headers - TRÈS IMPORTANT!
+    const allowedOrigins = [
+        'https://groupe-financier-ste-foy-vb4s.vercel.app',
+        'https://groupe-financier-ste-foy-vb4s-juqcrkbv-vercel.app',
+        'http://localhost:3000'
+    ];
+
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    } else {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Max-Age', '86400');
 
     // Gérer les requêtes OPTIONS (preflight)
     if (req.method === 'OPTIONS') {
