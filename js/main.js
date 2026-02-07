@@ -310,139 +310,267 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- Featured AI Radar Logic (Fun & Pop - Robust Fallback) ---
-document.addEventListener('DOMContentLoaded', () => {
-    const aiListEl = document.getElementById('ai-news-list');
-    const refreshBtn = document.getElementById('refresh-ai-btn');
+/* =========================================
+   RADAR I.A. - VERSION 100% GRATUITE
+   ========================================= */
 
-    if (!aiListEl) return;
+// Sources RSS gratuites en français
+const RSS_FEEDS = {
+    all: [
+        { url: 'https://ici.radio-canada.ca/rss/71', name: 'Radio-Canada' },
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires' }
+    ],
+    finance: [
+        { url: 'https://www.lesaffaires.com/rss/bourse.xml', name: 'Les Affaires' },
+        { url: 'https://ici.radio-canada.ca/rss/71', name: 'Radio-Canada' }
+    ],
+    tech: [
+        { url: 'https://www.journaldunet.com/rss/', name: 'Journal du Net' }
+    ]
+};
 
-    // 1. Fun Fallback Data (Designed to look exactly like live data)
-    const fallbackData = [
-        {
-            title: "Marchés : L'IA domine encore",
-            summary: "Les géants de la tech tirent les indices vers le haut. L'engouement pour l'intelligence artificielle ne faiblit pas.",
-            link: "#",
-            emoji: "🤖"
-        },
-        {
-            title: "Taux d'intérêt : Statu quo ?",
-            summary: "Les banques centrales jouent la prudence. Les investisseurs attendent des signaux clairs sur la baisse des taux.",
-            link: "#",
-            emoji: "🏦"
-        },
-        {
-            title: "Énergie : Le pétrole rebondit",
-            summary: "Tensions géopolitiques et demande accrue font grimper le brut. Un secteur à surveiller cette semaine.",
-            link: "#",
-            emoji: "🛢️"
-        }
-    ];
+// Symboles boursiers par secteur (pour Yahoo Finance)
+const SECTOR_TICKERS = {
+    all: ['SPY', 'QQQ', 'DIA'],
+    health: ['XLV', 'JNJ', 'PFE'],
+    tech: ['QQQ', 'AAPL', 'MSFT', 'NVDA'],
+    crypto: ['BTC-USD', 'ETH-USD'],
+    industrial: ['XLI', 'CAT', 'BA'],
+    energy: ['XLE', 'XOM', 'CVX'],
+    finance: ['XLF', 'JPM', 'BAC'],
+    defensive: ['XLP', 'PG', 'KO']
+};
 
-    // 2. Emoji Helper
-    function getEmoji(text) {
-        const t = text.toLowerCase();
-        if (t.includes('ia') || t.includes('tech') || t.includes('apple') || t.includes('nvidia') || t.includes('google')) return '🤖';
-        if (t.includes('bourse') || t.includes('marché') || t.includes('dow') || t.includes('sp500') || t.includes('nasdaq')) return '📈';
-        if (t.includes('or') || t.includes('pétrole') || t.includes('argent') || t.includes('bitcoin') || t.includes('crypto')) return '💰';
-        if (t.includes('chine') || t.includes('europe') || t.includes('monde') || t.includes('guerre')) return '🌍';
-        if (t.includes('immobilier') || t.includes('maison') || t.includes('hypothèque')) return '🏠';
-        if (t.includes('politique') || t.includes('loi') || t.includes('budget') || t.includes('impôt')) return '⚖️';
-        return '🗞️';
-    }
+// Fonction principale - 100% GRATUITE
+async function loadNewsGratuit(sector) {
+    const container = document.getElementById('news-container');
 
-    // 3. Renderer Helper
-    function renderArticles(articles) {
-        let html = '';
-        articles.forEach(item => {
-            const cleanTitle = item.title.split(' | ')[0];
-            // Remove HTML tags from description and shorten to ~110 chars
-            let summary = (item.description || item.summary || "Détails à suivre...").replace(/<[^>]*>?/gm, '');
-            if (summary.length > 110) summary = summary.substring(0, 110) + '...';
+    if (!container) return;
 
-            const emoji = item.emoji || getEmoji(cleanTitle + " " + summary);
-            const link = item.link || "#";
+    container.innerHTML = `
+        <div class="news-loading">
+            <div class="loading-spinner"></div>
+            <p>Analyse des marchés en cours...</p>
+        </div>
+    `;
 
-            html += `
-                <li class="radar-item-featured">
-                    <span class="emoji-icon">${emoji}</span>
-                    <div class="radar-content">
-                        <h4>${cleanTitle}</h4>
-                        <p>${summary}</p>
-                        <a href="${link}" target="_blank" class="source-link">Lire l'article <i data-lucide="arrow-right" style="width:14px;"></i></a>
-                    </div>
-                </li>
-            `;
+    try {
+        const feeds = RSS_FEEDS[sector] || RSS_FEEDS.all;
+        const newsPromises = feeds.map(feed => fetchRSS(feed));
+        const newsArrays = await Promise.all(newsPromises);
+        const allNews = newsArrays.flat();
+
+        const recentNews = allNews.filter(news => {
+            const ageInDays = (Date.now() - new Date(news.pubDate)) / (1000 * 60 * 60 * 24);
+            return ageInDays <= 2;
         });
-        aiListEl.innerHTML = html;
+
+        const newsWithTickers = await Promise.all(
+            recentNews.slice(0, 5).map(news => addTickersToNews(news, sector))
+        );
+
+        if (newsWithTickers.length === 0) {
+            container.innerHTML = `
+                <div class="news-empty">
+                    <i data-lucide="inbox"></i>
+                    <p>Aucune nouvelle récente disponible.</p>
+                </div>
+            `;
+        } else {
+            container.innerHTML = newsWithTickers.map(news => createNewsCard(news)).join('');
+        }
+
+        if (window.lucide) window.lucide.createIcons();
+
+        // Update last update time if element exists
+        const lastUpdateTimeEl = document.getElementById('last-update-time');
+        if (lastUpdateTimeEl) {
+            const now = new Date();
+            lastUpdateTimeEl.textContent = `Dernière mise à jour : ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+
+    } catch (error) {
+        console.error('Erreur:', error);
+        container.innerHTML = `
+            <div class="news-empty">
+                <i data-lucide="alert-circle"></i>
+                <p>Erreur lors du chargement des nouvelles.</p>
+            </div>
+        `;
         if (window.lucide) window.lucide.createIcons();
     }
+}
 
-    // 4. Main Fetch Function
-    async function fetchFeaturedNews() {
-        // Loading State
-        aiListEl.style.opacity = '0.5';
+// Charger un flux RSS (100% gratuit)
+async function fetchRSS(feed) {
+    try {
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const response = await fetch(proxyUrl + encodeURIComponent(feed.url));
+        const text = await response.text();
 
-        // Reliable Feeds priority
-        const feeds = [
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lesaffaires.com/rss/mieux-investir', // Investissement
-            'https://api.rss2json.com/v1/api.json?rss_url=https://ici.radio-canada.ca/rss/1000524',       // Techno/Science
-            'https://api.rss2json.com/v1/api.json?rss_url=https://www.lapresse.ca/affaires/rss'            // Affaires
-        ];
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, 'text/xml');
+        const items = xml.querySelectorAll('item');
 
-        let articles = [];
-
-        try {
-            const randomFeed = feeds[Math.floor(Math.random() * feeds.length)];
-            // Add API key if available, otherwise reliance on free tier (rate limited)
-            const res = await fetch(randomFeed + '&_t=' + Date.now());
-
-            if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-            const data = await res.json();
-
-            if (data.status === 'ok' && data.items) {
-                articles = data.items.filter(item =>
-                    !item.title.includes('Météo') &&
-                    !item.title.includes('Horoscope') &&
-                    !item.title.includes('Kijiji')
-                );
-            } else {
-                throw new Error("API returned status not ok");
+        const news = [];
+        items.forEach((item, index) => {
+            if (index < 5) {
+                news.push({
+                    title: item.querySelector('title')?.textContent || '',
+                    summary: extractSummary(item.querySelector('description')?.textContent || ''),
+                    link: item.querySelector('link')?.textContent || '',
+                    pubDate: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
+                    source: feed.name
+                });
             }
-        } catch (e) {
-            console.warn("Radar API unavailable (" + e.message + "), switching to Fallback Mode.");
-            articles = []; // Force fallback
-        }
+        });
 
-        // If API search failed or returned too few items, use fallback
-        if (articles.length < 3) {
-            // Fill remaining spots with fallback data
-            const needed = 3 - articles.length;
-            for (let i = 0; i < needed; i++) {
-                articles.push(fallbackData[i % fallbackData.length]);
-            }
-        }
+        return news;
 
-        // Render exactly 3 items
-        renderArticles(articles.slice(0, 3));
-        aiListEl.style.opacity = '1';
+    } catch (error) {
+        console.error(`Erreur RSS ${feed.name}:`, error);
+        return [];
     }
+}
 
-    // 5. Init
-    fetchFeaturedNews();
+// Extraire un résumé court (première phrase)
+function extractSummary(description) {
+    const clean = description.replace(/<[^>]*>/g, '');
+    const firstSentence = clean.split('.')[0];
+    return firstSentence.substring(0, 150) + (firstSentence.length > 150 ? '...' : '.');
+}
 
-    // 6. Refresh Logic
+// Ajouter les variations boursières (Yahoo Finance gratuit)
+async function addTickersToNews(news, sector) {
+    try {
+        const symbols = SECTOR_TICKERS[sector] || SECTOR_TICKERS.all;
+        const selectedSymbols = symbols.slice(0, 2);
+
+        const tickerPromises = selectedSymbols.map(symbol => getYahooQuote(symbol));
+        const tickers = await Promise.all(tickerPromises);
+
+        return {
+            ...news,
+            tickers: tickers.filter(t => t !== null),
+            time: getTimeAgo(news.pubDate)
+        };
+
+    } catch (error) {
+        console.error('Erreur tickers:', error);
+        return { ...news, tickers: [], time: getTimeAgo(news.pubDate) };
+    }
+}
+
+// Obtenir une quote Yahoo Finance (100% GRATUIT)
+async function getYahooQuote(symbol) {
+    try {
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
+        const response = await fetch(url);
+
+        if (!response.ok) return null;
+
+        const data = await response.json();
+        const result = data.chart.result[0];
+
+        if (!result) return null;
+
+        const meta = result.meta;
+        const price = meta.regularMarketPrice;
+        const prevClose = meta.previousClose || meta.chartPreviousClose;
+
+        if (!price || !prevClose) return null;
+
+        const change = ((price - prevClose) / prevClose * 100);
+        const changeStr = change.toFixed(2);
+
+        return {
+            symbol: symbol,
+            change: `${change > 0 ? '+' : ''}${changeStr}%`,
+            isUp: change > 0,
+            starred: Math.abs(change) > 2
+        };
+
+    } catch (error) {
+        console.error(`Erreur quote ${symbol}:`, error);
+        return null;
+    }
+}
+
+// Calculer le temps écoulé
+function getTimeAgo(pubDate) {
+    const now = new Date();
+    const published = new Date(pubDate);
+    const diffMs = now - published;
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 60) return `${diffMins}min`;
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h`;
+    return `${Math.floor(diffMins / 1440)}j`;
+}
+
+// Créer une carte de nouvelle
+function createNewsCard(news) {
+    const isNew = news.time.includes('min') || (news.time.includes('h') && parseInt(news.time) < 3);
+
+    return `
+        <div class="news-card">
+            <h3 class="news-title">
+                ${news.title}
+                ${isNew ? '<span class="badge-new">NOUVEAU</span>' : ''}
+            </h3>
+            
+            <p class="news-summary">${news.summary}</p>
+            
+            <div class="news-meta">
+                <span class="news-source">${news.source}</span>
+                <span class="news-time">
+                    <i data-lucide="clock"></i>
+                    Il y a ${news.time}
+                </span>
+            </div>
+            
+            ${news.tickers && news.tickers.length > 0 ? `
+                <div class="news-tickers">
+                    ${news.tickers.map(ticker => `
+                        <div class="ticker-badge">
+                            <span class="ticker-symbol">${ticker.symbol}</span>
+                            <span class="ticker-change ${ticker.isUp ? 'up' : 'down'}">${ticker.change}</span>
+                            ${ticker.starred ? '<span class="ticker-star">★</span>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', function () {
+    loadNewsGratuit('all');
+
+    const sectorButtons = document.querySelectorAll('.sector-btn');
+    sectorButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            sectorButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            const sector = this.getAttribute('data-sector');
+            loadNewsGratuit(sector);
+        });
+    });
+
+    const refreshBtn = document.getElementById('refresh-ai-news');
     if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => {
-            const icon = refreshBtn.querySelector('i');
-            icon.style.animation = "spin-ai 1s linear infinite";
-            fetchFeaturedNews().then(() => {
-                setTimeout(() => icon.style.animation = "", 500);
-            });
+        refreshBtn.addEventListener('click', function () {
+            const activeSymbol = document.querySelector('.sector-btn.active');
+            const activeSector = activeSymbol ? activeSymbol.getAttribute('data-sector') : 'all';
+            loadNewsGratuit(activeSector);
         });
     }
-});
 
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `@keyframes spin-ai {100 % { transform: rotate(360deg); }}`;
-document.head.appendChild(styleSheet);
+    setInterval(() => {
+        const activeSymbol = document.querySelector('.sector-btn.active');
+        const activeSector = activeSymbol ? activeSymbol.getAttribute('data-sector') : 'all';
+        loadNewsGratuit(activeSector);
+    }, 15 * 60 * 1000);
+});
