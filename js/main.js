@@ -311,25 +311,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* =========================================
-   RADAR I.A. - VERSION 100% GRATUITE
+   RADAR I.A. - VERSION AMÉLIORÉE
+   Avec liens cliquables et sources fiables
    ========================================= */
 
-// Sources RSS gratuites en français
+// Sources RSS FIABLES UNIQUEMENT (vérifiées)
 const RSS_FEEDS = {
     all: [
-        { url: 'https://ici.radio-canada.ca/rss/71', name: 'Radio-Canada' },
-        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires' }
+        { url: 'https://www.lapresse.ca/rss', name: 'La Presse', reliable: true },
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true },
+        { url: 'https://www.ledevoir.com/rss/edition.xml', name: 'Le Devoir', reliable: true }
     ],
     finance: [
-        { url: 'https://www.lesaffaires.com/rss/bourse.xml', name: 'Les Affaires' },
-        { url: 'https://ici.radio-canada.ca/rss/71', name: 'Radio-Canada' }
+        { url: 'https://www.lesaffaires.com/rss/bourse.xml', name: 'Les Affaires', reliable: true },
+        { url: 'https://www.lesechos.fr/rss.xml', name: 'Les Échos', reliable: true },
+        { url: 'https://www.lapresse.ca/affaires/rss', name: 'La Presse Affaires', reliable: true }
     ],
     tech: [
-        { url: 'https://www.journaldunet.com/rss/', name: 'Journal du Net' }
+        { url: 'https://www.lapresse.ca/techno/rss', name: 'La Presse Tech', reliable: true },
+        { url: 'https://www.ledevoir.com/rss/techno.xml', name: 'Le Devoir Tech', reliable: true }
+    ],
+    health: [
+        { url: 'https://www.lapresse.ca/actualites/sante/rss', name: 'La Presse Santé', reliable: true }
+    ],
+    energy: [
+        { url: 'https://www.lesaffaires.com/rss/energie.xml', name: 'Les Affaires Énergie', reliable: true }
+    ],
+    // Pour les autres secteurs, on utilise les sources générales
+    crypto: [
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
+    ],
+    industrial: [
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
+    ],
+    defensive: [
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
     ]
 };
 
-// Symboles boursiers par secteur (pour Yahoo Finance)
+// Liste blanche - SOURCES FIABLES SEULEMENT
+const TRUSTED_SOURCES = [
+    'lapresse.ca',
+    'lesaffaires.com',
+    'ledevoir.com',
+    'radio-canada.ca',
+    'ici.radio-canada.ca',
+    'bloomberg.com',
+    'reuters.com',
+    'lesechos.fr',
+    'afp.com',
+    'theglobeandmail.com'
+];
+
+// Liste noire - Sources à éviter
+const BLOCKED_SOURCES = [
+    'blogspot',
+    'wordpress.com',
+    'medium.com',
+    'substack',
+    'blog',
+    'forum',
+    'reddit',
+    'facebook',
+    'twitter'
+];
+
+// Symboles boursiers par secteur
 const SECTOR_TICKERS = {
     all: ['SPY', 'QQQ', 'DIA'],
     health: ['XLV', 'JNJ', 'PFE'],
@@ -341,7 +388,20 @@ const SECTOR_TICKERS = {
     defensive: ['XLP', 'PG', 'KO']
 };
 
-// Fonction principale - 100% GRATUITE
+// Vérifier si une source est fiable
+function isSourceReliable(url) {
+    if (!url) return false;
+
+    // Vérifier si dans la liste noire
+    const isBlocked = BLOCKED_SOURCES.some(blocked => url.toLowerCase().includes(blocked));
+    if (isBlocked) return false;
+
+    // Vérifier si dans la liste blanche
+    const isTrusted = TRUSTED_SOURCES.some(trusted => url.toLowerCase().includes(trusted));
+    return isTrusted;
+}
+
+// Fonction principale
 async function loadNewsGratuit(sector) {
     const container = document.getElementById('news-container');
 
@@ -350,7 +410,7 @@ async function loadNewsGratuit(sector) {
     container.innerHTML = `
         <div class="news-loading">
             <div class="loading-spinner"></div>
-            <p>Analyse des marchés en cours...</p>
+            <p>Recherche de nouvelles fiables...</p>
         </div>
     `;
 
@@ -360,20 +420,28 @@ async function loadNewsGratuit(sector) {
         const newsArrays = await Promise.all(newsPromises);
         const allNews = newsArrays.flat();
 
+        // Filtrer par date (max 2 jours)
         const recentNews = allNews.filter(news => {
             const ageInDays = (Date.now() - new Date(news.pubDate)) / (1000 * 60 * 60 * 24);
             return ageInDays <= 2;
         });
 
+        // Filtrer par source fiable
+        const reliableNews = recentNews.filter(news => isSourceReliable(news.link));
+
+        // Ajouter les variations boursières
         const newsWithTickers = await Promise.all(
-            recentNews.slice(0, 5).map(news => addTickersToNews(news, sector))
+            reliableNews.slice(0, 5).map(news => addTickersToNews(news, sector))
         );
 
         if (newsWithTickers.length === 0) {
             container.innerHTML = `
                 <div class="news-empty">
                     <i data-lucide="inbox"></i>
-                    <p>Aucune nouvelle récente disponible.</p>
+                    <p>Aucune nouvelle fiable récente disponible pour ce secteur.</p>
+                    <p style="font-size: 0.85rem; margin-top: 10px; color: #94a3b8;">
+                        Essayez un autre secteur ou actualisez dans quelques minutes.
+                    </p>
                 </div>
             `;
         } else {
@@ -395,33 +463,81 @@ async function loadNewsGratuit(sector) {
             <div class="news-empty">
                 <i data-lucide="alert-circle"></i>
                 <p>Erreur lors du chargement des nouvelles.</p>
+                <p style="font-size: 0.85rem; margin-top: 10px; color: #94a3b8;">
+                    Veuillez réessayer dans quelques instants.
+                </p>
             </div>
         `;
         if (window.lucide) window.lucide.createIcons();
     }
 }
 
-// Charger un flux RSS (100% gratuit)
+// Charger un flux RSS
 async function fetchRSS(feed) {
     try {
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
-        const response = await fetch(proxyUrl + encodeURIComponent(feed.url));
-        const text = await response.text();
+        // Essayer plusieurs proxies CORS
+        const proxies = [
+            'https://api.allorigins.win/raw?url=',
+            'https://corsproxy.io/?',
+            'https://api.codetabs.com/v1/proxy?quest='
+        ];
 
+        let response = null;
+        let text = null;
+
+        // Essayer chaque proxy jusqu'à ce qu'un fonctionne
+        for (const proxyUrl of proxies) {
+            try {
+                response = await fetch(proxyUrl + encodeURIComponent(feed.url), {
+                    timeout: 5000
+                });
+
+                if (response.ok) {
+                    text = await response.text();
+                    break;
+                }
+            } catch (e) {
+                console.log(`Proxy ${proxyUrl} failed, trying next...`);
+                continue;
+            }
+        }
+
+        if (!text) {
+            console.error(`Tous les proxies ont échoué pour ${feed.name}`);
+            return [];
+        }
+
+        // Parser le XML
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, 'text/xml');
+
+        // Vérifier les erreurs de parsing
+        const parseError = xml.querySelector('parsererror');
+        if (parseError) {
+            console.error(`Erreur parsing XML pour ${feed.name}`);
+            return [];
+        }
+
         const items = xml.querySelectorAll('item');
 
         const news = [];
         items.forEach((item, index) => {
             if (index < 5) {
-                news.push({
-                    title: item.querySelector('title')?.textContent || '',
-                    summary: extractSummary(item.querySelector('description')?.textContent || ''),
-                    link: item.querySelector('link')?.textContent || '',
-                    pubDate: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
-                    source: feed.name
-                });
+                const title = item.querySelector('title')?.textContent || '';
+                const description = item.querySelector('description')?.textContent || '';
+                const link = item.querySelector('link')?.textContent || '';
+                const pubDate = item.querySelector('pubDate')?.textContent || new Date().toISOString();
+
+                // Vérifier que l'article a un titre et un lien
+                if (title && link) {
+                    news.push({
+                        title: title.trim(),
+                        summary: extractSummary(description),
+                        link: link.trim(),
+                        pubDate: pubDate,
+                        source: feed.name
+                    });
+                }
             }
         });
 
@@ -433,11 +549,28 @@ async function fetchRSS(feed) {
     }
 }
 
-// Extraire un résumé court (première phrase)
+// Extraire un résumé court
 function extractSummary(description) {
-    const clean = description.replace(/<[^>]*>/g, '');
-    const firstSentence = clean.split('.')[0];
-    return firstSentence.substring(0, 150) + (firstSentence.length > 150 ? '...' : '.');
+    if (!description) return 'Aucun résumé disponible.';
+
+    // Nettoyer le HTML et les entités
+    const clean = description
+        .replace(/<[^>]*>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .trim();
+
+    // Prendre la première phrase (max 150 caractères)
+    const sentences = clean.split(/[.!?]/);
+    const firstSentence = sentences[0] || clean;
+
+    if (firstSentence.length > 150) {
+        return firstSentence.substring(0, 147) + '...';
+    }
+
+    return firstSentence + '.';
 }
 
 // Ajouter les variations boursières (Yahoo Finance gratuit)
@@ -508,7 +641,7 @@ function getTimeAgo(pubDate) {
     return `${Math.floor(diffMins / 1440)}j`;
 }
 
-// Créer une carte de nouvelle
+// Créer une carte de nouvelle AVEC LIEN CLIQUABLE
 function createNewsCard(news) {
     const isNew = news.time.includes('min') || (news.time.includes('h') && parseInt(news.time) < 3);
 
@@ -540,6 +673,14 @@ function createNewsCard(news) {
                     `).join('')}
                 </div>
             ` : ''}
+            
+            <!-- LIEN CLIQUABLE VERS L'ARTICLE -->
+            <div class="news-actions">
+                <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="read-article-btn">
+                    <i data-lucide="external-link"></i>
+                    Lire l'article complet
+                </a>
+            </div>
         </div>
     `;
 }
@@ -562,12 +703,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const refreshBtn = document.getElementById('refresh-ai-news');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', function () {
+            const icon = this.querySelector('i');
+            icon.style.animation = 'spin 1s linear';
+
+            setTimeout(() => {
+                icon.style.animation = '';
+            }, 1000);
+
             const activeSymbol = document.querySelector('.sector-btn.active');
             const activeSector = activeSymbol ? activeSymbol.getAttribute('data-sector') : 'all';
             loadNewsGratuit(activeSector);
         });
     }
 
+    // Auto-refresh toutes les 15 minutes
     setInterval(() => {
         const activeSymbol = document.querySelector('.sector-btn.active');
         const activeSector = activeSymbol ? activeSymbol.getAttribute('data-sector') : 'all';

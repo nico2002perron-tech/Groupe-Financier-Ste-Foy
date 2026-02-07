@@ -5820,3 +5820,37 @@ footer {
         gap: 8px;
     }
 }
+
+/* Styles pour les actions des nouvelles (Bouton Lire l'article) */
+.news-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.read-article-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(0, 180, 216, 0.3);
+    border-radius: 50px;
+    color: #0077b6;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.read-article-btn:hover {
+    background: rgba(0, 180, 216, 0.05);
+    border-color: #00b4d8;
+    color: #00b4d8;
+    transform: translateX(3px);
+}
+
+.read-article-btn i {
+    width: 14px;
+    height: 14px;
+}
