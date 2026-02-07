@@ -311,11 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* =========================================
-   RADAR I.A. - VERSION AMÉLIORÉE
-   Avec liens cliquables et sources fiables
+   RADAR I.A. - VERSION GROQ SÉCURISÉE (VERCEL)
    ========================================= */
 
-// Sources RSS FIABLES UNIQUEMENT (vérifiées)
+// Sources RSS FIABLES
 const RSS_FEEDS = {
     all: [
         { url: 'https://www.lapresse.ca/rss', name: 'La Presse', reliable: true },
@@ -324,12 +323,10 @@ const RSS_FEEDS = {
     ],
     finance: [
         { url: 'https://www.lesaffaires.com/rss/bourse.xml', name: 'Les Affaires', reliable: true },
-        { url: 'https://www.lesechos.fr/rss.xml', name: 'Les Échos', reliable: true },
         { url: 'https://www.lapresse.ca/affaires/rss', name: 'La Presse Affaires', reliable: true }
     ],
     tech: [
-        { url: 'https://www.lapresse.ca/techno/rss', name: 'La Presse Tech', reliable: true },
-        { url: 'https://www.ledevoir.com/rss/techno.xml', name: 'Le Devoir Tech', reliable: true }
+        { url: 'https://www.lapresse.ca/techno/rss', name: 'La Presse Tech', reliable: true }
     ],
     health: [
         { url: 'https://www.lapresse.ca/actualites/sante/rss', name: 'La Presse Santé', reliable: true }
@@ -337,7 +334,6 @@ const RSS_FEEDS = {
     energy: [
         { url: 'https://www.lesaffaires.com/rss/energie.xml', name: 'Les Affaires Énergie', reliable: true }
     ],
-    // Pour les autres secteurs, on utilise les sources générales
     crypto: [
         { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
     ],
@@ -348,33 +344,6 @@ const RSS_FEEDS = {
         { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
     ]
 };
-
-// Liste blanche - SOURCES FIABLES SEULEMENT
-const TRUSTED_SOURCES = [
-    'lapresse.ca',
-    'lesaffaires.com',
-    'ledevoir.com',
-    'radio-canada.ca',
-    'ici.radio-canada.ca',
-    'bloomberg.com',
-    'reuters.com',
-    'lesechos.fr',
-    'afp.com',
-    'theglobeandmail.com'
-];
-
-// Liste noire - Sources à éviter
-const BLOCKED_SOURCES = [
-    'blogspot',
-    'wordpress.com',
-    'medium.com',
-    'substack',
-    'blog',
-    'forum',
-    'reddit',
-    'facebook',
-    'twitter'
-];
 
 // Symboles boursiers par secteur
 const SECTOR_TICKERS = {
@@ -388,20 +357,11 @@ const SECTOR_TICKERS = {
     defensive: ['XLP', 'PG', 'KO']
 };
 
-// Vérifier si une source est fiable
-function isSourceReliable(url) {
-    if (!url) return false;
+// URL de ton API Vercel (à changer après déploiement!)
+// Pour l'instant ça pointe vers /api/analyze-news localement
+const API_URL = '/api/analyze-news';
 
-    // Vérifier si dans la liste noire
-    const isBlocked = BLOCKED_SOURCES.some(blocked => url.toLowerCase().includes(blocked));
-    if (isBlocked) return false;
-
-    // Vérifier si dans la liste blanche
-    const isTrusted = TRUSTED_SOURCES.some(trusted => url.toLowerCase().includes(trusted));
-    return isTrusted;
-}
-
-// Fonction principale
+// Fonction principale avec Groq IA
 async function loadNewsGratuit(sector) {
     const container = document.getElementById('news-container');
 
@@ -410,125 +370,128 @@ async function loadNewsGratuit(sector) {
     container.innerHTML = `
         <div class="news-loading">
             <div class="loading-spinner"></div>
-            <p>Recherche de nouvelles fiables...</p>
+            <p>🤖 L'IA analyse les nouvelles du secteur ${getSectorName(sector)}...</p>
         </div>
     `;
 
     try {
+        // 1. Charger les flux RSS bruts
         const feeds = RSS_FEEDS[sector] || RSS_FEEDS.all;
         const newsPromises = feeds.map(feed => fetchRSS(feed));
         const newsArrays = await Promise.all(newsPromises);
         const allNews = newsArrays.flat();
 
-        // Filtrer par date (max 2 jours)
+        // 2. Filtrer par date (max 2 jours)
         const recentNews = allNews.filter(news => {
             const ageInDays = (Date.now() - new Date(news.pubDate)) / (1000 * 60 * 60 * 24);
             return ageInDays <= 2;
         });
 
-        // Filtrer par source fiable
-        const reliableNews = recentNews.filter(news => isSourceReliable(news.link));
-
-        // Ajouter les variations boursières
-        const newsWithTickers = await Promise.all(
-            reliableNews.slice(0, 5).map(news => addTickersToNews(news, sector))
-        );
-
-        if (newsWithTickers.length === 0) {
+        if (recentNews.length === 0) {
             container.innerHTML = `
                 <div class="news-empty">
                     <i data-lucide="inbox"></i>
-                    <p>Aucune nouvelle fiable récente disponible pour ce secteur.</p>
+                    <p>Aucune nouvelle récente disponible.</p>
+                </div>
+            `;
+            if (window.lucide) lucide.createIcons();
+            return;
+        }
+
+        // 3. APPELER GROQ via notre API sécurisée Vercel
+        container.innerHTML = `
+            <div class="news-loading">
+                <div class="loading-spinner"></div>
+                <p>🤖 Groq analyse ${recentNews.length} articles...</p>
+            </div>
+        `;
+
+        const analyzedData = await analyzeWithGroq(recentNews, sector);
+
+        if (!analyzedData.success || analyzedData.articles.length === 0) {
+            container.innerHTML = `
+                <div class="news-empty">
+                    <i data-lucide="brain"></i>
+                    <p>L'IA n'a trouvé aucun article pertinent pour ce secteur.</p>
                     <p style="font-size: 0.85rem; margin-top: 10px; color: #94a3b8;">
-                        Essayez un autre secteur ou actualisez dans quelques minutes.
+                        Essayez un autre secteur ou actualisez.
                     </p>
                 </div>
             `;
-        } else {
-            container.innerHTML = newsWithTickers.map(news => createNewsCard(news)).join('');
+            if (window.lucide) lucide.createIcons();
+            return;
         }
 
-        if (window.lucide) window.lucide.createIcons();
+        // 4. Ajouter les variations boursières
+        const newsWithTickers = await Promise.all(
+            analyzedData.articles.map(news => addTickersToNews(news, sector))
+        );
 
-        // Update last update time if element exists
-        const lastUpdateTimeEl = document.getElementById('last-update-time');
-        if (lastUpdateTimeEl) {
-            const now = new Date();
-            lastUpdateTimeEl.textContent = `Dernière mise à jour : ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
-        }
+        // 5. Afficher
+        container.innerHTML = newsWithTickers.map(news => createNewsCard(news)).join('');
+        if (window.lucide) lucide.createIcons();
 
     } catch (error) {
         console.error('Erreur:', error);
         container.innerHTML = `
             <div class="news-empty">
                 <i data-lucide="alert-circle"></i>
-                <p>Erreur lors du chargement des nouvelles.</p>
+                <p>Erreur lors de l'analyse IA.</p>
                 <p style="font-size: 0.85rem; margin-top: 10px; color: #94a3b8;">
-                    Veuillez réessayer dans quelques instants.
+                    ${error.message}
                 </p>
             </div>
         `;
-        if (window.lucide) window.lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
+// Appeler l'API Vercel qui appelle Groq (SÉCURISÉ!)
+async function analyzeWithGroq(articles, sector) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                articles: articles,
+                sector: sector
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'API error');
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Groq Analysis Error:', error);
+        throw error;
     }
 }
 
 // Charger un flux RSS
 async function fetchRSS(feed) {
     try {
-        // Essayer plusieurs proxies CORS
-        const proxies = [
-            'https://api.allorigins.win/raw?url=',
-            'https://corsproxy.io/?',
-            'https://api.codetabs.com/v1/proxy?quest='
-        ];
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const response = await fetch(proxyUrl + encodeURIComponent(feed.url));
+        const text = await response.text();
 
-        let response = null;
-        let text = null;
-
-        // Essayer chaque proxy jusqu'à ce qu'un fonctionne
-        for (const proxyUrl of proxies) {
-            try {
-                response = await fetch(proxyUrl + encodeURIComponent(feed.url), {
-                    timeout: 5000
-                });
-
-                if (response.ok) {
-                    text = await response.text();
-                    break;
-                }
-            } catch (e) {
-                console.log(`Proxy ${proxyUrl} failed, trying next...`);
-                continue;
-            }
-        }
-
-        if (!text) {
-            console.error(`Tous les proxies ont échoué pour ${feed.name}`);
-            return [];
-        }
-
-        // Parser le XML
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, 'text/xml');
-
-        // Vérifier les erreurs de parsing
-        const parseError = xml.querySelector('parsererror');
-        if (parseError) {
-            console.error(`Erreur parsing XML pour ${feed.name}`);
-            return [];
-        }
-
         const items = xml.querySelectorAll('item');
 
         const news = [];
         items.forEach((item, index) => {
-            if (index < 5) {
+            if (index < 10) { // On prend plus d'articles car Groq va filtrer
                 const title = item.querySelector('title')?.textContent || '';
                 const description = item.querySelector('description')?.textContent || '';
                 const link = item.querySelector('link')?.textContent || '';
                 const pubDate = item.querySelector('pubDate')?.textContent || new Date().toISOString();
 
-                // Vérifier que l'article a un titre et un lien
                 if (title && link) {
                     news.push({
                         title: title.trim(),
@@ -549,31 +512,14 @@ async function fetchRSS(feed) {
     }
 }
 
-// Extraire un résumé court
+// Extraire résumé
 function extractSummary(description) {
-    if (!description) return 'Aucun résumé disponible.';
-
-    // Nettoyer le HTML et les entités
-    const clean = description
-        .replace(/<[^>]*>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .trim();
-
-    // Prendre la première phrase (max 150 caractères)
-    const sentences = clean.split(/[.!?]/);
-    const firstSentence = sentences[0] || clean;
-
-    if (firstSentence.length > 150) {
-        return firstSentence.substring(0, 147) + '...';
-    }
-
-    return firstSentence + '.';
+    if (!description) return '';
+    const clean = description.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+    return clean.substring(0, 200);
 }
 
-// Ajouter les variations boursières (Yahoo Finance gratuit)
+// Ajouter variations boursières
 async function addTickersToNews(news, sector) {
     try {
         const symbols = SECTOR_TICKERS[sector] || SECTOR_TICKERS.all;
@@ -589,59 +535,65 @@ async function addTickersToNews(news, sector) {
         };
 
     } catch (error) {
-        console.error('Erreur tickers:', error);
         return { ...news, tickers: [], time: getTimeAgo(news.pubDate) };
     }
 }
 
-// Obtenir une quote Yahoo Finance (100% GRATUIT)
+// Yahoo Finance
 async function getYahooQuote(symbol) {
     try {
         const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
         const response = await fetch(url);
-
         if (!response.ok) return null;
 
         const data = await response.json();
         const result = data.chart.result[0];
-
         if (!result) return null;
 
         const meta = result.meta;
         const price = meta.regularMarketPrice;
         const prevClose = meta.previousClose || meta.chartPreviousClose;
-
         if (!price || !prevClose) return null;
 
         const change = ((price - prevClose) / prevClose * 100);
-        const changeStr = change.toFixed(2);
 
         return {
             symbol: symbol,
-            change: `${change > 0 ? '+' : ''}${changeStr}%`,
+            change: `${change > 0 ? '+' : ''}${change.toFixed(2)}%`,
             isUp: change > 0,
             starred: Math.abs(change) > 2
         };
 
     } catch (error) {
-        console.error(`Erreur quote ${symbol}:`, error);
         return null;
     }
 }
 
-// Calculer le temps écoulé
+// Temps écoulé
 function getTimeAgo(pubDate) {
-    const now = new Date();
     const published = new Date(pubDate);
-    const diffMs = now - published;
-    const diffMins = Math.floor(diffMs / 60000);
-
+    const diffMins = Math.floor((Date.now() - published) / 60000);
     if (diffMins < 60) return `${diffMins}min`;
     if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h`;
     return `${Math.floor(diffMins / 1440)}j`;
 }
 
-// Créer une carte de nouvelle AVEC LIEN CLIQUABLE
+// Nom du secteur
+function getSectorName(sector) {
+    const names = {
+        all: 'tous les secteurs',
+        health: 'santé',
+        tech: 'technologie',
+        crypto: 'crypto',
+        industrial: 'industriel',
+        energy: 'énergie',
+        finance: 'finance',
+        defensive: 'défensif'
+    };
+    return names[sector] || sector;
+}
+
+// Créer carte de nouvelle
 function createNewsCard(news) {
     const isNew = news.time.includes('min') || (news.time.includes('h') && parseInt(news.time) < 3);
 
@@ -674,7 +626,6 @@ function createNewsCard(news) {
                 </div>
             ` : ''}
             
-            <!-- LIEN CLIQUABLE VERS L'ARTICLE -->
             <div class="news-actions">
                 <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="read-article-btn">
                     <i data-lucide="external-link"></i>
@@ -685,7 +636,7 @@ function createNewsCard(news) {
     `;
 }
 
-// Initialisation au chargement
+// Initialisation
 document.addEventListener('DOMContentLoaded', function () {
     loadNewsGratuit('all');
 
@@ -694,9 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             sectorButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-
-            const sector = this.getAttribute('data-sector');
-            loadNewsGratuit(sector);
+            loadNewsGratuit(this.getAttribute('data-sector'));
         });
     });
 
@@ -704,11 +653,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (refreshBtn) {
         refreshBtn.addEventListener('click', function () {
             const icon = this.querySelector('i');
-            icon.style.animation = 'spin 1s linear';
-
-            setTimeout(() => {
-                icon.style.animation = '';
-            }, 1000);
+            if (icon) icon.style.animation = 'spin 1s linear';
+            setTimeout(() => { if (icon) icon.style.animation = ''; }, 1000);
 
             const activeSymbol = document.querySelector('.sector-btn.active');
             const activeSector = activeSymbol ? activeSymbol.getAttribute('data-sector') : 'all';
@@ -716,7 +662,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Auto-refresh toutes les 15 minutes
     setInterval(() => {
         const activeSymbol = document.querySelector('.sector-btn.active');
         const activeSector = activeSymbol ? activeSymbol.getAttribute('data-sector') : 'all';
