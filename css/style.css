@@ -5854,3 +5854,57 @@ footer {
     width: 14px;
     height: 14px;
 }
+
+/* =========================================
+   CSS ADDITIONNEL POUR LE BOUTON " LIRE LARTICLE\
+ ========================================= */
+
+.news-actions {
+ margin-top: 16px;
+ padding-top: 16px;
+ border-top: 1px solid #f1f5f9;
+}
+
+.read-article-btn {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 10px 18px;
+ background: linear-gradient(135deg, #0ea5e9 0%, #0077b6 100%);
+ color: white;
+ border-radius: 50px;
+ font-size: 0.85rem;
+ font-weight: 600;
+ text-decoration: none;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+}
+
+.read-article-btn i {
+ width: 16px;
+ height: 16px;
+}
+
+.read-article-btn:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+ background: linear-gradient(135deg, #0077b6 0%, #0ea5e9 100%);
+}
+
+.read-article-btn:active {
+ transform: translateY(0);
+}
+
+/* Animation pour le bouton */
+@keyframes pulse-btn {
+ 0%, 100% {
+ box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+ }
+ 50% {
+ box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+ }
+}
+
+.news-card:hover .read-article-btn {
+ animation: pulse-btn 2s ease-in-out infinite;
+}
