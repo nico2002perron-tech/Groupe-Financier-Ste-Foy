@@ -311,9 +311,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* =========================================
-   RADAR I.A. - VERSION GROQ DIRECT
-   Groq cherche et analyse tout!
+   RADAR I.A. - VERSION HYBRIDE (RSS + GROQ)
    ========================================= */
+
+// Sources RSS FIABLES
+const RSS_FEEDS = {
+    all: [
+        { url: 'https://www.lapresse.ca/rss', name: 'La Presse', reliable: true },
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true },
+        { url: 'https://www.ledevoir.com/rss/edition.xml', name: 'Le Devoir', reliable: true }
+    ],
+    finance: [
+        { url: 'https://www.lesaffaires.com/rss/bourse.xml', name: 'Les Affaires', reliable: true },
+        { url: 'https://www.lapresse.ca/affaires/rss', name: 'La Presse Affaires', reliable: true }
+    ],
+    tech: [
+        { url: 'https://www.lapresse.ca/techno/rss', name: 'La Presse Tech', reliable: true }
+    ],
+    health: [
+        { url: 'https://www.lapresse.ca/actualites/sante/rss', name: 'La Presse Santé', reliable: true }
+    ],
+    energy: [
+        { url: 'https://www.lesaffaires.com/rss/energie.xml', name: 'Les Affaires Énergie', reliable: true }
+    ],
+    crypto: [
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
+    ],
+    industrial: [
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
+    ],
+    defensive: [
+        { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires', reliable: true }
+    ]
+};
 
 // Symboles boursiers par secteur
 const SECTOR_TICKERS = {
@@ -327,10 +357,11 @@ const SECTOR_TICKERS = {
     defensive: ['XLP', 'PG', 'KO']
 };
 
-// URL de l'API Vercel
-const API_URL = 'https://groupe-financier-ste-foy-vb4s.vercel.app/api/analyze-news';
+// URLs des API Vercel
+const API_URL = '/api/analyze-news';
+const RSS_PROXY_URL = '/api/rss';
 
-// Fonction principale - GROQ FAIT TOUT!
+// Fonction principale
 async function loadNewsGratuit(sector) {
     const container = document.getElementById('news-container');
 
@@ -339,18 +370,47 @@ async function loadNewsGratuit(sector) {
     container.innerHTML = `
         <div class="news-loading">
             <div class="loading-spinner"></div>
-            <p>🤖 Groq cherche les dernières nouvelles de ${getSectorName(sector)}...</p>
+            <p>🤖 Recherche des nouvelles en direct pour ${getSectorName(sector)}...</p>
         </div>
     `;
 
     try {
-        // Appeler l'API - Groq va TOUT chercher!
+        // 1. Charger les flux RSS via le proxy backend
+        const feeds = RSS_FEEDS[sector] || RSS_FEEDS.all;
+        const newsPromises = feeds.map(feed => fetchRSS(feed));
+        const newsArrays = await Promise.all(newsPromises);
+        const allNews = newsArrays.flat();
+
+        // 2. Filtrer par date (max 2 jours)
+        const recentNews = allNews.filter(news => {
+            const ageInDays = (Date.now() - new Date(news.pubDate)) / (1000 * 60 * 60 * 24);
+            return ageInDays <= 2;
+        });
+
+        if (recentNews.length === 0) {
+            container.innerHTML = `
+                <div class="news-empty">
+                    <i data-lucide="inbox"></i>
+                    <p>Aucune nouvelle récente trouvée dans les flux RSS.</p>
+                </div>
+            `;
+            if (window.lucide) lucide.createIcons();
+            return;
+        }
+
+        // 3. Envoyer à l'IA pour analyse et résumé
+        container.innerHTML = `
+            <div class="news-loading">
+                <div class="loading-spinner"></div>
+                <p>🤖 Groq analyse ${recentNews.length} articles récents...</p>
+            </div>
+        `;
+
         const response = await fetch(API_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                articles: recentNews,
                 sector: sector
             })
         });
@@ -366,10 +426,7 @@ async function loadNewsGratuit(sector) {
             container.innerHTML = `
                 <div class="news-empty">
                     <i data-lucide="inbox"></i>
-                    <p>Aucune nouvelle récente trouvée pour ce secteur.</p>
-                    <p style="font-size: 0.85rem; margin-top: 10px; color: #94a3b8;">
-                        Essayez un autre secteur ou actualisez dans quelques minutes.
-                    </p>
+                    <p>L'IA n'a retenu aucun article jugé pertinent.</p>
                 </div>
             `;
             if (window.lucide) lucide.createIcons();
@@ -385,7 +442,7 @@ async function loadNewsGratuit(sector) {
         container.innerHTML = `
             <div class="news-empty">
                 <i data-lucide="alert-circle"></i>
-                <p>Erreur lors du chargement des nouvelles.</p>
+                <p>Erreur lors du chargement ou de l'analyse.</p>
                 <p style="font-size: 0.85rem; margin-top: 10px; color: #94a3b8;">
                     ${error.message}
                 </p>
@@ -393,6 +450,52 @@ async function loadNewsGratuit(sector) {
         `;
         if (window.lucide) lucide.createIcons();
     }
+}
+
+// Charger un flux RSS via le proxy
+async function fetchRSS(feed) {
+    try {
+        const response = await fetch(`${RSS_PROXY_URL}?url=${encodeURIComponent(feed.url)}`);
+
+        if (!response.ok) return [];
+
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, 'text/xml');
+        const items = xml.querySelectorAll('item');
+
+        const news = [];
+        items.forEach((item, index) => {
+            if (index < 8) {
+                const title = item.querySelector('title')?.textContent || '';
+                const description = item.querySelector('description')?.textContent || '';
+                const link = item.querySelector('link')?.textContent || '';
+                const pubDate = item.querySelector('pubDate')?.textContent || new Date().toISOString();
+
+                if (title && link) {
+                    news.push({
+                        title: title.trim(),
+                        summary: extractSummary(description),
+                        link: link.trim(),
+                        pubDate: pubDate,
+                        source: feed.name
+                    });
+                }
+            }
+        });
+
+        return news;
+    } catch (error) {
+        console.error(`Erreur proxy RSS ${feed.name}:`, error);
+        return [];
+    }
+}
+
+// Extraire résumé propre
+function extractSummary(description) {
+    if (!description) return '';
+    const clean = description.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+    return clean.substring(0, 250);
 }
 
 // Calculer le temps écoulé
