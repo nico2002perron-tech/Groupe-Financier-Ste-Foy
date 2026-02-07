@@ -63,19 +63,21 @@ h5 {
     font-weight: 700;
 }
 
-/* Gradient Text for Modern Tech Feel with Shimmer Effect */
+/* Gradient Text for Modern Tech Feel with Shimmer Effect - BOOSTED COLORS */
 .text-gradient {
     background: linear-gradient(90deg,
             var(--brand-dark) 0%,
-            var(--brand-primary) 40%,
-            #5fcde4 50%,
-            var(--brand-primary) 60%,
+            var(--brand-primary) 30%,
+            #00b4d8 50%,
+            var(--brand-primary) 70%,
             var(--brand-dark) 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: textShimmer 5s ease-in-out infinite;
+    animation: textShimmer 4s ease-in-out infinite;
+    font-weight: 800;
+    /* Bolder for more visibility */
 }
 
 @keyframes textShimmer {
@@ -170,7 +172,7 @@ ul {
     right: 0;
     height: 40px;
     background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.03) 0%,
+            rgba(0, 0, 0, 0.05) 0%,
             transparent 100%);
     border-radius: 40px 40px 0 0;
     pointer-events: none;
@@ -199,35 +201,35 @@ ul {
     display: none;
 }
 
-/* Gradient: White to Light Grey */
+/* Gradient: White to Light Grey - MORE VISIBLE */
 .gradient-white-to-light {
     background: linear-gradient(180deg,
             #ffffff 0%,
-            #ffffff 60%,
-            var(--bg-light) 100%);
+            #f3f6fa 60%,
+            #e6f0fa 100%);
 }
 
 /* Gradient: Solid Light */
 .gradient-light {
     background: linear-gradient(180deg,
             var(--bg-light) 0%,
-            var(--bg-light) 70%,
-            #f0f7fc 100%);
+            #ebf5fc 70%,
+            #dceafe 100%);
 }
 
 /* Gradient: Light to Cyan (blends into cycle section) */
 .gradient-light-to-cyan {
     background: linear-gradient(180deg,
             var(--bg-light) 0%,
-            #f0f7fc 50%,
-            #e8f4fc 100%);
+            #e0f2fe 50%,
+            #bae6fd 100%);
 }
 
 /* Gradient: Cyan/Blue to Light (coming from cycle section) */
 .gradient-cyan-to-light {
     background: linear-gradient(180deg,
-            #e0f2fe 0%,
-            #eef6fc 40%,
+            #bae6fd 0%,
+            #e0f2fe 40%,
             var(--bg-light) 100%);
 }
 
@@ -235,7 +237,7 @@ ul {
 .gradient-light-to-white {
     background: linear-gradient(180deg,
             var(--bg-light) 0%,
-            var(--bg-light) 50%,
+            #f1f5f9 50%,
             #f8fafc 80%,
             #ffffff 100%);
 }
@@ -253,25 +255,29 @@ ul {
     margin: -30px 0;
     pointer-events: auto;
     cursor: pointer;
+    background: transparent;
+    /* Ensure transparent background */
 }
 
 .chameleon-divider svg {
     width: 100%;
     height: 100%;
     overflow: visible;
-    filter: blur(2px);
+    filter: drop-shadow(0 0 5px rgba(0, 180, 216, 0.4));
+    /* Glow effect for visibility */
     transition: filter 0.5s ease;
 }
 
 /* Hover effect - becomes clearer and more vibrant */
 .chameleon-divider:hover svg {
-    filter: blur(1px);
+    filter: drop-shadow(0 0 8px rgba(0, 180, 216, 0.8));
 }
 
 .chameleon-divider:hover .chameleon-wave {
     stroke-width: 14 !important;
     opacity: 1 !important;
-    filter: blur(2px) !important;
+    filter: none !important;
+    /* Clearer on hover */
 }
 
 /* Vapor wave paths - more visible */
@@ -279,24 +285,25 @@ ul {
     stroke-linecap: round;
     stroke-linejoin: round;
     transition: stroke-width 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+    opacity: 1 !important;
+    /* Force visibility */
 }
 
 .chameleon-wave.wave-1 {
     animation: vaporFlow1 12s ease-in-out infinite;
-    filter: blur(3px);
-    opacity: 0.85;
+    opacity: 1;
+    stroke: #00b4d8;
+    /* Fallback color */
 }
 
 .chameleon-wave.wave-2 {
     animation: vaporFlow2 15s ease-in-out infinite;
-    filter: blur(4px);
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .chameleon-wave.wave-3 {
     animation: vaporFlow3 18s ease-in-out infinite;
-    filter: blur(5px);
-    opacity: 0.55;
+    opacity: 0.6;
 }
 
 /* Slow vapor animation - gentle floating motion */
@@ -350,76 +357,10 @@ ul {
 /* Gradient fog layers - subtle & pale transition */
 .chameleon-divider::before,
 .chameleon-divider::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 80px;
-    background: linear-gradient(90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(184, 212, 232, 0.1) 20%,
-            rgba(135, 206, 235, 0.15) 50%,
-            rgba(184, 212, 232, 0.1) 80%,
-            rgba(255, 255, 255, 0) 100%);
-    filter: blur(20px);
-    animation: fogDrift 25s ease-in-out infinite, fogPulse 6s ease-in-out infinite;
-    transition: opacity 0.4s ease, filter 0.4s ease;
+    display: none;
+    /* Remove fog to make lines clearer */
 }
 
-.chameleon-divider::before {
-    top: 0;
-    animation-delay: -5s;
-}
-
-.chameleon-divider::after {
-    bottom: 0;
-    animation-delay: -10s;
-    opacity: 0.6;
-}
-
-/* Hover effect - glow intensifies */
-.chameleon-divider:hover::before,
-.chameleon-divider:hover::after {
-    opacity: 1;
-    filter: blur(15px);
-    animation: fogDrift 15s ease-in-out infinite, fogPulseIntense 2s ease-in-out infinite;
-}
-
-@keyframes fogDrift {
-
-    0%,
-    100% {
-        transform: translateX(-5%) scaleX(1.1);
-    }
-
-    50% {
-        transform: translateX(5%) scaleX(1);
-    }
-}
-
-@keyframes fogPulse {
-
-    0%,
-    100% {
-        opacity: 0.5;
-    }
-
-    50% {
-        opacity: 0.8;
-    }
-}
-
-@keyframes fogPulseIntense {
-
-    0%,
-    100% {
-        opacity: 0.8;
-    }
-
-    50% {
-        opacity: 1;
-    }
-}
 
 /* Floating particles effect - center particles */
 .chameleon-divider .particles {
@@ -434,9 +375,12 @@ ul {
 
 .chameleon-divider .particle {
     position: absolute;
-    width: 4px;
-    height: 4px;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.7), transparent);
+    width: 5px;
+    /* Bigger particles */
+    height: 5px;
+    background: #00b4d8;
+    /* Solid neon color */
+    box-shadow: 0 0 5px #00b4d8;
     border-radius: 50%;
     animation: floatParticle 10s ease-in-out infinite;
 }
@@ -5267,12 +5211,8 @@ footer {
         transform: scale(1);
         opacity: 1;
     }
-
-@keyframes pulse-green {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 1; }
 }
+
 
 /* =========================================
    AI RADAR SECTION (STRICT PIXEL-PERFECT)
@@ -5312,7 +5252,8 @@ footer {
 .radar-logo-box {
     width: 40px;
     height: 40px;
-    background: #1e40af; /* Deep naval blue from image */
+    background: #1e40af;
+    /* Deep naval blue from image */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -5346,7 +5287,8 @@ footer {
 }
 
 .radar-intro {
-    color: #0d9488; /* Teal strict */
+    color: #0d9488;
+    /* Teal strict */
     font-weight: 700;
     font-size: 0.95rem;
     margin-bottom: 15px;
@@ -5462,147 +5404,290 @@ footer {
         padding: 25px;
         border-radius: 24px;
     }
+
     .radar-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
     }
+
     .radar-live-badge {
         align-self: flex-start;
     }
 }
 
 /* =========================================
-   FEATURED RADAR SPOTLIGHT (FUN & POP)
+   RADAR STRATÉGIQUE I.A. - SECTION
    ========================================= */
+
 .featured-radar-section {
     padding: 60px 0;
-    /* Removed flex to let container handle layout */
-    background: radial-gradient(circle at center, rgba(0, 180, 216, 0.03) 0%, transparent 70%);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    position: relative;
 }
 
 .radar-spotlight {
-    position: relative;
-    width: 100%;
     max-width: 900px;
-    margin: 0 auto; /* Centering within container */
-    background: #ffffff;
-    border-radius: 24px; /* Slightly tighter radius */
-    padding: 40px;      /* Refined padding */
-    text-align: center;
-    border: 1px solid rgba(0, 180, 216, 0.2);
-    /* THE GLOW - Attention Grabbing */
-    box-shadow: 0 20px 60px rgba(0, 180, 216, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27), box-shadow 0.4s ease;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 180, 216, 0.1);
+    position: relative;
     overflow: hidden;
 }
 
-.radar-spotlight:hover {
-    transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 30px 80px rgba(0, 180, 216, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+/* Subtle gradient overlay */
+.radar-spotlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(135deg,
+            rgba(0, 180, 216, 0.02) 0%,
+            rgba(0, 119, 182, 0.01) 100%);
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* Fun Header */
+/* Header avec robot avatar */
 .radar-header-featured {
+    display: flex;
+    align-items: center;
+    gap: 20px;
     margin-bottom: 35px;
     position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
 }
 
 .robot-avatar {
     width: 60px;
     height: 60px;
-    background: #e0f2fe;
-    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0077b6 100%);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px;
-    color: #0284c7;
-    border: 2px solid #bae6fd;
-    animation: bounce-slow 3s infinite;
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+    flex-shrink: 0;
 }
 
-@keyframes bounce-slow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+.robot-avatar i {
+    color: white;
+    width: 32px;
+    height: 32px;
 }
 
 .radar-title-featured {
     font-size: 2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
+    margin: 0;
+    color: #1a2a3a;
+    flex: 1;
+    min-width: 200px;
+}
+
+.radar-title-featured span {
+    color: #0ea5e9;
 }
 
 .radar-subtitle-featured {
-    font-size: 1.1rem;
-    color: #475569;
-    font-weight: 500;
+    font-size: 1rem;
+    color: #64748b;
+    margin: 5px 0 0 0;
+    flex-basis: 100%;
+    margin-left: 80px;
 }
 
-/* Fun List */
+/* Liste des nouvelles */
 .radar-list-featured {
     list-style: none;
     padding: 0;
     margin: 0;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .radar-item-featured {
-    background: #f8fafc;
-    border-radius: 16px;
-    padding: 20px 25px;
-    border: 1px solid #f1f5f9;
-    transition: all 0.2s ease;
     display: flex;
-    align-items: flex-start;
-    gap: 15px;
+    gap: 20px;
+    padding: 24px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg,
+            rgba(248, 250, 252, 0.8) 0%,
+            rgba(241, 245, 249, 0.4) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.radar-item-featured::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #0ea5e9 0%, #0077b6 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .radar-item-featured:hover {
-    background: #ffffff;
-    border-color: #e2e8f0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    transform: translateX(5px);
+    transform: translateX(8px);
+    box-shadow: 0 8px 24px rgba(0, 180, 216, 0.12);
+    background: white;
+    border-color: rgba(0, 180, 216, 0.15);
 }
 
+.radar-item-featured:hover::before {
+    opacity: 1;
+}
+
+.radar-item-featured:last-child {
+    margin-bottom: 0;
+}
+
+/* Emoji icon */
 .emoji-icon {
-    font-size: 1.8rem;
-    line-height: 1;
-    margin-top: -2px;
+    font-size: 2rem;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Content */
+.radar-content {
+    flex: 1;
 }
 
 .radar-content h4 {
     font-size: 1.1rem;
-    color: #0f172a;
-    margin-bottom: 6px;
     font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
 }
 
 .radar-content p {
-    color: #64748b;
     font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 8px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.6;
 }
 
-.source-link {
-    font-size: 0.85rem;
-    color: #0ea5e9;
+/* Bouton refresh */
+#refresh-ai-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
     font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
+    cursor: pointer;
+    display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    margin: 25px auto 0;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+    transition: all 0.3s;
 }
 
-.source-link:hover {
-    text-decoration: underline;
+#refresh-ai-btn:hover {
+    color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.08);
+    transform: translateY(-2px);
 }
 
+#refresh-ai-btn i {
+    width: 16px;
+    height: 16px;
+}
+
+/* Badge "RÉCENT" */
+.badge-recent {
+    display: inline-block;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-left: 10px;
+    vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Loading state */
+.radar-item-featured.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.radar-item-featured.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.6) 50%,
+            transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .radar-spotlight {
+        padding: 30px 20px;
+    }
+
+    .radar-header-featured {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .radar-subtitle-featured {
+        margin-left: 0;
+    }
+
+    .radar-title-featured {
+        font-size: 1.5rem;
+    }
+
+    .radar-item-featured {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .emoji-icon {
+        align-self: flex-start;
+    }
+}
