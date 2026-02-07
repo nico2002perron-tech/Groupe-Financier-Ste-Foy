@@ -1,29 +1,13 @@
-// api/analyze-news.js
 export default async function handler(req, res) {
-    // CORS Headers - TRÈS IMPORTANT!
-    const allowedOrigins = [
-        'https://groupe-financier-ste-foy-vb4s.vercel.app',
-        'https://groupe-financier-ste-foy-vb4s-juqcrkbv-vercel.app',
-        'http://localhost:3000'
-    ];
-
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    } else {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-    }
-
+    // CORS - Autoriser toutes les origines (temporaire pour test)
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Gérer les requêtes OPTIONS (preflight)
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    // Accepter seulement POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -35,14 +19,12 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Invalid articles data' });
         }
 
-        // Récupérer la clé API depuis les variables d'environnement (SÉCURISÉ!)
         const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
         if (!GROQ_API_KEY) {
             return res.status(500).json({ error: 'API key not configured' });
         }
 
-        // Préparer le prompt pour Groq
         const prompt = `Tu es un analyste financier expert qui filtre et résume des nouvelles.
 
 Voici ${articles.length} articles bruts sur le secteur "${sector}":
@@ -65,7 +47,6 @@ RÈGLES STRICTES:
 - Ton NEUTRE et FACTUEL (pas d'opinion)
 - Résumés courts et informatifs
 - Priorité aux nouvelles récentes et importantes
-- Si un article parle de variations boursières, mentionne-le
 
 Réponds UNIQUEMENT en JSON (pas de markdown):
 {
@@ -75,12 +56,11 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
       "title": "titre traduit si nécessaire",
       "summary": "résumé neutre en 1 phrase",
       "relevant": true,
-      "importance": 1-10
+      "importance": 8
     }
   ]
 }`;
 
-        // Appeler Groq API
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -88,7 +68,7 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile', // Modèle rapide et gratuit
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     {
                         role: 'system',
@@ -99,7 +79,7 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
                         content: prompt
                     }
                 ],
-                temperature: 0.3, // Peu créatif = plus factuel
+                temperature: 0.3,
                 max_tokens: 2000
             })
         });
@@ -113,10 +93,8 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
         const data = await response.json();
         const content = data.choices[0].message.content;
 
-        // Parser la réponse JSON de Groq
         let analyzed;
         try {
-            // Nettoyer le markdown si présent
             const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
             analyzed = JSON.parse(cleaned);
         } catch (e) {
@@ -124,7 +102,6 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
             return res.status(500).json({ error: 'Invalid JSON from Groq', content });
         }
 
-        // Combiner avec les données originales
         const processedArticles = analyzed.articles
             .filter(a => a.relevant)
             .sort((a, b) => b.importance - a.importance)
