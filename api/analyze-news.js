@@ -1,5 +1,6 @@
+// api/analyze-news.js - VERSION GROQ TOUT-EN-UN
 export default async function handler(req, res) {
-    // CORS - Autoriser toutes les origines (temporaire pour test)
+    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -13,11 +14,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { articles, sector } = req.body;
-
-        if (!articles || !Array.isArray(articles)) {
-            return res.status(400).json({ error: 'Invalid articles data' });
-        }
+        const { sector } = req.body;
 
         const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
@@ -25,38 +22,78 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'API key not configured' });
         }
 
-        const prompt = `Tu es un analyste financier expert qui filtre et résume des nouvelles.
+        // Mapper les secteurs vers des requêtes de recherche
+        const sectorQueries = {
+            all: 'actualités financières marchés boursiers économie',
+            health: 'santé pharmaceutique biotech dispositifs médicaux',
+            tech: 'technologie intelligence artificielle semiconducteurs logiciel',
+            crypto: 'cryptomonnaie bitcoin ethereum blockchain',
+            industrial: 'industriel manufacturier construction équipement',
+            energy: 'énergie pétrole gaz renouvelable',
+            finance: 'banque finance investissement assurance',
+            defensive: 'biens consommation services publics alimentation'
+        };
 
-Voici ${articles.length} articles bruts sur le secteur "${sector}":
+        const searchQuery = sectorQueries[sector] || sectorQueries.all;
+        const sectorName = {
+            all: 'tous les secteurs',
+            health: 'santé',
+            tech: 'technologie',
+            crypto: 'crypto',
+            industrial: 'industriel',
+            energy: 'énergie',
+            finance: 'finance',
+            defensive: 'défensif'
+        }[sector] || 'tous les secteurs';
 
-${articles.map((a, i) => `
-Article ${i + 1}:
-Titre: ${a.title}
-Description: ${a.summary}
-Source: ${a.source}
-`).join('\n')}
+        // Symboles boursiers par secteur
+        const sectorTickers = {
+            all: ['SPY', 'QQQ', 'DIA'],
+            health: ['XLV', 'JNJ', 'PFE'],
+            tech: ['QQQ', 'AAPL', 'NVDA'],
+            crypto: ['BTC-USD', 'ETH-USD'],
+            industrial: ['XLI', 'CAT'],
+            energy: ['XLE', 'XOM'],
+            finance: ['XLF', 'JPM'],
+            defensive: ['XLP', 'PG']
+        };
 
-TÂCHES:
-1. Analyse chaque article
-2. ÉLIMINE les articles non-pertinents pour le secteur "${sector}"
-3. ÉLIMINE les articles trop vieux ou non-financiers
-4. Pour les articles pertinents, crée un résumé NEUTRE en 1 phrase (max 150 caractères)
-5. Garde MAXIMUM 5 meilleurs articles
+        const tickers = (sectorTickers[sector] || sectorTickers.all).slice(0, 2);
 
-RÈGLES STRICTES:
-- Ton NEUTRE et FACTUEL (pas d'opinion)
-- Résumés courts et informatifs
-- Priorité aux nouvelles récentes et importantes
+        const prompt = `Tu es un analyste financier expert. La date d'aujourd'hui est le ${new Date().toLocaleDateString('fr-FR')}.
 
-Réponds UNIQUEMENT en JSON (pas de markdown):
+TÂCHE: Trouve 5 nouvelles financières RÉCENTES (dernières 48 heures) sur le secteur "${sectorName}".
+
+CRITÈRES STRICTS:
+1. Nouvelles des dernières 48h UNIQUEMENT
+2. Sources FIABLES: Bloomberg, Reuters, Financial Times, Wall Street Journal, CNBC, Les Affaires, La Presse
+3. Pertinentes pour le secteur "${sectorName}"
+4. Avec impact boursier potentiel
+
+Pour CHAQUE nouvelle, fournis:
+- title: Titre traduit en français (factuel, max 100 caractères)
+- summary: Résumé NEUTRE en 1 phrase (max 150 caractères) - AUCUNE opinion, juste les faits
+- source: Nom de la source (Bloomberg, Reuters, etc.)
+- time: Temps écoulé (ex: "2h", "30min", "1j")
+- link: URL de l'article (si disponible, sinon URL de la source)
+- tickers: 2 symboles boursiers pertinents parmi: ${tickers.join(', ')}
+
+RÈGLES ABSOLUES:
+- Ton 100% NEUTRE et FACTUEL
+- Pas d'opinion, de prédiction ou de conseil
+- Juste rapporter les faits
+- Nouvelles vérifiables et récentes
+
+Réponds UNIQUEMENT en JSON valide (pas de markdown):
 {
   "articles": [
     {
-      "originalIndex": 0,
-      "title": "titre traduit si nécessaire",
-      "summary": "résumé neutre en 1 phrase",
-      "relevant": true,
-      "importance": 8
+      "title": "titre court en français",
+      "summary": "résumé neutre factuel",
+      "source": "Bloomberg",
+      "time": "2h",
+      "link": "https://...",
+      "tickers": ["SPY", "QQQ"]
     }
   ]
 }`;
@@ -72,15 +109,15 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
                 messages: [
                     {
                         role: 'system',
-                        content: 'Tu es un analyste financier expert. Tu réponds UNIQUEMENT en JSON valide, sans markdown.'
+                        content: 'Tu es un analyste financier neutre et factuel. Tu réponds UNIQUEMENT en JSON valide, sans markdown ni commentaire.'
                     },
                     {
                         role: 'user',
                         content: prompt
                     }
                 ],
-                temperature: 0.3,
-                max_tokens: 2000
+                temperature: 0.2, // Très peu créatif = plus factuel
+                max_tokens: 3000
             })
         });
 
@@ -102,25 +139,26 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
             return res.status(500).json({ error: 'Invalid JSON from Groq', content });
         }
 
-        const processedArticles = analyzed.articles
-            .filter(a => a.relevant)
-            .sort((a, b) => b.importance - a.importance)
-            .slice(0, 5)
-            .map(a => {
-                const original = articles[a.originalIndex];
+        // Ajouter les variations boursières réelles via Yahoo Finance
+        const articlesWithTickers = await Promise.all(
+            analyzed.articles.map(async (article) => {
+                const tickerData = await Promise.all(
+                    article.tickers.map(symbol => getYahooQuote(symbol))
+                );
+
                 return {
-                    ...original,
-                    title: a.title,
-                    summary: a.summary,
-                    importance: a.importance
+                    ...article,
+                    pubDate: estimatePubDate(article.time),
+                    tickers: tickerData.filter(t => t !== null)
                 };
-            });
+            })
+        );
 
         return res.status(200).json({
             success: true,
-            articles: processedArticles,
-            totalAnalyzed: articles.length,
-            keptArticles: processedArticles.length
+            articles: articlesWithTickers,
+            sector: sectorName,
+            generatedAt: new Date().toISOString()
         });
 
     } catch (error) {
@@ -130,4 +168,59 @@ Réponds UNIQUEMENT en JSON (pas de markdown):
             message: error.message
         });
     }
+}
+
+// Obtenir quote Yahoo Finance
+async function getYahooQuote(symbol) {
+    try {
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
+        const response = await fetch(url);
+
+        if (!response.ok) return null;
+
+        const data = await response.json();
+        const result = data.chart.result[0];
+
+        if (!result) return null;
+
+        const meta = result.meta;
+        const price = meta.regularMarketPrice;
+        const prevClose = meta.previousClose || meta.chartPreviousClose;
+
+        if (!price || !prevClose) return null;
+
+        const change = ((price - prevClose) / prevClose * 100);
+
+        return {
+            symbol: symbol,
+            change: `${change > 0 ? '+' : ''}${change.toFixed(2)}%`,
+            isUp: change > 0,
+            starred: Math.abs(change) > 2
+        };
+
+    } catch (error) {
+        return null;
+    }
+}
+
+// Estimer la date de publication depuis le temps écoulé
+function estimatePubDate(timeStr) {
+    const now = new Date();
+
+    if (timeStr.includes('min')) {
+        const mins = parseInt(timeStr);
+        return new Date(now - mins * 60 * 1000).toISOString();
+    }
+
+    if (timeStr.includes('h')) {
+        const hours = parseInt(timeStr);
+        return new Date(now - hours * 60 * 60 * 1000).toISOString();
+    }
+
+    if (timeStr.includes('j')) {
+        const days = parseInt(timeStr);
+        return new Date(now - days * 24 * 60 * 60 * 1000).toISOString();
+    }
+
+    return now.toISOString();
 }
