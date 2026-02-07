@@ -359,7 +359,7 @@ const SECTOR_TICKERS = {
 
 // URL de ton API Vercel (à changer après déploiement!)
 // Point vers l'API déployée sur Vercel
-const API_URL = 'https://groupe-financier-ste-foy-5kos.vercel.app/api/analyze-news';
+const API_URL = 'https://groupe-financier-ste-foy-vb4s.vercel.app/api/analyze-news';
 
 // Fonction principale avec Groq IA
 async function loadNewsGratuit(sector) {
