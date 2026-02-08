@@ -152,7 +152,7 @@ Réponds UNIQUEMENT en JSON valide (pas de markdown):
         const articlesWithTickers = await Promise.all(
             analyzed.articles.map(async (article) => {
                 const tickerData = await Promise.all(
-                    article.tickers.map(symbol => getYahooQuote(symbol))
+                    (article.tickers || []).map(symbol => getYahooQuote(symbol))
                 );
 
                 return {
