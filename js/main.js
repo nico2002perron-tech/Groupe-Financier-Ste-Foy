@@ -3,7 +3,7 @@
    ========================================= */
 
 // URL de l'API (Même domaine Vercel)
-const API_URL = 'https://vraisitegroupestefoy.vercel.app/api/analyze-news';
+const API_URL = '/api/analyze-news';
 
 // Fonction principale
 async function loadNewsGratuit(sector) {
