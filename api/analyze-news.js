@@ -198,10 +198,11 @@ Réponds en JSON pur (pas de markdown):
         });
 
     } catch (error) {
-        console.error('Server Error:', error);
+        console.error('CRITICAL SERVER ERROR:', error);
         return res.status(500).json({
-            error: 'Internal server error',
-            message: error.message
+            error: 'DEBUG_CRASH',
+            message: error.message,
+            stack: error.stack
         });
     }
 }
