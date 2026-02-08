@@ -132,11 +132,20 @@ Réponds UNIQUEMENT en JSON valide (pas de markdown):
 
         let analyzed;
         try {
-            const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            analyzed = JSON.parse(cleaned);
+            // Extraction robuste du JSON (cherche le premier { et le dernier })
+            const startBracket = content.indexOf('{');
+            const endBracket = content.lastIndexOf('}');
+            if (startBracket === -1 || endBracket === -1) throw new Error('No JSON object found');
+
+            const jsonStr = content.substring(startBracket, endBracket + 1);
+            analyzed = JSON.parse(jsonStr);
         } catch (e) {
             console.error('JSON Parse Error:', content);
-            return res.status(500).json({ error: 'Invalid JSON from Groq', content });
+            return res.status(500).json({
+                error: 'Invalid JSON from Groq',
+                message: e.message,
+                content: content.substring(0, 500) // Envoyer un aperçu pour le debug
+            });
         }
 
         // Ajouter les variations boursières réelles via Yahoo Finance
