@@ -147,11 +147,19 @@ Réponds en JSON pur (pas de markdown):
 
         let analyzed;
         try {
-            const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-            analyzed = JSON.parse(cleaned);
+            const start = content.indexOf('{');
+            const end = content.lastIndexOf('}');
+            if (start === -1 || end === -1) throw new Error('No JSON object found in response');
+
+            const jsonStr = content.substring(start, end + 1);
+            analyzed = JSON.parse(jsonStr);
         } catch (e) {
             console.error('JSON Parse Error:', content);
-            return res.status(500).json({ error: 'Invalid JSON from Groq', rawContent: content.substring(0, 500) });
+            return res.status(500).json({
+                error: 'Invalid JSON from Groq',
+                message: e.message,
+                contentPreview: content.substring(0, 300)
+            });
         }
 
         if (!analyzed.articles || analyzed.articles.length === 0) {
