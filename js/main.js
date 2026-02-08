@@ -3,7 +3,7 @@
    ========================================= */
 
 // URL de l'API (Même domaine Vercel)
-const API_URL = 'https://vraisitegroupestefoy-bpt349m3n-nico2002perron-1339s-projects.vercel.app/api/analyze-news';
+const API_URL = 'https://vraisitegroupestefoy.vercel.app/api/analyze-news';
 
 // Fonction principale
 async function loadNewsGratuit(sector) {
