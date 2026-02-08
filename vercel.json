@@ -1,5 +1,9 @@
 {
     "version": 2,
-    "cleanUrls": true,
-    "trailingSlash": false
+    "functions": {
+        "api/*.js": {
+            "runtime": "@vercel/node"
+        }
+    },
+    "cleanUrls": true
 }
