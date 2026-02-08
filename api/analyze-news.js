@@ -1,92 +1,80 @@
-// api/analyze-news.js - VERSION WEB SEARCH ROBUSTE
+// api/analyze-news.js - VERSION WEB SEARCH OFFICIELLE
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (req.method === 'OPTIONS') return res.status(200).end();
-    return res.status(200).send("HELLO_V9");
-
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
         const { sector = 'all' } = req.body;
         const GROQ_API_KEY = process.env.GROQ_API_KEY;
-        if (!GROQ_API_KEY) throw new Error('GROQ_API_KEY is not configured');
+        if (!GROQ_API_KEY) throw new Error('GROQ_API_KEY missing');
 
         const sectorNames = { all: 'tous les secteurs', health: 'santé', tech: 'technologie', crypto: 'crypto', industrial: 'industriel', energy: 'énergie', finance: 'finance', defensive: 'défensif' };
         const sectorName = sectorNames[sector] || sectorNames.all;
         const tickers = { all: ['SPY', 'QQQ'], health: ['XLV', 'JNJ'], tech: ['QQQ', 'AAPL'], crypto: ['BTC-USD', 'ETH-USD'], industrial: ['XLI', 'CAT'], energy: ['XLE', 'XOM'], finance: ['XLF', 'JPM'], defensive: ['XLP', 'PG'] }[sector] || ['SPY', 'QQQ'];
 
-        const prompt = `Tu es un analyste financier. Date: ${new Date().toLocaleDateString('fr-FR')}.
-TÂCHE: Trouve 5 nouvelles financières RÉCENTES sur "${sectorName}". 
-UTILISE LA RECHERCHE WEB.
-FORMAT: Réponds uniquement avec un objet JSON valide contenant un tableau "articles".
-Chaque article doit avoir: title, summary, source, time, link, tickers (choisis 2 parmi: ${tickers.join(', ')}).`;
+        const prompt = `Analyste financier expert. Date: ${new Date().toLocaleDateString('fr-FR')}.
+TÂCHE: Trouve 5 nouvelles financières RÉELLES (<48h) sur "${sectorName}".
+UTILISE LA RECHERCHE WEB pour des liens RÉELS.
+FORMAT: JSON uniquement: {"articles": [{"title": "...", "summary": "...", "source": "Bloomberg", "time": "2h", "link": "https://...", "tickers": ["${tickers[0]}", "${tickers[1]}"]}]}`;
 
-        console.log("Calling Groq without tools...");
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 model: 'llama-3.3-70b-versatile',
                 messages: [
-                    { role: 'system', content: 'Tu es un analyste financier. Réponds TOUJOURS en JSON valide.' },
+                    { role: 'system', content: 'Tu es un analyste financier utilisant la recherche web. Réponds UNIQUEMENT en JSON.' },
                     { role: 'user', content: prompt }
                 ],
-                temperature: 0.1
+                temperature: 0.1,
+                tools: [{
+                    type: "web_search",
+                    name: "web_search"
+                }]
             })
         });
 
         if (!response.ok) {
-            const err = await response.text();
-            throw new Error(`Groq Status ${response.status}: ${err}`);
+            const errText = await response.text();
+            throw new Error(`Groq Error ${response.status}: ${errText}`);
         }
 
         const data = await response.json();
-        console.log("Full Groq Response received");
+        let content = data.choices[0]?.message?.content || "";
 
-        let content = data.choices?.[0]?.message?.content || "";
-        const toolCalls = data.choices?.[0]?.message?.tool_calls;
-
-        // Si le modèle a fait un appel d'outil mais n'a pas donné de contenu, 
-        // on essaie de voir si les arguments contiennent ce qu'on veut (hack fréquent)
-        if (!content && toolCalls && toolCalls.length > 0) {
-            content = toolCalls[toolCalls.length - 1].function?.arguments || "";
+        // Handling tool-use response pattern
+        if (!content && data.choices[0]?.message?.tool_calls) {
+            const toolCall = data.choices[0].message.tool_calls.find(t => t.function?.arguments);
+            content = toolCall?.function?.arguments || "";
         }
 
-        // Extraction du JSON
-        let analyzed;
-        try {
-            const start = content.indexOf('{');
-            const end = content.lastIndexOf('}');
-            if (start === -1) {
-                // Si rien n'est trouvé, on renvoie une structure vide propre plutôt qu'un crash
-                return res.status(200).json({ success: true, articles: [], sector: sectorName, note: "No data found in AI response" });
-            }
-            analyzed = JSON.parse(content.substring(start, end + 1));
-        } catch (e) {
-            throw new Error(`JSON Parse Error: ${e.message} | Raw: ${content.substring(0, 100)}`);
-        }
+        const start = content.indexOf('{');
+        const end = content.lastIndexOf('}');
+        if (start === -1) throw new Error(`No JSON found. Raw: ${content.substring(0, 100)}`);
 
-        // Enrichissement avec Yahoo Finance
+        const analyzed = JSON.parse(content.substring(start, end + 1));
+
         const finalArticles = await Promise.all((analyzed.articles || []).slice(0, 5).map(async (art) => {
-            const symbolList = art.tickers || tickers;
-            const tickerData = await Promise.all(symbolList.slice(0, 2).map(s => getYahooQuote(s)));
+            const syms = art.tickers || tickers;
+            const quoteData = await Promise.all(syms.slice(0, 2).map(s => getYahooQuote(s)));
             return {
                 ...art,
                 pubDate: estimatePubDate(art.time || '1h'),
-                tickers: tickerData.filter(t => t !== null)
+                tickers: quoteData.filter(q => q !== null)
             };
         }));
 
         return res.status(200).json({ success: true, articles: finalArticles, sector: sectorName });
 
     } catch (error) {
-        console.error("API ERROR:", error);
+        console.error("FINAL_API_ERROR:", error);
         return res.status(500).json({
             success: false,
-            error: "PROCESSING_FAILED",
+            error: "ANALYSIS_FAILED",
             message: error.message
         });
     }
