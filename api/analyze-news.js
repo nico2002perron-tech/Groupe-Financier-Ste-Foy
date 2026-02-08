@@ -22,7 +22,7 @@ UTILISE LA RECHERCHE WEB.
 FORMAT: Réponds uniquement avec un objet JSON valide contenant un tableau "articles".
 Chaque article doit avoir: title, summary, source, time, link, tickers (choisis 2 parmi: ${tickers.join(', ')}).`;
 
-        console.log("Calling Groq with Web Search...");
+        console.log("Calling Groq without tools...");
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
@@ -32,9 +32,7 @@ Chaque article doit avoir: title, summary, source, time, link, tickers (choisis 
                     { role: 'system', content: 'Tu es un analyste financier. Réponds TOUJOURS en JSON valide.' },
                     { role: 'user', content: prompt }
                 ],
-                temperature: 0.1,
-                // On active la recherche web comme outil
-                tools: [{ type: "web_search", name: "web_search" }]
+                temperature: 0.1
             })
         });
 
