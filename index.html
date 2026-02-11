@@ -15,6 +15,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/ai-radar.css">
 </head>
 
 <body>
@@ -641,27 +642,38 @@
         </div>
     </section>
 
-    <!-- AI Radar Strategic Section - VERSION AMÉLIORÉE -->
-    <section class="featured-radar-section">
+    <!-- AI Radar Strategic Section - DESIGN PREMIUM V2 -->
+    <section class="ai-radar-section-v2">
+        <!-- Animated background orbs -->
+        <div class="ai-bg-orb ai-bg-orb-1"></div>
+        <div class="ai-bg-orb ai-bg-orb-2"></div>
+        <div class="ai-bg-orb ai-bg-orb-3"></div>
+
         <div class="container">
-            <div class="radar-spotlight fade-in-scroll">
-                <!-- Header -->
-                <div class="radar-header-featured">
-                    <div class="robot-avatar">
-                        <i data-lucide="bot" style="width: 32px; height: 32px;"></i>
+            <div class="ai-radar-glass fade-in-scroll">
+                <!-- Header Premium -->
+                <div class="ai-radar-header">
+                    <div class="ai-avatar-ring">
+                        <div class="ai-avatar-pulse"></div>
+                        <i data-lucide="brain" style="width: 28px; height: 28px;"></i>
                     </div>
-                    <div style="flex: 1;">
-                        <h2 class="radar-title-featured">Radar Stratégique I.A.</h2>
-                        <p class="radar-subtitle-featured">Actualités financières analysées en temps réel 📊</p>
+                    <div class="ai-header-text">
+                        <h2 class="ai-radar-title">Radar Stratégique I.A.</h2>
+                        <p class="ai-radar-sub">Actualités financières analysées en temps réel</p>
                     </div>
-                    <button id="refresh-ai-news" class="btn-refresh-ai">
-                        <i data-lucide="refresh-cw" style="width:18px; height:18px;"></i>
-                        Actualiser
-                    </button>
+                    <div class="ai-header-actions">
+                        <span class="ai-live-badge">
+                            <span class="live-dot"></span>
+                            En Direct
+                        </span>
+                        <button id="refresh-ai-news" class="btn-refresh-premium" aria-label="Actualiser">
+                            <i data-lucide="refresh-cw" style="width:18px; height:18px;"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Filtres par secteur -->
-                <div class="sector-filters">
+                <div class="ai-sector-filters">
                     <button class="sector-btn active" data-sector="all">
                         <i data-lucide="globe-2"></i> Globale
                     </button>
@@ -689,17 +701,31 @@
                 </div>
 
                 <!-- Liste des nouvelles -->
-                <div id="news-container" class="news-container">
+                <div id="news-container" class="news-container-v2">
                     <div class="news-loading">
-                        <div class="loading-spinner"></div>
+                        <div class="loading-pulse">
+                            <div class="pulse-ring"></div>
+                            <div class="pulse-ring"></div>
+                            <div class="pulse-ring"></div>
+                            <i data-lucide="brain" style="width:28px; height:28px; color: #0077b6;"></i>
+                        </div>
                         <p>Analyse des marchés en cours...</p>
+                        <div class="loading-bar">
+                            <div class="loading-bar-inner"></div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Badge "Dernière mise à jour" -->
-                <div class="last-update">
-                    <i data-lucide="clock" style="width:14px; height:14px;"></i>
-                    <span id="last-update-time">Dernière mise à jour : Il y a quelques instants</span>
+                <!-- Footer -->
+                <div class="ai-radar-footer">
+                    <div class="ai-sources-hint">
+                        <i data-lucide="database" style="width:13px; height:13px;"></i>
+                        Sources : Bloomberg, CNBC, La Presse, Les Affaires, et plus
+                    </div>
+                    <div class="ai-update-time">
+                        <i data-lucide="clock" style="width:13px; height:13px;"></i>
+                        <span id="last-update-time">Dernière mise à jour : Il y a quelques instants</span>
+                    </div>
                 </div>
             </div>
         </div>

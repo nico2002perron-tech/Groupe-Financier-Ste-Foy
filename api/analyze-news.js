@@ -1,6 +1,5 @@
-// api/analyze-news.js - RSS CÔTÉ SERVEUR + GROQ RÉSUME
+// api/analyze-news.js - EXACTEMENT 3 articles par secteur + SANS TICKERS
 export default async function handler(req, res) {
-    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -15,148 +14,144 @@ export default async function handler(req, res) {
 
     try {
         const { sector } = req.body;
-
         const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
         if (!GROQ_API_KEY) {
             return res.status(500).json({ error: 'API key not configured' });
         }
 
-        // Sources RSS fiables
-        const RSS_FEEDS = {
+        const RSS_SOURCES = {
             all: [
-                'https://www.lapresse.ca/rss',
-                'https://www.lesaffaires.com/rss/manchettes.xml'
+                { url: 'https://feeds.bloomberg.com/markets/news.rss', name: 'Bloomberg Markets' },
+                { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC Markets' },
+                { url: 'https://www.marketwatch.com/rss/topstories', name: 'MarketWatch' },
+                { url: 'https://www.lapresse.ca/affaires/rss', name: 'La Presse Affaires' },
+                { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires' }
             ],
             finance: [
-                'https://www.lesaffaires.com/rss/bourse.xml',
-                'https://www.lapresse.ca/affaires/rss'
+                { url: 'https://www.lesaffaires.com/rss/bourse.xml', name: 'Les Affaires Bourse' },
+                { url: 'https://www.lapresse.ca/affaires/rss', name: 'La Presse Affaires' },
+                { url: 'https://feeds.bloomberg.com/markets/news.rss', name: 'Bloomberg Markets' },
+                { url: 'https://www.cnbc.com/id/10000664/device/rss/rss.html', name: 'CNBC Finance' }
             ],
             tech: [
-                'https://www.lapresse.ca/techno/rss'
-            ],
-            health: [
-                'https://www.lapresse.ca/actualites/sante/rss'
-            ],
-            energy: [
-                'https://www.lesaffaires.com/rss/energie.xml'
+                { url: 'https://www.lapresse.ca/techno/rss', name: 'La Presse Techno' },
+                { url: 'https://feeds.feedburner.com/TechCrunch/', name: 'TechCrunch' },
+                { url: 'https://www.theverge.com/rss/index.xml', name: 'The Verge' },
+                { url: 'https://www.cnbc.com/id/19854910/device/rss/rss.html', name: 'CNBC Tech' }
             ],
             crypto: [
-                'https://www.lesaffaires.com/rss/manchettes.xml'
+                { url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', name: 'CoinDesk' },
+                { url: 'https://cointelegraph.com/rss', name: 'Cointelegraph' },
+                { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires' }
+            ],
+            health: [
+                { url: 'https://www.lapresse.ca/actualites/sante/rss', name: 'La Presse Santé' },
+                { url: 'https://ici.radio-canada.ca/rss/73', name: 'Radio-Canada Santé' },
+                { url: 'https://www.cnbc.com/id/10000108/device/rss/rss.html', name: 'CNBC Health' }
+            ],
+            energy: [
+                { url: 'https://www.lesaffaires.com/rss/energie.xml', name: 'Les Affaires Énergie' },
+                { url: 'https://www.cnbc.com/id/19836768/device/rss/rss.html', name: 'CNBC Energy' },
+                { url: 'https://www.marketwatch.com/rss/topstories', name: 'MarketWatch' }
             ],
             industrial: [
-                'https://www.lesaffaires.com/rss/manchettes.xml'
+                { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires' },
+                { url: 'https://feeds.bloomberg.com/markets/news.rss', name: 'Bloomberg Markets' },
+                { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC' }
             ],
             defensive: [
-                'https://www.lesaffaires.com/rss/manchettes.xml'
+                { url: 'https://www.lesaffaires.com/rss/manchettes.xml', name: 'Les Affaires' },
+                { url: 'https://www.marketwatch.com/rss/realtimeheadlines', name: 'MarketWatch' },
+                { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC' }
             ]
         };
 
-        const sectorName = {
-            all: 'tous les secteurs',
-            health: 'santé',
-            tech: 'technologie',
-            crypto: 'crypto',
-            industrial: 'industriel',
-            energy: 'énergie',
-            finance: 'finance',
-            defensive: 'défensif'
-        }[sector] || 'tous les secteurs';
-
-        const sectorTickers = {
-            all: ['SPY', 'QQQ'],
-            health: ['XLV', 'JNJ'],
-            tech: ['QQQ', 'NVDA'],
-            crypto: ['BTC-USD', 'ETH-USD'],
-            industrial: ['XLI', 'CAT'],
-            energy: ['XLE', 'XOM'],
-            finance: ['XLF', 'JPM'],
-            defensive: ['XLP', 'PG']
+        const sectorNames = {
+            all: 'économie mondiale', health: 'santé', tech: 'technologie',
+            crypto: 'crypto', industrial: 'industriel', energy: 'énergie',
+            finance: 'finance', defensive: 'défensif'
         };
 
-        const tickers = sectorTickers[sector] || sectorTickers.all;
-        const feeds = RSS_FEEDS[sector] || RSS_FEEDS.all;
+        const sectorName = sectorNames[sector] || sectorNames.all;
+        const sources = RSS_SOURCES[sector] || RSS_SOURCES.all;
 
-        // 1. CHARGER LES RSS CÔTÉ SERVEUR (pas de CORS!)
-        console.log('Fetching RSS feeds for sector:', sector);
-        const allArticles = [];
+        console.log(`📰 Fetching from ${sources.length} sources for ${sectorName}`);
 
-        for (const feedUrl of feeds) {
-            try {
-                const rssResponse = await fetch(feedUrl, {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (compatible; GroqNewsBot/1.0)'
-                    }
-                });
+        const fetchPromises = sources.map(source => fetchRSS(source));
+        const results = await Promise.allSettled(fetchPromises);
 
-                if (!rssResponse.ok) {
-                    console.log(`RSS fetch failed for ${feedUrl}:`, rssResponse.status);
-                    continue;
-                }
+        const allArticles = results
+            .filter(r => r.status === 'fulfilled' && r.value.length > 0)
+            .flatMap(r => r.value);
 
-                const rssText = await rssResponse.text();
-                const articles = parseRSS(rssText, feedUrl);
-                allArticles.push(...articles);
-
-            } catch (error) {
-                console.error(`Error fetching ${feedUrl}:`, error.message);
-            }
-        }
-
-        console.log('Total articles fetched:', allArticles.length);
+        console.log(`✅ Fetched ${allArticles.length} total articles`);
 
         if (allArticles.length === 0) {
             return res.status(200).json({
                 success: true,
                 articles: [],
-                message: 'Aucune nouvelle disponible pour ce secteur'
+                message: 'Aucune nouvelle disponible'
             });
         }
 
-        // 2. Filtrer les articles récents (48h max)
-        const recentArticles = allArticles.filter(article => {
-            const ageInHours = (Date.now() - new Date(article.pubDate)) / (1000 * 60 * 60);
-            return ageInHours <= 48;
-        }).slice(0, 10); // Top 10
+        const now = Date.now();
+        const maxAgeMs = 48 * 60 * 60 * 1000;
+
+        const recentArticles = allArticles
+            .filter(article => {
+                const age = now - new Date(article.pubDate).getTime();
+                return age <= maxAgeMs && age >= 0;
+            })
+            .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+            .slice(0, 20);
+
+        console.log(`🔍 ${recentArticles.length} articles récents`);
 
         if (recentArticles.length === 0) {
             return res.status(200).json({
                 success: true,
                 articles: [],
-                message: 'Aucune nouvelle récente (48h) disponible'
+                message: 'Aucune nouvelle des dernières 48h'
             });
         }
 
-        // 3. GROQ ANALYSE ET RÉSUME
-        const prompt = `Tu es un analyste financier expert. Voici ${recentArticles.length} articles récents sur "${sectorName}".
+        // PROMPT pour garantir exactement 3 articles
+        const prompt = `Tu es un analyste financier.
+
+DATE: ${new Date().toLocaleDateString('fr-FR')}
+
+Tu as ${recentArticles.length} articles sur "${sectorName}".
 
 ARTICLES:
-${recentArticles.map((a, i) => `
-${i + 1}. ${a.title}
-   ${a.description}
-   Source: ${a.source}
-`).join('\n')}
+${recentArticles.map((a, i) => `[${i}] ${a.title}
+${a.description}
+Source: ${a.source}`).join('\n\n')}
 
-TÂCHE:
-1. Sélectionne les 5 articles les PLUS PERTINENTS pour "${sectorName}"
-2. Pour chaque article sélectionné, crée un résumé NEUTRE en 1 phrase (max 150 caractères)
-3. Traduis en français si nécessaire
-4. Attribue 2 symboles boursiers pertinents parmi: ${tickers.join(', ')}
+MISSION:
+Sélectionne EXACTEMENT 3 articles PERTINENTS pour "${sectorName}".
 
-RÈGLES:
-- Ton 100% NEUTRE et FACTUEL
-- Pas d'opinion ni de prédiction
-- Résumés courts et informatifs
+CRITÈRES (par ordre de priorité):
+1. Pertinence pour "${sectorName}"
+2. Impact économique ou boursier
+3. Entreprises connues (Apple, Tesla, Microsoft, etc.)
+4. Nouvelles récentes et importantes
 
-Réponds en JSON pur (pas de markdown):
+Pour chaque article:
+- **title**: Traduit en français, factuel (max 100 car.)
+- **summary**: Résumé NEUTRE en français (max 150 car.) - ZÉRO opinion, que des faits
+- **importance**: Score 1-10
+
+IMPORTANT: Tu dois sélectionner EXACTEMENT 3 articles. Ni plus ni moins.
+
+Réponds en JSON pur:
 {
   "articles": [
     {
       "originalIndex": 0,
-      "title": "titre traduit",
+      "title": "titre français",
       "summary": "résumé neutre",
-      "relevant": true,
-      "tickers": ["SPY", "QQQ"]
+      "importance": 8
     }
   ]
 }`;
@@ -172,30 +167,35 @@ Réponds en JSON pur (pas de markdown):
                 messages: [
                     {
                         role: 'system',
-                        content: 'Tu es un analyste financier neutre. Tu réponds en JSON pur sans markdown.'
+                        content: 'Tu es un analyste financier neutre. Tu réponds en JSON pur. Tu sélectionnes TOUJOURS exactement 3 articles.'
                     },
                     {
                         role: 'user',
                         content: prompt
                     }
                 ],
-                temperature: 0.2,
-                max_tokens: 2000
+                temperature: 0.15,
+                max_tokens: 1500
             })
         });
 
         if (!groqResponse.ok) {
-            const errorText = await groqResponse.text();
-            console.error('Groq API Error:', errorText);
+            console.error('❌ Groq Error');
 
-            // FALLBACK: Retourner les articles bruts
+            // FALLBACK: Exactement 3 articles
+            const fallbackArticles = padTo3(recentArticles.slice(0, 3).map(a => ({
+                title: a.title,
+                summary: a.description.substring(0, 150),
+                source: a.source,
+                link: a.link,
+                pubDate: a.pubDate,
+                time: getTimeAgo(a.pubDate),
+                isNew: isPublishedToday(a.pubDate)
+            })), recentArticles);
+
             return res.status(200).json({
                 success: true,
-                articles: recentArticles.slice(0, 5).map(a => ({
-                    ...a,
-                    time: getTimeAgo(a.pubDate),
-                    tickers: []
-                })),
+                articles: fallbackArticles,
                 fallback: true
             });
         }
@@ -205,45 +205,54 @@ Réponds en JSON pur (pas de markdown):
 
         let analyzed;
         try {
-            const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+            let cleaned = content.trim()
+                .replace(/```json\n?/g, '')
+                .replace(/```\n?/g, '')
+                .replace(/^[^{]*({.*})[^}]*$/s, '$1');
+
             analyzed = JSON.parse(cleaned);
         } catch (e) {
-            console.error('JSON Parse Error:', content);
-            // FALLBACK
+            console.error('❌ Parse Error');
+
+            const fallbackArticles = padTo3(recentArticles.slice(0, 3).map(a => ({
+                title: a.title,
+                summary: a.description.substring(0, 150),
+                source: a.source,
+                link: a.link,
+                pubDate: a.pubDate,
+                time: getTimeAgo(a.pubDate),
+                isNew: isPublishedToday(a.pubDate)
+            })), recentArticles);
+
             return res.status(200).json({
                 success: true,
-                articles: recentArticles.slice(0, 5).map(a => ({
-                    ...a,
-                    time: getTimeAgo(a.pubDate),
-                    tickers: []
-                })),
+                articles: fallbackArticles,
                 fallback: true
             });
         }
 
-        // 4. Combiner avec données originales + variations boursières
-        const finalArticles = await Promise.all(
-            analyzed.articles
-                .filter(a => a.relevant)
-                .slice(0, 5)
-                .map(async (a) => {
-                    const original = recentArticles[a.originalIndex];
+        // ASSEMBLER: EXACTEMENT 3 ARTICLES, SANS TICKERS
+        let finalArticles = (analyzed.articles || [])
+            .sort((a, b) => (b.importance || 5) - (a.importance || 5))
+            .slice(0, 3)
+            .map(a => {
+                const original = recentArticles[a.originalIndex];
+                if (!original) return null;
 
-                    const tickerData = await Promise.all(
-                        (a.tickers || tickers.slice(0, 2)).map(symbol => getYahooQuote(symbol))
-                    );
+                return {
+                    title: a.title || original.title,
+                    summary: a.summary || original.description.substring(0, 150),
+                    source: original.source,
+                    link: original.link,
+                    pubDate: original.pubDate,
+                    time: getTimeAgo(original.pubDate),
+                    isNew: isPublishedToday(original.pubDate)
+                };
+            })
+            .filter(a => a !== null);
 
-                    return {
-                        title: a.title,
-                        summary: a.summary,
-                        source: original.source,
-                        link: original.link,
-                        pubDate: original.pubDate,
-                        time: getTimeAgo(original.pubDate),
-                        tickers: tickerData.filter(t => t !== null)
-                    };
-                })
-        );
+        // GARANTIR EXACTEMENT 3 ARTICLES
+        finalArticles = padTo3(finalArticles, recentArticles);
 
         return res.status(200).json({
             success: true,
@@ -252,7 +261,7 @@ Réponds en JSON pur (pas de markdown):
         });
 
     } catch (error) {
-        console.error('Server Error:', error);
+        console.error('💥 Error:', error);
         return res.status(500).json({
             error: 'Internal server error',
             message: error.message
@@ -260,75 +269,106 @@ Réponds en JSON pur (pas de markdown):
     }
 }
 
-// Parser RSS simple
-function parseRSS(xmlText, feedUrl) {
+// Compléter pour atteindre exactement 3 articles
+function padTo3(articles, allRecent) {
+    if (articles.length >= 3) return articles.slice(0, 3);
+
+    const usedLinks = new Set(articles.map(a => a.link));
+    for (const raw of allRecent) {
+        if (articles.length >= 3) break;
+        if (usedLinks.has(raw.link)) continue;
+        articles.push({
+            title: raw.title,
+            summary: raw.description.substring(0, 150),
+            source: raw.source,
+            link: raw.link,
+            pubDate: raw.pubDate,
+            time: getTimeAgo(raw.pubDate),
+            isNew: isPublishedToday(raw.pubDate)
+        });
+        usedLinks.add(raw.link);
+    }
+    return articles;
+}
+
+function isPublishedToday(pubDate) {
+    const today = new Date();
+    const articleDate = new Date(pubDate);
+    return today.toDateString() === articleDate.toDateString();
+}
+
+async function fetchRSS(source) {
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+
+        const response = await fetch(source.url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0',
+                'Accept': 'application/rss+xml, application/xml'
+            },
+            signal: controller.signal
+        });
+
+        clearTimeout(timeout);
+
+        if (!response.ok) return [];
+
+        const text = await response.text();
+        return parseRSS(text, source.name);
+
+    } catch (error) {
+        return [];
+    }
+}
+
+function parseRSS(xmlText, sourceName) {
     const articles = [];
-    const sourceName = feedUrl.includes('lapresse') ? 'La Presse' :
-        feedUrl.includes('lesaffaires') ? 'Les Affaires' : 'Source';
+    try {
+        const itemRegex = /<item[^>]*>(.*?)<\/item>/gs;
+        const items = xmlText.match(itemRegex) || [];
 
-    // Regex simple pour extraire les items
-    const itemRegex = /<item>(.*?)<\/item>/gs;
-    const items = xmlText.match(itemRegex) || [];
+        items.forEach((item, i) => {
+            if (i >= 15) return;
 
-    items.forEach((item, index) => {
-        if (index >= 10) return; // Max 10 par feed
+            const extract = (field) => {
+                const cdata = new RegExp(`<${field}[^>]*><!\\[CDATA\\[(.*?)\\]\\]></${field}>`, 's');
+                const normal = new RegExp(`<${field}[^>]*>(.*?)</${field}>`, 's');
+                return (item.match(cdata)?.[1] || item.match(normal)?.[1] || '').trim();
+            };
 
-        const titleMatch = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>|<title>(.*?)<\/title>/s);
-        const descMatch = item.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>|<description>(.*?)<\/description>/s);
-        const linkMatch = item.match(/<link>(.*?)<\/link>/s);
-        const pubDateMatch = item.match(/<pubDate>(.*?)<\/pubDate>/s);
+            const title = extract('title');
+            const description = extract('description').replace(/<[^>]*>/g, '');
+            const link = extract('link');
+            const pubDate = extract('pubDate') || new Date().toISOString();
 
-        const title = (titleMatch?.[1] || titleMatch?.[2] || '').trim();
-        const description = (descMatch?.[1] || descMatch?.[2] || '').replace(/<[^>]*>/g, '').trim();
-        const link = (linkMatch?.[1] || '').trim();
-        const pubDate = pubDateMatch?.[1] || new Date().toISOString();
-
-        if (title && link) {
-            articles.push({
-                title,
-                description: description.substring(0, 300),
-                link,
-                pubDate,
-                source: sourceName
-            });
-        }
-    });
+            if (title && link && link.startsWith('http')) {
+                articles.push({
+                    title: cleanText(title),
+                    description: cleanText(description).substring(0, 400),
+                    link,
+                    pubDate,
+                    source: sourceName
+                });
+            }
+        });
+    } catch (e) { }
 
     return articles;
 }
 
-// Variations boursières Yahoo
-async function getYahooQuote(symbol) {
-    try {
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
-        const response = await fetch(url);
-
-        if (!response.ok) return null;
-
-        const data = await response.json();
-        const result = data.chart.result[0];
-        if (!result) return null;
-
-        const meta = result.meta;
-        const price = meta.regularMarketPrice;
-        const prevClose = meta.previousClose || meta.chartPreviousClose;
-        if (!price || !prevClose) return null;
-
-        const change = ((price - prevClose) / prevClose * 100);
-
-        return {
-            symbol: symbol,
-            change: `${change > 0 ? '+' : ''}${change.toFixed(2)}%`,
-            isUp: change > 0,
-            starred: Math.abs(change) > 2
-        };
-
-    } catch (error) {
-        return null;
-    }
+function cleanText(text) {
+    return text
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
-// Temps écoulé
 function getTimeAgo(pubDate) {
     const diffMins = Math.floor((Date.now() - new Date(pubDate)) / 60000);
     if (diffMins < 60) return `${diffMins}min`;

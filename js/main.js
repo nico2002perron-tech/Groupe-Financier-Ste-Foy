@@ -1,5 +1,6 @@
 /* =========================================
    RADAR I.A. - MODE SERVEUR UNIQUE
+   Design Premium avec Animations
    ========================================= */
 
 // URL de l'API (Même domaine Vercel)
@@ -13,22 +14,25 @@ async function loadNewsGratuit(sector) {
 
     container.innerHTML = `
         <div class="news-loading">
-            <div class="loading-spinner"></div>
-            <p>🤖 Appel de l'analyse I.A. pour ${getSectorName(sector)}...</p>
+            <div class="loading-pulse">
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring"></div>
+                <i data-lucide="brain" style="width:28px; height:28px; color: #0077b6;"></i>
+            </div>
+            <p>🤖 Analyse I.A. en cours pour <strong>${getSectorName(sector)}</strong>...</p>
+            <div class="loading-bar"><div class="loading-bar-inner"></div></div>
         </div>
     `;
+    if (window.lucide) lucide.createIcons();
 
     try {
-        // 1️⃣ LOG FRONTEND
         console.log("Calling API:", API_URL, "for sector:", sector);
 
-        // Appel UNIQUE au backend - Aucune logique RSS ici !
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                sector: sector
-            })
+            body: JSON.stringify({ sector: sector })
         });
 
         if (!response.ok) {
@@ -38,7 +42,6 @@ async function loadNewsGratuit(sector) {
 
         const data = await response.json();
 
-        // Log du debug reçu du serveur
         if (data.debug) {
             console.log("=== API DEBUG INFO ===");
             console.log("Groq Key:", data.debug.groqKey);
@@ -50,16 +53,31 @@ async function loadNewsGratuit(sector) {
             container.innerHTML = `
                 <div class="news-empty">
                     <i data-lucide="inbox"></i>
-                    <p>Aucune nouvelle disponible (même en mode brut).</p>
+                    <p>Aucune nouvelle disponible pour le moment.</p>
                 </div>
             `;
             if (window.lucide) lucide.createIcons();
             return;
         }
 
-        // Afficher les nouvelles (IA ou Brutes en cas de fallback)
-        container.innerHTML = data.articles.map(news => createNewsCard(news)).join('');
+        // Afficher les cartes avec animation staggered
+        container.innerHTML = data.articles.map((news, index) => createNewsCard(news, index)).join('');
         if (window.lucide) lucide.createIcons();
+
+        // Déclencher les animations d'entrée
+        requestAnimationFrame(() => {
+            const cards = container.querySelectorAll('.news-card-premium');
+            cards.forEach((card, i) => {
+                setTimeout(() => card.classList.add('visible'), i * 150);
+            });
+        });
+
+        // Mettre à jour le timestamp
+        const updateEl = document.getElementById('last-update-time');
+        if (updateEl) {
+            const now = new Date();
+            updateEl.textContent = `Dernière mise à jour : ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+        }
 
     } catch (error) {
         console.error('Frontend Error:', error);
@@ -99,49 +117,62 @@ function getSectorName(sector) {
     return names[sector] || sector;
 }
 
-// Créer carte de nouvelle
-function createNewsCard(news) {
-    const isNew = news.time && (news.time.includes('min') || (news.time.includes('h') && parseInt(news.time) < 3));
+// Créer carte de nouvelle PREMIUM - SANS TICKERS
+function createNewsCard(news, index = 0) {
+    const isNew = news.isNew || (news.time && (news.time.includes('min') || (news.time.includes('h') && parseInt(news.time) < 3)));
+
+    // Icône selon la source
+    const sourceIcon = getSourceIcon(news.source);
 
     return `
-        <div class="news-card">
-            <h3 class="news-title">
-                ${news.title}
-                ${isNew ? '<span class="badge-new">NOUVEAU</span>' : ''}
-            </h3>
-            
-            <p class="news-summary">${news.summary}</p>
-            
-            <div class="news-meta">
-                <span class="news-source">${news.source}</span>
-                <span class="news-time">
-                    <i data-lucide="clock"></i>
-                    Il y a ${news.time}
-                </span>
-            </div>
-            
-            ${news.tickers && news.tickers.length > 0 ? `
-                <div class="news-tickers">
-                    ${news.tickers.map(ticker => `
-                        <div class="ticker-badge">
-                            <span class="ticker-symbol">${ticker.symbol}</span>
-                            <span class="ticker-change ${ticker.isUp ? 'up' : 'down'}">${ticker.change}</span>
-                            ${ticker.starred ? '<span class="ticker-star">★</span>' : ''}
-                        </div>
-                    `).join('')}
+        <div class="news-card-premium" style="--card-index: ${index}">
+            <div class="card-accent-line"></div>
+            <div class="card-body">
+                <div class="card-header">
+                    <div class="card-number">${String(index + 1).padStart(2, '0')}</div>
+                    <div class="card-title-wrap">
+                        <h3 class="news-title-premium">
+                            ${news.title}
+                        </h3>
+                        ${isNew ? '<span class="badge-nouveau"><i data-lucide="zap" style="width:11px;height:11px;"></i> NOUVEAU</span>' : ''}
+                    </div>
                 </div>
-            ` : ''}
-            
-            ${news.link ? `
-                <div class="news-actions">
-                    <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="read-article-btn">
-                        <i data-lucide="external-link"></i>
-                        Lire l'article complet
+
+                <p class="news-summary-premium">${news.summary}</p>
+
+                <div class="card-footer">
+                    <div class="card-meta">
+                        <span class="meta-source">
+                            ${sourceIcon}
+                            ${news.source}
+                        </span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-time">
+                            <i data-lucide="clock" style="width:13px; height:13px;"></i>
+                            Il y a ${news.time}
+                        </span>
+                    </div>
+                    <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="btn-read-article">
+                        <span>Lire</span>
+                        <i data-lucide="arrow-up-right" style="width:15px; height:15px;"></i>
                     </a>
                 </div>
-            ` : ''}
+            </div>
         </div>
     `;
+}
+
+function getSourceIcon(source) {
+    const s = (source || '').toLowerCase();
+    if (s.includes('presse')) return '<i data-lucide="newspaper" style="width:13px;height:13px;"></i>';
+    if (s.includes('bloomberg')) return '<i data-lucide="bar-chart-2" style="width:13px;height:13px;"></i>';
+    if (s.includes('cnbc')) return '<i data-lucide="tv" style="width:13px;height:13px;"></i>';
+    if (s.includes('affaires')) return '<i data-lucide="briefcase" style="width:13px;height:13px;"></i>';
+    if (s.includes('coin') || s.includes('crypto')) return '<i data-lucide="bitcoin" style="width:13px;height:13px;"></i>';
+    if (s.includes('tech') || s.includes('verge')) return '<i data-lucide="cpu" style="width:13px;height:13px;"></i>';
+    if (s.includes('radio-canada')) return '<i data-lucide="radio" style="width:13px;height:13px;"></i>';
+    if (s.includes('market')) return '<i data-lucide="trending-up" style="width:13px;height:13px;"></i>';
+    return '<i data-lucide="globe" style="width:13px;height:13px;"></i>';
 }
 
 // Initialisation
@@ -182,20 +213,3 @@ document.addEventListener('DOMContentLoaded', function () {
         loadNewsGratuit(activeSector);
     }, 15 * 60 * 1000);
 });
-
-/* =========================================
-   NOTES
-   ========================================= */
-
-/*
-MODE DIAGNOSTIC - FONCTIONNEMENT:
-
-1. Frontend appelle UNIQUEMENT /api/analyze-news
-2. Backend va chercher les RSS lui-même
-3. Backend tente d'analyser avec Groq I.A.
-4. Si Groq échoue, Backend renvoie les articles bruts (fallback)
-5. Frontend affiche ce qu'il reçoit
-
-✅ PLUS AUCUN CORS (tout se passe côté serveur)
-✅ PLUS AUCUN APPEL EXTERNE DEPUIS LE NAVIGATEUR
-*/
