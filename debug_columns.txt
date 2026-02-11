@@ -1,0 +1,135 @@
+--- Log Trace ---
+DEBUG: Found Revenue col: Revenue
+DEBUG: Calculated Gross Margin using Gross Profit
+DEBUG: Calculated Oper Margin using Operating Income
+
+--- Available Columns Scan ---
+- Accounts Payable
+- Accounts Receivable
+- Accrued Expenses
+- Book Value Per Share
+- Capital Expenditures
+- Cash & Equivalents
+- Cash & Short-Term Investments
+- Cash Growth
+- Cash Income Tax Paid
+- Cash Interest Paid
+- Change in Accounts Payable
+- Change in Accounts Receivable
+- Change in Inventory
+- Change in Other Net Operating Assets
+- Change in Working Capital
+- Common Dividends Paid
+- Common Stock
+- Comprehensive Income & Other
+- Cost of Revenue
+- Current Income Taxes Payable
+- Current Portion of Leases
+- Current Portion of Long-Term Debt
+- Current Unearned Revenue
+- D&A For EBITDA
+- Depreciation & Amortization
+- Dividend Growth
+- Dividend Per Share
+- EBIT
+- EBIT Margin
+- EBITDA
+- EBITDA Margin
+- EPS (Basic)
+- EPS (Diluted)
+- EPS Growth
+- Effective Tax Rate
+- Filing Date Shares Outstanding
+- Financing Cash Flow
+- Free Cash Flow
+- Free Cash Flow Growth
+- Free Cash Flow Margin
+- Free Cash Flow Margin_cf
+- Free Cash Flow Per Share
+- Free Cash Flow Per Share_cf
+- Free Cash Flow_cf
+- Gross Margin
+- Gross Margin %
+- Gross Profit
+- Income Tax Expense
+- Interest & Investment Income
+- Interest Expense
+- Inventory
+- Investing Cash Flow
+- Investment in Securities
+- Land
+- Leasehold Improvements
+- Levered Free Cash Flow
+- Long-Term Debt
+- Long-Term Debt Issued
+- Long-Term Debt Repaid
+- Long-Term Deferred Tax Assets
+- Long-Term Investments
+- Long-Term Leases
+- Machinery
+- Net Cash (Debt)
+- Net Cash Flow
+- Net Cash Growth
+- Net Cash Per Share
+- Net Debt Issued (Repaid)
+- Net Income
+- Net Income Growth
+- Net Income to Common
+- Net Income_cf
+- Net Margin %
+- Operating Cash Flow
+- Operating Cash Flow Growth
+- Operating Expenses
+- Operating Income
+- Operating Margin
+- Operating Margin %
+- Other Current Assets
+- Other Current Liabilities
+- Other Financing Activities
+- Other Investing Activities
+- Other Long-Term Assets
+- Other Long-Term Liabilities
+- Other Non Operating Income (Expenses)
+- Other Operating Activities
+- Other Receivables
+- Pretax Income
+- Profit Margin
+- Property, Plant & Equipment
+- ROIC %
+- Receivables
+- Repurchase of Common Stock
+- Research & Development
+- Retained Earnings
+- Revenue
+- Revenue Growth (YoY)
+- Revenue as Reported
+- Selling, General & Admin
+- Shareholders' Equity
+- Shares Change (YoY)
+- Shares Outstanding (Basic)
+- Shares Outstanding (Diluted)
+- Short-Term Debt
+- Short-Term Debt Issued
+- Short-Term Debt Repaid
+- Short-Term Investments
+- Stock-Based Compensation
+- Tangible Book Value
+- Tangible Book Value Per Share
+- Total Assets
+- Total Common Shares Outstanding
+- Total Current Assets
+- Total Current Liabilities
+- Total Debt
+- Total Debt Issued
+- Total Debt Repaid
+- Total Liabilities
+- Total Liabilities & Equity
+- Unlevered Free Cash Flow
+- Working Capital
+
+--- Diagnostic ---
+[OK] Gross Margin % FOUND. Sample: [47.32528803972297, 47.32528803972297, 47.32528803972297]
+[OK] Operating Margin % FOUND. Sample: [32.38395195779779, 32.38395195779779, 32.38395195779779]
+[OK] ROIC % FOUND. Sample: [83.55347798053711, 83.55347798053711, 83.55347798053711]
+[FAIL] Current Ratio (Fonds de roulement) MISSING
+[FAIL] Defensive Interval (Days) MISSING

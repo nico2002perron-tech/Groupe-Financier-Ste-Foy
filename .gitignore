@@ -13,3 +13,9 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Diagnostic scripts
+diag_*.py
+diag_*.txt
+verify_*.py
+debug_ssl.py
