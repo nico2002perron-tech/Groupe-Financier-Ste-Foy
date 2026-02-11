@@ -641,37 +641,65 @@
         </div>
     </section>
 
-    <!-- AI Radar Strategic Section -->
-    <!-- Featured AI Radar Spotlight (Fun & Pop) -->
-    <!-- AI Radar Strategic Section -->
-    <!-- Featured AI Radar Spotlight (Standardized Card) -->
-    <section class="section-padding gradient-section gradient-light" id="radar-live">
+    <!-- AI Radar Strategic Section - VERSION AMÉLIORÉE -->
+    <section class="featured-radar-section">
         <div class="container">
-            <div class="card fade-in-scroll" style="max-width: 900px; margin: 0 auto;">
-                <div class="radar-header-featured text-center">
+            <div class="radar-spotlight fade-in-scroll">
+                <!-- Header -->
+                <div class="radar-header-featured">
                     <div class="robot-avatar">
                         <i data-lucide="bot" style="width: 32px; height: 32px;"></i>
                     </div>
-                    <h2 class="radar-title-featured">Radar I.A. <span style="color: #0ea5e9;">Live</span></h2>
-                    <p class="radar-subtitle-featured">Analyses instantanées & fun pour rester à l'affût ! 🚀</p>
+                    <div style="flex: 1;">
+                        <h2 class="radar-title-featured">Radar Stratégique I.A.</h2>
+                        <p class="radar-subtitle-featured">Actualités financières analysées en temps réel 📊</p>
+                    </div>
+                    <button id="refresh-ai-news" class="btn-refresh-ai">
+                        <i data-lucide="refresh-cw" style="width:18px; height:18px;"></i>
+                        Actualiser
+                    </button>
                 </div>
 
-                <ul class="radar-list-featured" id="ai-news-list" style="margin: 0 auto;">
-                    <!-- Content injected by JS -->
-                    <li class="radar-item-featured">
-                        <span class="emoji-icon">🤔</span>
-                        <div class="radar-content">
-                            <h4>Initialisation de l'IA...</h4>
-                            <p>Nos robots scannent les marchés pour vous trouver les pépites du jour.</p>
-                        </div>
-                    </li>
-                </ul>
-
-                <div style="margin-top: 25px; text-align: center;">
-                    <button id="refresh-ai-btn"
-                        style="background:none; border:none; color:#94a3b8; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; margin:0 auto; font-size:0.9rem;">
-                        <i data-lucide="refresh-cw" style="width:16px;"></i> Actualiser
+                <!-- Filtres par secteur -->
+                <div class="sector-filters">
+                    <button class="sector-btn active" data-sector="all">
+                        <i data-lucide="globe-2"></i> Globale
                     </button>
+                    <button class="sector-btn" data-sector="health">
+                        <i data-lucide="heart-pulse"></i> Santé
+                    </button>
+                    <button class="sector-btn" data-sector="tech">
+                        <i data-lucide="cpu"></i> Technologie
+                    </button>
+                    <button class="sector-btn" data-sector="crypto">
+                        <i data-lucide="bitcoin"></i> Crypto
+                    </button>
+                    <button class="sector-btn" data-sector="industrial">
+                        <i data-lucide="factory"></i> Industriel
+                    </button>
+                    <button class="sector-btn" data-sector="energy">
+                        <i data-lucide="zap"></i> Énergie
+                    </button>
+                    <button class="sector-btn" data-sector="finance">
+                        <i data-lucide="landmark"></i> Finance
+                    </button>
+                    <button class="sector-btn" data-sector="defensive">
+                        <i data-lucide="shield"></i> Défensif
+                    </button>
+                </div>
+
+                <!-- Liste des nouvelles -->
+                <div id="news-container" class="news-container">
+                    <div class="news-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Analyse des marchés en cours...</p>
+                    </div>
+                </div>
+
+                <!-- Badge "Dernière mise à jour" -->
+                <div class="last-update">
+                    <i data-lucide="clock" style="width:14px; height:14px;"></i>
+                    <span id="last-update-time">Dernière mise à jour : Il y a quelques instants</span>
                 </div>
             </div>
         </div>
@@ -990,6 +1018,7 @@
     <!-- JS -->
     <!-- Chart.js for Custom Live Markets -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/app.js"></script>
     <script src="./js/main.js"></script>
     <script>
         lucide.createIcons();
