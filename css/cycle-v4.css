@@ -823,15 +823,19 @@
 
 /*  Smooth transition into Compas  */
 #cycle-economique {
-    padding-bottom: 50px !important;
-    /* Increased to avoid clipping the shadow/glow */
+    padding-bottom: 24px !important;
+    /* Reduced back to tight spacing */
     overflow: visible !important;
     position: relative;
-    z-index: 5;
+    z-index: 10;
+    /* Ensure it stays above compas */
 }
 
 .cycle-glass {
     margin-bottom: 0;
+    position: relative;
+    z-index: 10;
+    /* Force glass on top */
 }
 
 /* Connector starts closer to the glass card */
