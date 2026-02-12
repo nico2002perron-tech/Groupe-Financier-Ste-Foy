@@ -51,8 +51,11 @@
         <a href="#contact">Nous Joindre</a>
     </div>
 
-    <!-- Hero Section - CENTERED + VIDEO CAROUSEL BG -->
+    <!-- Hero Section - SPLIT LAYOUT + VIDEO CAROUSEL BG -->
     <header class="hero-v2">
+        <!-- Shimmer border -->
+        <div class="hero-shimmer-border"></div>
+
         <!-- Video Background Carousel -->
         <div class="hero-video-wrap">
             <video autoplay muted loop playsinline class="hero-video hero-vid active" id="hero-vid-1">
@@ -67,62 +70,38 @@
         <!-- Floating Particles -->
         <div class="hero-particles" id="hero-particles"></div>
 
-        <!-- Content CENTERED -->
-        <div class="container hero-v2-centered">
-            <!-- Text centered -->
-            <div class="hero-v2-text-center">
-                <span class="hero-v2-label anim-fade-up" style="--delay: 0.1s">
+        <!-- Content SPLIT -->
+        <div class="container hero-v2-split">
+            <!-- Left: Glassmorphism Text Card -->
+            <div class="hero-glass-card anim-fade-up" style="--delay: 0.15s">
+                <span class="hero-v2-label">
                     <i data-lucide="shield-check"></i> Gestion de Patrimoine
                 </span>
-                <div class="hero-accent-line anim-fade-up" style="--delay: 0.2s"></div>
-                <h1 class="anim-fade-up" style="--delay: 0.3s">Votre avenir financier, <br><span
-                        class="text-gradient">notre priorité absolue.</span></h1>
-                <p class="hero-v2-desc anim-fade-up" style="--delay: 0.45s">Depuis plusieurs années, le Groupe Financier
-                    Ste-Foy accompagne les familles
+                <div class="hero-accent-line"></div>
+                <h1>Votre avenir financier, <br><span class="text-gradient">notre priorité absolue.</span></h1>
+                <p class="hero-v2-desc">Depuis plusieurs années, le Groupe Financier Ste-Foy accompagne les familles
                     et les entreprises de
                     Québec avec intégrité, transparence et une expertise reconnue.</p>
-                <div class="hero-v2-actions anim-fade-up" style="--delay: 0.6s">
+                <div class="hero-v2-actions">
                     <a href="#contact" class="btn-hero-primary"><i data-lucide="calendar"></i> Prendre Rendez-vous</a>
                     <a href="#services" class="btn-hero-link">Découvrir nos services <i
                             data-lucide="arrow-right"></i></a>
                 </div>
             </div>
 
-            <!-- Large Team Photo -->
-            <div class="hero-photo-showcase anim-fade-up" style="--delay: 0.55s">
+            <!-- Right: Team Photo -->
+            <div class="hero-photo-side anim-fade-up" style="--delay: 0.4s">
                 <div class="photo-glow"></div>
                 <img src="./assets/team-photo.jpg" alt="L'équipe du Groupe Financier Ste-Foy" class="hero-team-img">
             </div>
         </div>
 
         <!-- Scroll Indicator -->
-        <a href="#stats" class="hero-scroll-indicator">
+        <a href="#mission" class="hero-scroll-indicator">
             <span>Découvrir</span>
             <i data-lucide="chevron-down"></i>
         </a>
     </header>
-
-    <!-- Animated Stats Section -->
-    <section id="stats" class="stats-section bg-light">
-        <div class="container stats-container">
-            <div class="stat-item fade-in-scroll">
-                <h3 class="stat-number" data-target="25">0</h3>
-                <p>Années d'Expérience</p>
-            </div>
-            <div class="stat-item fade-in-scroll">
-                <h3 class="stat-number" data-target="500">0</h3>
-                <p>Familles Accompagnées</p>
-            </div>
-            <div class="stat-item fade-in-scroll">
-                <h3 class="stat-number" data-target="150">0</h3>
-                <p>Millions sous Gestion</p>
-            </div>
-            <div class="stat-item fade-in-scroll">
-                <h3 class="stat-number" data-target="100">0</h3>
-                <p>% Indépendant</p>
-            </div>
-        </div>
-    </section>
 
     <!-- Notre Mission Section (Premium) -->
     <section id="mission" class="section-padding mission-section gradient-section gradient-white-to-light">
@@ -1087,7 +1066,7 @@
                 videos[current].classList.remove('active');
                 current = (current + 1) % videos.length;
                 videos[current].classList.add('active');
-            }, 8000);
+            }, 12000);
         })();
 
         // === FLOATING PARTICLES ===
