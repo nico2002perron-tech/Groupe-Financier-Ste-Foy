@@ -1091,6 +1091,37 @@
     <script>
         lucide.createIcons();
 
+        // === MOBILE MENU TOGGLE ===
+        (function () {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const menuClose = document.querySelector('.menu-close');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const menuLinks = document.querySelectorAll('.mobile-menu a');
+
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            if (menuClose && mobileMenu) {
+                menuClose.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+        })();
+
         // === NAVBAR SCROLL EFFECT ===
         (function () {
             const nav = document.getElementById('main-nav');
