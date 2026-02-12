@@ -747,6 +747,7 @@
         height: 30px !important;
     }
 }
+
 /*  Stronger visual bridge between Cycle & Compas  */
 .compas-connector {
     text-align: center;
@@ -780,10 +781,23 @@
 }
 
 @keyframes connectorDotDrop {
-    0% { top: 0; opacity: 0; }
-    20% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { top: 100%; opacity: 0; }
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
 }
 
 .connector-text {
@@ -822,16 +836,26 @@
 
 .connector-line {
     height: 80px;
-    background: linear-gradient(to bottom, 
-        rgba(0, 119, 182, 0.2) 0%, 
-        rgba(0, 119, 182, 0.08) 100%);
+    background: linear-gradient(to bottom,
+            rgba(0, 119, 182, 0.2) 0%,
+            rgba(0, 119, 182, 0.08) 100%);
 }
 
 /* CTA Note */
 .cycle-cta-note {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    /* Smaller font */
+    color: #94d8e9;
+    /* Lighter blue/gray to blend with bg or use #8ba3b5 for white bg, but this is inside cycle-detail-col? cycle-detail-col is white? No, cycle-detail-col is inside cycle-glass which is white? */
+    /* Wait, the background of cycle-detail-col is likely white or light. */
+    /* If it's light, #94d8e9 might be too light. #64748b was used before. */
+    /* Let's try a very subtle slate-blue. */
     color: #64748b;
-    margin-top: 12px;
-    max-width: 400px;
-    line-height: 1.4;
+    margin-top: 14px;
+    max-width: 380px;
+    line-height: 1.5;
+    text-align: left;
+    /* Aligned with button usually */
+    opacity: 0.8;
+    font-weight: 500;
 }
