@@ -55,12 +55,9 @@
         <a href="#contact">Nous Joindre</a>
     </div>
 
-    <!-- Hero Section - SPLIT LAYOUT + VIDEO CAROUSEL BG -->
+    <!-- ============ HERO ============ -->
     <header class="hero-v2">
-        <!-- Shimmer border -->
-        <div class="hero-shimmer-border"></div>
-
-        <!-- Video Background Carousel -->
+        <!-- Video BG Carousel -->
         <div class="hero-video-wrap">
             <video autoplay muted loop playsinline class="hero-video hero-vid active" id="hero-vid-1">
                 <source src="./assets/hero-bg-2.mp4" type="video/mp4">
@@ -68,40 +65,66 @@
             <video autoplay muted loop playsinline class="hero-video hero-vid" id="hero-vid-2">
                 <source src="./assets/hero-bg.mp4" type="video/mp4">
             </video>
-            <div class="hero-video-overlay"></div>
+            <div class="hero-overlay"></div>
         </div>
 
-        <!-- Floating Particles -->
+        <!-- Particles -->
         <div class="hero-particles" id="hero-particles"></div>
 
-        <!-- Content SPLIT -->
-        <div class="container hero-v2-split">
-            <!-- Left: Glassmorphism Text Card -->
-            <div class="hero-glass-card anim-fade-up" style="--delay: 0.15s">
-                <span class="hero-v2-label">
-                    <i data-lucide="shield-check"></i> Gestion de Patrimoine
-                </span>
-                <div class="hero-accent-line"></div>
-                <h1>Votre avenir financier, <br><span class="text-gradient">notre priorité absolue.</span></h1>
-                <p class="hero-v2-desc">Depuis plusieurs années, le Groupe Financier Ste-Foy accompagne les familles
-                    et les entreprises de
-                    Québec avec intégrité, transparence et une expertise reconnue.</p>
-                <div class="hero-v2-actions">
-                    <a href="#contact" class="btn-hero-primary"><i data-lucide="calendar"></i> Prendre Rendez-vous</a>
-                    <a href="#services" class="btn-hero-link">Découvrir nos services <i
-                            data-lucide="arrow-right"></i></a>
+        <!-- Main Content -->
+        <div class="container hero-content">
+            <div class="hero-left">
+                <div class="hero-badge anim-up" style="--d:.1s">
+                    <span class="badge-dot"></span>
+                    Groupe Financier Ste-Foy
+                </div>
+
+                <h1 class="hero-title anim-up" style="--d:.25s">
+                    Votre avenir financier,<br>
+                    <span class="hero-gradient-text">notre priorité absolue.</span>
+                </h1>
+
+                <p class="hero-sub anim-up" style="--d:.4s">Depuis plusieurs années, nous accompagnons les familles et
+                    les entreprises de Québec avec intégrité, transparence et une expertise reconnue.</p>
+
+                <div class="hero-ctas anim-up" style="--d:.55s">
+                    <a href="#contact" class="hero-btn-primary">
+                        <i data-lucide="calendar"></i>
+                        Prendre Rendez-vous
+                    </a>
+                    <a href="#services" class="hero-btn-ghost">
+                        Nos services
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="hero-trust anim-up" style="--d:.7s">
+                    <div class="trust-item">
+                        <i data-lucide="award"></i>
+                        <span><strong>25+</strong> ans</span>
+                    </div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item">
+                        <i data-lucide="users"></i>
+                        <span><strong>500+</strong> familles</span>
+                    </div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item">
+                        <i data-lucide="shield-check"></i>
+                        <span><strong>100%</strong> indépendant</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right: Team Photo -->
-            <div class="hero-photo-side anim-fade-up" style="--delay: 0.4s">
-                <div class="photo-glow"></div>
-                <img src="./assets/team-photo.jpg" alt="L'équipe du Groupe Financier Ste-Foy" class="hero-team-img">
+            <div class="hero-right anim-up" style="--d:.45s">
+                <div class="hero-img-frame">
+                    <img src="./assets/team-photo.jpg" alt="L'équipe du Groupe Financier Ste-Foy">
+                </div>
             </div>
         </div>
 
-        <!-- Scroll Indicator -->
-        <a href="#mission" class="hero-scroll-indicator">
+        <!-- Scroll -->
+        <a href="#mission" class="hero-scroll">
             <span>Découvrir</span>
             <i data-lucide="chevron-down"></i>
         </a>
