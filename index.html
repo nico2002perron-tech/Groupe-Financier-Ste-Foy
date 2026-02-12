@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="./css/hero-v2.css">
     <link rel="stylesheet" href="./css/navbar.css">
     <link rel="stylesheet" href="./css/cycle-mobile.css">
+    <link rel="stylesheet" href="./css/compas.css">
 </head>
 
 <body>
@@ -451,6 +452,139 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ COMPAS PATRIMONIAL I.A. ============ -->
+    <section id="compas" class="compas-section">
+        <!-- Decorative orbs -->
+        <div class="compas-orb compas-orb-1"></div>
+        <div class="compas-orb compas-orb-2"></div>
+
+        <div class="container" style="position: relative; z-index: 2;">
+            <!-- Header -->
+            <div class="compas-header fade-in-scroll">
+                <span class="compas-badge"><i data-lucide="compass"></i> Outil Interactif</span>
+                <h2>Le Compas Patrimonial <span class="text-gradient">I.A.</span></h2>
+                <p>Simulez l'impact des cycles économiques sur votre patrimoine. Notre intelligence artificielle adapte
+                    ses recommandations en temps réel selon la phase actuelle du marché.</p>
+            </div>
+
+            <!-- Main Glass Container -->
+            <div class="compas-glass fade-in-scroll delay-1">
+                <div class="compas-layout">
+                    <!-- LEFT: Controls -->
+                    <div class="compas-controls">
+                        <!-- Cycle Indicator (linked to radar) -->
+                        <div class="compas-cycle-indicator expansion" id="compas-cycle-indicator">
+                            <span class="cycle-dot"></span>
+                            <div class="cycle-indicator-text">
+                                <strong id="compas-cycle-name">Cycle détecté : Expansion</strong>
+                                <span id="compas-cycle-desc">Phase de croissance économique soutenue</span>
+                            </div>
+                        </div>
+
+                        <!-- Amount Slider -->
+                        <div class="compas-slider-group">
+                            <div class="slider-label">
+                                <span><i data-lucide="wallet" style="width:14px;height:14px;display:inline;"></i>
+                                    Montant à investir</span>
+                                <span class="slider-value" id="compas-amount-value">100 000 $</span>
+                            </div>
+                            <input type="range" class="compas-range" id="compas-amount" min="10000" max="1000000"
+                                step="5000" value="100000">
+                        </div>
+
+                        <!-- Horizon Slider -->
+                        <div class="compas-slider-group">
+                            <div class="slider-label">
+                                <span><i data-lucide="hourglass" style="width:14px;height:14px;display:inline;"></i>
+                                    Horizon de placement</span>
+                                <span class="slider-value" id="compas-horizon-value">15 ans</span>
+                            </div>
+                            <input type="range" class="compas-range" id="compas-horizon" min="3" max="30" step="1"
+                                value="15">
+                        </div>
+
+                        <!-- Risk Profile -->
+                        <div class="compas-profile-group">
+                            <div class="slider-label">
+                                <span><i data-lucide="shield-check" style="width:14px;height:14px;display:inline;"></i>
+                                    Profil de risque</span>
+                            </div>
+                            <div class="profile-buttons">
+                                <button class="profile-btn" data-profile="prudent">🛡️ Prudent</button>
+                                <button class="profile-btn active" data-profile="equilibre">⚖️ Équilibré</button>
+                                <button class="profile-btn" data-profile="croissance">🚀 Croissance</button>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <a href="#contact" class="compas-cta">
+                            <i data-lucide="calendar"></i>
+                            Discuter avec un expert
+                        </a>
+                    </div>
+
+                    <!-- RIGHT: Results -->
+                    <div class="compas-results">
+                        <!-- Projection Chart -->
+                        <div class="compas-projection">
+                            <div class="projection-header">
+                                <h3><i data-lucide="trending-up"></i> Projection de croissance</h3>
+                                <div class="projection-final">
+                                    <div class="big-number" id="compas-big-number">243 685 $</div>
+                                    <div class="subtitle" id="compas-subtitle">Projection sur 15 ans</div>
+                                </div>
+                            </div>
+                            <div class="compas-chart-wrap">
+                                <svg id="compas-svg-chart" viewBox="0 0 600 180" preserveAspectRatio="none"></svg>
+                            </div>
+                        </div>
+
+                        <!-- AI Analysis -->
+                        <div class="compas-ai-box">
+                            <div class="ai-box-header">
+                                <div class="ai-icon-ring">
+                                    <i data-lucide="bot"></i>
+                                </div>
+                                <div>
+                                    <div class="ai-box-title">Analyse du Compas I.A.</div>
+                                    <div class="ai-box-subtitle">Recommandation basée sur le cycle actuel</div>
+                                </div>
+                            </div>
+                            <div id="compas-ai-text">
+                                <span class="ai-emoji">📈</span> <strong>Profil équilibré identifié.</strong> En phase
+                                d'<strong>Expansion</strong>, les marchés offrent un terrain favorable. Ajustez les
+                                paramètres ci-dessus pour obtenir une analyse personnalisée.
+                            </div>
+                        </div>
+
+                        <!-- Stats Row -->
+                        <div class="compas-stats">
+                            <div class="compas-stat">
+                                <div class="stat-value" id="stat-gain">143 685 $</div>
+                                <div class="stat-label">Gain projeté</div>
+                            </div>
+                            <div class="compas-stat">
+                                <div class="stat-value" id="stat-return">7.5%</div>
+                                <div class="stat-label">Rendement annuel</div>
+                            </div>
+                            <div class="compas-stat">
+                                <div class="stat-value" id="stat-alloc">65% Actions</div>
+                                <div class="stat-label">Allocation suggérée</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="compas-disclaimer">
+                    <i data-lucide="info"></i>
+                    Simulation à titre indicatif seulement. Les rendements passés ne garantissent pas les rendements
+                    futurs.
                 </div>
             </div>
         </div>
@@ -1088,6 +1222,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./js/app.js"></script>
     <script src="./js/main.js"></script>
+    <script src="./js/compas.js"></script>
     <script>
         lucide.createIcons();
 

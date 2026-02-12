@@ -1,0 +1,655 @@
+/* =========================================
+   COMPAS PATRIMONIAL I.A.
+   Premium Interactive Simulator
+   Glassmorphism · Animated · Cycle-Aware
+   ========================================= */
+
+/* ── Section ── */
+.compas-section {
+    position: relative;
+    padding: 80px 0 100px;
+    background: linear-gradient(180deg, #e8f4f8 0%, #f0f7fa 40%, #f8fbfd 100%);
+    overflow: hidden;
+}
+
+/* Decorative Orbs */
+.compas-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.compas-orb-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #0077b6, transparent);
+    top: -100px;
+    right: -150px;
+}
+
+.compas-orb-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #00b4d8, transparent);
+    bottom: -100px;
+    left: -100px;
+}
+
+/* ── Header ── */
+.compas-header {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 2;
+}
+
+.compas-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(0, 119, 182, .08), rgba(0, 180, 216, .08));
+    border: 1px solid rgba(0, 119, 182, .12);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #0077b6;
+    margin-bottom: 20px;
+    letter-spacing: 0.03em;
+}
+
+.compas-badge i,
+.compas-badge svg {
+    width: 15px;
+    height: 15px;
+}
+
+.compas-header h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    color: #0a2540;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.compas-header p {
+    font-size: 1.05rem;
+    color: #5a7d95;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ── Main Glass Container ── */
+.compas-glass {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+        0 20px 60px rgba(0, 40, 80, 0.06),
+        0 4px 16px rgba(0, 40, 80, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    padding: 48px;
+    overflow: hidden;
+}
+
+/* Animated border glow */
+.compas-glass::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, transparent 30%, rgba(0, 119, 182, 0.15) 50%, transparent 70%);
+    background-size: 300% 300%;
+    animation: compasGlow 6s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes compasGlow {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* ── Layout ── */
+.compas-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+/* ── Controls Panel (Left) ── */
+.compas-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Cycle Indicator */
+.compas-cycle-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 119, 182, 0.04);
+    border: 1px solid rgba(0, 119, 182, 0.1);
+    border-radius: 14px;
+    padding: 14px 18px;
+    transition: all 0.4s ease;
+}
+
+.compas-cycle-indicator.expansion {
+    border-color: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.04);
+}
+
+.compas-cycle-indicator.surchauffe {
+    border-color: rgba(245, 158, 11, 0.2);
+    background: rgba(245, 158, 11, 0.04);
+}
+
+.compas-cycle-indicator.recession {
+    border-color: rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.04);
+}
+
+.compas-cycle-indicator.reprise {
+    border-color: rgba(59, 130, 246, 0.2);
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.cycle-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #0077b6;
+    animation: cycleDotPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+.compas-cycle-indicator.expansion .cycle-dot {
+    background: #10b981;
+}
+
+.compas-cycle-indicator.surchauffe .cycle-dot {
+    background: #f59e0b;
+}
+
+.compas-cycle-indicator.recession .cycle-dot {
+    background: #ef4444;
+}
+
+.compas-cycle-indicator.reprise .cycle-dot {
+    background: #3b82f6;
+}
+
+@keyframes cycleDotPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 119, 182, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(0, 119, 182, 0);
+    }
+}
+
+.cycle-indicator-text {
+    font-size: 0.82rem;
+    color: #5a7d95;
+    line-height: 1.4;
+}
+
+.cycle-indicator-text strong {
+    display: block;
+    color: #0a2540;
+    font-size: 0.88rem;
+    margin-bottom: 2px;
+}
+
+/* Slider Groups */
+.compas-slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.slider-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #3a5a6e;
+}
+
+.slider-value {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: #0077b6;
+    letter-spacing: -0.02em;
+}
+
+/* Custom Range Slider */
+.compas-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #0077b6 0%, #e2ecf2 0%);
+    outline: none;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.compas-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
+    border: 3px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
+    cursor: grab;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.compas-range::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 18px rgba(0, 119, 182, 0.4);
+}
+
+.compas-range::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+}
+
+/* Risk Profile Toggle */
+.compas-profile-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.profile-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: 1.5px solid rgba(0, 119, 182, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    color: #5a7d95;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.profile-btn:hover {
+    border-color: rgba(0, 119, 182, 0.25);
+    background: rgba(0, 119, 182, 0.04);
+}
+
+.profile-btn.active {
+    background: linear-gradient(135deg, #0077b6, #00a8cc);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(0, 119, 182, 0.25);
+}
+
+/* CTA */
+.compas-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #0077b6, #00a8cc);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(0, 119, 182, 0.2);
+    text-decoration: none;
+}
+
+.compas-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 119, 182, 0.3);
+}
+
+.compas-cta i,
+.compas-cta svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ── Results Panel (Right) ── */
+.compas-results {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* Growth Projection */
+.compas-projection {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 119, 182, 0.08);
+    border-radius: 18px;
+    padding: 28px;
+}
+
+.projection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.projection-header h3 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #0a2540;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.projection-header h3 i,
+.projection-header h3 svg {
+    width: 16px;
+    height: 16px;
+    color: #0077b6;
+}
+
+.projection-final {
+    text-align: right;
+}
+
+.projection-final .big-number {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: #0077b6;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+.projection-final .subtitle {
+    font-size: 0.75rem;
+    color: #8ba3b5;
+    margin-top: 2px;
+}
+
+/* SVG Chart */
+.compas-chart-wrap {
+    position: relative;
+    height: 200px;
+    width: 100%;
+}
+
+.compas-chart-wrap svg {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-line {
+    fill: none;
+    stroke: url(#compas-gradient);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 2px 4px rgba(0, 119, 182, 0.2));
+    transition: d 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-area {
+    fill: url(#compas-area-gradient);
+    opacity: 0.3;
+    transition: d 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-gridline {
+    stroke: rgba(0, 119, 182, 0.06);
+    stroke-width: 1;
+    stroke-dasharray: 4, 4;
+}
+
+.chart-label {
+    font-size: 11px;
+    fill: #8ba3b5;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Year markers at bottom of chart */
+.chart-year-label {
+    font-size: 10px;
+    fill: #8ba3b5;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    text-anchor: middle;
+}
+
+/* ── AI Analysis Box ── */
+.compas-ai-box {
+    position: relative;
+    background: linear-gradient(135deg, rgba(10, 37, 64, 0.03), rgba(0, 119, 182, 0.04));
+    border: 1px solid rgba(0, 119, 182, 0.1);
+    border-radius: 18px;
+    padding: 28px;
+    overflow: hidden;
+}
+
+/* Scanner sweep effect */
+.compas-ai-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 119, 182, 0.06), transparent);
+    animation: compasScanner 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes compasScanner {
+    0% {
+        left: -50%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+.ai-box-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.ai-icon-ring {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    animation: aiBobbing 3s ease-in-out infinite;
+}
+
+@keyframes aiBobbing {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.ai-icon-ring i,
+.ai-icon-ring svg {
+    width: 18px;
+    height: 18px;
+    color: #fff;
+}
+
+.ai-box-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0a2540;
+}
+
+.ai-box-subtitle {
+    font-size: 0.72rem;
+    color: #8ba3b5;
+}
+
+#compas-ai-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #2c4a5e;
+    min-height: 80px;
+    transition: opacity 0.3s ease;
+}
+
+#compas-ai-text strong {
+    color: #0077b6;
+}
+
+#compas-ai-text .ai-emoji {
+    font-size: 1.1rem;
+    margin-right: 4px;
+}
+
+/* Stats Row */
+.compas-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.compas-stat {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 119, 182, 0.06);
+    border-radius: 14px;
+    padding: 16px 12px;
+}
+
+.compas-stat .stat-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0077b6;
+    margin-bottom: 4px;
+}
+
+.compas-stat .stat-label {
+    font-size: 0.72rem;
+    color: #8ba3b5;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ── Disclaimer ── */
+.compas-disclaimer {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #a0b4c4;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.compas-disclaimer i,
+.compas-disclaimer svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 968px) {
+    .compas-section {
+        padding: 60px 0 80px;
+    }
+
+    .compas-glass {
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+
+    .compas-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .compas-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .compas-chart-wrap {
+        height: 170px;
+    }
+}
+
+@media (max-width: 480px) {
+    .compas-glass {
+        padding: 24px 16px;
+    }
+
+    .profile-buttons {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .compas-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .projection-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .projection-final {
+        text-align: left;
+    }
+}
