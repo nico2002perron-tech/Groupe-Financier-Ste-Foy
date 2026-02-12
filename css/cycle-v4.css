@@ -1,0 +1,749 @@
+/* =========================================
+   CYCLE ÉCONOMIQUE V4 — SPLIT LAYOUT
+   Radar + Detail Panel · Glass · Sharp
+   ========================================= */
+
+/* ── Glass Container (matches compas-glass) ── */
+.cycle-glass {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+        0 20px 60px rgba(0, 40, 80, 0.06),
+        0 4px 16px rgba(0, 40, 80, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    padding: 48px;
+    overflow: hidden;
+}
+
+/* Animated border glow */
+.cycle-glass::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, transparent 30%, rgba(0, 119, 182, 0.15) 50%, transparent 70%);
+    background-size: 300% 300%;
+    animation: compasGlow 6s ease-in-out infinite;
+    z-index: -1;
+}
+
+/* ── Split Layout ── */
+.cycle-split-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+/* ── LEFT: Radar Column ── */
+.cycle-radar-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cycle-radar-col .radar-wrapper {
+    width: 380px !important;
+    height: 380px !important;
+}
+
+.cycle-radar-col .radar-wrapper::after {
+    width: 400px !important;
+    height: 400px !important;
+}
+
+.cycle-radar-col .radar-core {
+    width: 380px !important;
+    height: 380px !important;
+}
+
+.cycle-radar-col .radar-center-glass {
+    width: 160px !important;
+    height: 160px !important;
+}
+
+.cycle-radar-col .center-content h3 {
+    font-size: 1rem !important;
+}
+
+.cycle-radar-col .center-content p {
+    font-size: 0.68rem !important;
+    line-height: 1.3 !important;
+}
+
+.cycle-radar-col .icon-bubble {
+    width: 46px !important;
+    height: 46px !important;
+}
+
+.cycle-radar-col .icon-bubble i,
+.cycle-radar-col .icon-bubble svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.cycle-radar-col .quadrant-label {
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* ── RIGHT: Detail Panel ── */
+.cycle-detail-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Phase Header */
+.phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.phase-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #fff;
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
+    box-shadow: 0 4px 14px rgba(0, 119, 182, 0.25);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.phase-icon-wrap i,
+.phase-icon-wrap svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* Phase colors */
+.phase-icon-wrap.phase-expansion {
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
+    box-shadow: 0 4px 14px rgba(0, 119, 182, 0.25);
+}
+
+.phase-icon-wrap.phase-surchauffe {
+    background: linear-gradient(135deg, #e67e22, #f59e0b);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+}
+
+.phase-icon-wrap.phase-recession {
+    background: linear-gradient(135deg, #7b2cbf, #9b59b6);
+    box-shadow: 0 4px 14px rgba(123, 44, 191, 0.25);
+}
+
+.phase-icon-wrap.phase-reprise {
+    background: linear-gradient(135deg, #006b5f, #10b981);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+}
+
+.phase-title-group {
+    flex: 1;
+}
+
+.phase-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0a2540;
+    margin: 0 0 2px;
+    line-height: 1.2;
+    transition: color 0.4s ease;
+}
+
+/* Phase name color variants */
+.phase-name.color-expansion {
+    color: #0077b6;
+}
+
+.phase-name.color-surchauffe {
+    color: #d35400;
+}
+
+.phase-name.color-recession {
+    color: #7b2cbf;
+}
+
+.phase-name.color-reprise {
+    color: #006b5f;
+}
+
+.phase-strategy {
+    font-size: 0.8rem;
+    color: #8ba3b5;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Description */
+.phase-description {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #3a5a6e;
+    margin: 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 119, 182, 0.06);
+    transition: opacity 0.3s ease;
+}
+
+/* ── Allocation Bars ── */
+.alloc-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.alloc-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #0a2540;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.alloc-title i,
+.alloc-title svg {
+    color: #0077b6;
+}
+
+.alloc-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.alloc-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 42px;
+    align-items: center;
+    gap: 12px;
+}
+
+.alloc-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #3a5a6e;
+}
+
+.alloc-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.alloc-dot-actions {
+    background: #0077b6;
+}
+
+.alloc-dot-obligations {
+    background: #00b4d8;
+}
+
+.alloc-dot-alternatif {
+    background: #48cae4;
+}
+
+.alloc-track {
+    height: 8px;
+    background: rgba(0, 119, 182, 0.06);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.alloc-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+}
+
+.alloc-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+    border-radius: 0 8px 8px 0;
+}
+
+.alloc-fill-actions {
+    background: linear-gradient(90deg, #0077b6, #0096c7);
+}
+
+.alloc-fill-obligations {
+    background: linear-gradient(90deg, #00b4d8, #48cae4);
+}
+
+.alloc-fill-alternatif {
+    background: linear-gradient(90deg, #48cae4, #90e0ef);
+}
+
+/* Surchauffe variant */
+.alloc-section.alloc-surchauffe .alloc-dot-actions {
+    background: #e67e22;
+}
+
+.alloc-section.alloc-surchauffe .alloc-dot-obligations {
+    background: #f59e0b;
+}
+
+.alloc-section.alloc-surchauffe .alloc-dot-alternatif {
+    background: #fbbf24;
+}
+
+.alloc-section.alloc-surchauffe .alloc-fill-actions {
+    background: linear-gradient(90deg, #e67e22, #f59e0b);
+}
+
+.alloc-section.alloc-surchauffe .alloc-fill-obligations {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.alloc-section.alloc-surchauffe .alloc-fill-alternatif {
+    background: linear-gradient(90deg, #fbbf24, #fde68a);
+}
+
+/* Recession variant */
+.alloc-section.alloc-recession .alloc-dot-actions {
+    background: #7b2cbf;
+}
+
+.alloc-section.alloc-recession .alloc-dot-obligations {
+    background: #9b59b6;
+}
+
+.alloc-section.alloc-recession .alloc-dot-alternatif {
+    background: #c084fc;
+}
+
+.alloc-section.alloc-recession .alloc-fill-actions {
+    background: linear-gradient(90deg, #7b2cbf, #9b59b6);
+}
+
+.alloc-section.alloc-recession .alloc-fill-obligations {
+    background: linear-gradient(90deg, #9b59b6, #c084fc);
+}
+
+.alloc-section.alloc-recession .alloc-fill-alternatif {
+    background: linear-gradient(90deg, #c084fc, #e9d5ff);
+}
+
+/* Reprise variant */
+.alloc-section.alloc-reprise .alloc-dot-actions {
+    background: #006b5f;
+}
+
+.alloc-section.alloc-reprise .alloc-dot-obligations {
+    background: #10b981;
+}
+
+.alloc-section.alloc-reprise .alloc-dot-alternatif {
+    background: #6ee7b7;
+}
+
+.alloc-section.alloc-reprise .alloc-fill-actions {
+    background: linear-gradient(90deg, #006b5f, #10b981);
+}
+
+.alloc-section.alloc-reprise .alloc-fill-obligations {
+    background: linear-gradient(90deg, #10b981, #6ee7b7);
+}
+
+.alloc-section.alloc-reprise .alloc-fill-alternatif {
+    background: linear-gradient(90deg, #6ee7b7, #d1fae5);
+}
+
+.alloc-pct {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #0a2540;
+    text-align: right;
+    transition: all 0.3s ease;
+}
+
+/* ── Indicator Chips ── */
+.phase-indicators {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.indicator-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 119, 182, 0.08);
+    border-radius: 10px;
+    font-size: 0.78rem;
+    color: #3a5a6e;
+    transition: all 0.3s ease;
+}
+
+.indicator-chip i,
+.indicator-chip svg {
+    color: #0077b6;
+    flex-shrink: 0;
+}
+
+.indicator-chip strong {
+    color: #0a2540;
+}
+
+/* Chip color variants */
+.indicator-chip.chip-expansion i,
+.indicator-chip.chip-expansion svg {
+    color: #0077b6;
+}
+
+.indicator-chip.chip-surchauffe i,
+.indicator-chip.chip-surchauffe svg {
+    color: #e67e22;
+}
+
+.indicator-chip.chip-recession i,
+.indicator-chip.chip-recession svg {
+    color: #7b2cbf;
+}
+
+.indicator-chip.chip-reprise i,
+.indicator-chip.chip-reprise svg {
+    color: #006b5f;
+}
+
+/* ── CTA Button ── */
+.cycle-to-compas-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #0077b6, #00a8cc);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(0, 119, 182, 0.2);
+    text-decoration: none;
+    width: fit-content;
+}
+
+.cycle-to-compas-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 119, 182, 0.3);
+}
+
+/* Pulse animation on phase change */
+.cycle-to-compas-btn.pulse-hint {
+    animation: ctaPulse 0.6s ease;
+}
+
+@keyframes ctaPulse {
+    0% {
+        box-shadow: 0 4px 18px rgba(0, 119, 182, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 4px 28px rgba(0, 119, 182, 0.45);
+        transform: scale(1.03);
+    }
+
+    100% {
+        box-shadow: 0 4px 18px rgba(0, 119, 182, 0.2);
+        transform: scale(1);
+    }
+}
+
+/* ── Detail Panel Entrance Animation ── */
+.cycle-detail-col .phase-header,
+.cycle-detail-col .phase-description,
+.cycle-detail-col .alloc-section,
+.cycle-detail-col .phase-indicators,
+.cycle-detail-col .cycle-to-compas-btn {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.cycle-detail-col.switching .phase-header,
+.cycle-detail-col.switching .phase-description,
+.cycle-detail-col.switching .alloc-section,
+.cycle-detail-col.switching .phase-indicators,
+.cycle-detail-col.switching .cycle-to-compas-btn {
+    opacity: 0;
+    transform: translateX(12px);
+}
+
+/* =========================================
+   OVERRIDE — Remove old container card
+   ========================================= */
+#cycle-economique .container {
+    background: transparent !important;
+    padding: 0 20px !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0 !important;
+    transform: none !important;
+}
+
+#cycle-economique .container::before,
+#cycle-economique .container::after {
+    display: none !important;
+}
+
+#cycle-economique .container:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Hide old inner compas-glass wrapper */
+#cycle-economique .cycle-layout-v2>.compas-glass {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+#cycle-economique .cycle-layout-v2>.compas-glass::before {
+    display: none;
+}
+
+/* =========================================
+   RESPONSIVE — TABLET
+   ========================================= */
+@media (max-width: 968px) {
+    .cycle-glass {
+        padding: 32px 24px;
+        border-radius: 20px;
+    }
+
+    .cycle-split-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .cycle-radar-col {
+        order: 1;
+    }
+
+    .cycle-detail-col {
+        order: 2;
+    }
+
+    .cycle-radar-col .radar-wrapper {
+        width: 320px !important;
+        height: 320px !important;
+    }
+
+    .cycle-radar-col .radar-wrapper::after {
+        width: 340px !important;
+        height: 340px !important;
+    }
+
+    .cycle-radar-col .radar-core {
+        width: 320px !important;
+        height: 320px !important;
+    }
+
+    .cycle-radar-col .radar-center-glass {
+        width: 130px !important;
+        height: 130px !important;
+    }
+
+    .cycle-radar-col .center-content h3 {
+        font-size: 0.88rem !important;
+    }
+
+    .cycle-radar-col .icon-bubble {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .cycle-radar-col .icon-bubble i,
+    .cycle-radar-col .icon-bubble svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .alloc-row {
+        grid-template-columns: 100px 1fr 38px;
+        gap: 10px;
+    }
+
+    .phase-name {
+        font-size: 1.3rem;
+    }
+}
+
+/* =========================================
+   RESPONSIVE — MOBILE
+   ========================================= */
+@media (max-width: 600px) {
+    .cycle-glass {
+        padding: 24px 16px;
+        border-radius: 18px;
+    }
+
+    .cycle-split-layout {
+        gap: 24px;
+    }
+
+    .cycle-radar-col .radar-wrapper {
+        width: 260px !important;
+        height: 260px !important;
+    }
+
+    .cycle-radar-col .radar-wrapper::after {
+        width: 275px !important;
+        height: 275px !important;
+    }
+
+    .cycle-radar-col .radar-core {
+        width: 260px !important;
+        height: 260px !important;
+    }
+
+    .cycle-radar-col .radar-center-glass {
+        width: 105px !important;
+        height: 105px !important;
+        padding: 12px !important;
+    }
+
+    .cycle-radar-col .center-content h3 {
+        font-size: 0.75rem !important;
+    }
+
+    .cycle-radar-col .center-content p {
+        display: none !important;
+    }
+
+    .cycle-radar-col .icon-bubble {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    .cycle-radar-col .icon-bubble i,
+    .cycle-radar-col .icon-bubble svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .cycle-radar-col .quadrant-label {
+        font-size: 0.62rem !important;
+    }
+
+    /* Detail panel */
+    .phase-icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+
+    .phase-icon-wrap i,
+    .phase-icon-wrap svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .phase-name {
+        font-size: 1.15rem;
+    }
+
+    .phase-strategy {
+        font-size: 0.72rem;
+    }
+
+    .phase-description {
+        font-size: 0.88rem;
+    }
+
+    .alloc-row {
+        grid-template-columns: 90px 1fr 36px;
+        gap: 8px;
+    }
+
+    .alloc-label {
+        font-size: 0.75rem;
+    }
+
+    .alloc-pct {
+        font-size: 0.8rem;
+    }
+
+    .phase-indicators {
+        gap: 8px;
+    }
+
+    .indicator-chip {
+        padding: 6px 10px;
+        font-size: 0.72rem;
+    }
+
+    .cycle-to-compas-btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.84rem;
+        padding: 12px 20px;
+    }
+
+    /* Floating orbs — hide */
+    .floating-orb {
+        display: none !important;
+    }
+}
+
+@media (max-width: 380px) {
+    .cycle-radar-col .radar-wrapper {
+        width: 230px !important;
+        height: 230px !important;
+    }
+
+    .cycle-radar-col .radar-wrapper::after {
+        width: 245px !important;
+        height: 245px !important;
+    }
+
+    .cycle-radar-col .radar-core {
+        width: 230px !important;
+        height: 230px !important;
+    }
+
+    .cycle-radar-col .radar-center-glass {
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    .cycle-radar-col .icon-bubble {
+        width: 30px !important;
+        height: 30px !important;
+    }
+}

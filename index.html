@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="./css/ai-radar.css">
     <link rel="stylesheet" href="./css/hero-v2.css">
     <link rel="stylesheet" href="./css/navbar.css">
-    <link rel="stylesheet" href="./css/cycle-mobile.css">
+
+    <link rel="stylesheet" href="./css/cycle-v4.css">
     <link rel="stylesheet" href="./css/compas.css">
 </head>
 
@@ -390,65 +391,149 @@
         </div>
     </div>
 
-    <!-- Cycle Économique Interactive Section V3 (PREMIUM) -->
+    <!-- Cycle Économique Interactive Section V4 (REFONTE) -->
     <section id="cycle-economique" class="section-padding gradient-section gradient-light-to-cyan">
 
+        <!-- Floating Decorative Orbs -->
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
 
-        <!-- Premium Section Header -->
-        <div class="cycle-header fade-in-scroll">
-            <span class="section-badge"><i data-lucide="activity"></i> Notre Approche</span>
-            <h2>Une Vision Adaptée aux Cycles</h2>
-            <p class="cycle-subtitle">Un modèle de gestion proactif qui s'ajuste en temps réel. <br>Cliquez sur
-                chaque phase pour découvrir notre stratégie.</p>
-        </div>
+        <div class="container" style="position: relative; z-index: 2;">
+            <!-- Premium Section Header -->
+            <div class="cycle-header fade-in-scroll">
+                <span class="section-badge"><i data-lucide="activity"></i> Notre Approche</span>
+                <h2>Une Vision Adaptée aux <span class="text-gradient">Cycles</span></h2>
+                <p class="cycle-subtitle">Un modèle de gestion proactif qui s'ajuste selon les phases
+                    économiques.<br>Cliquez sur chaque phase pour découvrir notre stratégie.</p>
+            </div>
 
-        <div class="cycle-layout-v2 fade-in-scroll delay-1">
-            <div class="radar-wrapper">
+            <!-- Main Glass Card -->
+            <div class="cycle-glass fade-in-scroll delay-1">
+                <div class="cycle-split-layout">
 
-                <!-- Core Radar (No Orbit) -->
-                <div class="radar-core">
-                    <!-- Top Right: Expansion -->
-                    <div class="radar-quadrant active" data-phase="expansion">
-                        <div class="quadrant-content">
-                            <div class="icon-bubble"><i data-lucide="trending-up"></i></div>
-                            <span class="quadrant-label">Expansion</span>
+                    <!-- LEFT: Radar Circle -->
+                    <div class="cycle-radar-col">
+                        <div class="radar-wrapper">
+                            <div class="radar-core">
+                                <div class="radar-quadrant active" data-phase="expansion">
+                                    <div class="quadrant-content">
+                                        <div class="icon-bubble"><i data-lucide="trending-up"></i></div>
+                                        <span class="quadrant-label">Expansion</span>
+                                    </div>
+                                </div>
+
+                                <div class="radar-quadrant" data-phase="surchauffe">
+                                    <div class="quadrant-content">
+                                        <div class="icon-bubble warning"><i data-lucide="flame"></i></div>
+                                        <span class="quadrant-label">Surchauffe</span>
+                                    </div>
+                                </div>
+
+                                <div class="radar-quadrant" data-phase="recession">
+                                    <div class="quadrant-content">
+                                        <div class="icon-bubble dark"><i data-lucide="shield"></i></div>
+                                        <span class="quadrant-label">Récession</span>
+                                    </div>
+                                </div>
+
+                                <div class="radar-quadrant" data-phase="reprise">
+                                    <div class="quadrant-content">
+                                        <div class="icon-bubble success"><i data-lucide="sunrise"></i></div>
+                                        <span class="quadrant-label">Reprise</span>
+                                    </div>
+                                </div>
+
+                                <div class="radar-center-glass">
+                                    <div class="center-content">
+                                        <h3 id="cycle-title" class="text-gradient-expansion">Expansion</h3>
+                                        <p id="cycle-desc-mini">Cliquez une phase</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Bottom Right: Surchauffe -->
-                    <div class="radar-quadrant" data-phase="surchauffe">
-                        <div class="quadrant-content">
-                            <div class="icon-bubble warning"><i data-lucide="flame"></i></div>
-                            <span class="quadrant-label">Surchauffe</span>
-                        </div>
-                    </div>
+                    <!-- RIGHT: Detail Panel -->
+                    <div class="cycle-detail-col" id="cycle-detail-panel">
 
-                    <!-- Bottom Left: Récession -->
-                    <div class="radar-quadrant" data-phase="recession">
-                        <div class="quadrant-content">
-                            <div class="icon-bubble dark"><i data-lucide="shield"></i></div>
-                            <span class="quadrant-label">Récession</span>
+                        <div class="phase-header" id="phase-header">
+                            <div class="phase-icon-wrap" id="phase-icon-wrap">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                            <div class="phase-title-group">
+                                <h3 class="phase-name" id="phase-name">Expansion</h3>
+                                <span class="phase-strategy" id="phase-strategy">Stratégie : croissance contrôlée</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Top Left: Reprise -->
-                    <div class="radar-quadrant" data-phase="reprise">
-                        <div class="quadrant-content">
-                            <div class="icon-bubble success"><i data-lucide="sunrise"></i></div>
-                            <span class="quadrant-label">Reprise</span>
-                        </div>
-                    </div>
+                        <p class="phase-description" id="phase-description">
+                            Les marchés progressent, l'économie croît et la confiance est élevée. Nous maximisons
+                            l'exposition aux actions tout en surveillant les signaux d'inflation pour anticiper les
+                            retournements.
+                        </p>
 
-                    <!-- Central Info Hub (Glass) -->
-                    <div class="radar-center-glass">
-                        <div class="center-content">
-                            <h3 id="cycle-title" class="text-gradient-expansion">Expansion</h3>
-                            <p id="cycle-desc">Positionnement équilibré pour capturer la croissance.</p>
+                        <div class="alloc-section">
+                            <div class="alloc-title">
+                                <i data-lucide="pie-chart" style="width:14px;height:14px;"></i>
+                                Allocation suggérée
+                            </div>
+                            <div class="alloc-bars">
+                                <div class="alloc-row">
+                                    <div class="alloc-label">
+                                        <span class="alloc-dot alloc-dot-actions"></span>
+                                        Actions
+                                    </div>
+                                    <div class="alloc-track">
+                                        <div class="alloc-fill alloc-fill-actions" id="alloc-bar-actions"
+                                            style="width: 65%"></div>
+                                    </div>
+                                    <span class="alloc-pct" id="alloc-pct-actions">65%</span>
+                                </div>
+                                <div class="alloc-row">
+                                    <div class="alloc-label">
+                                        <span class="alloc-dot alloc-dot-obligations"></span>
+                                        Obligations
+                                    </div>
+                                    <div class="alloc-track">
+                                        <div class="alloc-fill alloc-fill-obligations" id="alloc-bar-obligations"
+                                            style="width: 20%"></div>
+                                    </div>
+                                    <span class="alloc-pct" id="alloc-pct-obligations">20%</span>
+                                </div>
+                                <div class="alloc-row">
+                                    <div class="alloc-label">
+                                        <span class="alloc-dot alloc-dot-alternatif"></span>
+                                        Alternatif
+                                    </div>
+                                    <div class="alloc-track">
+                                        <div class="alloc-fill alloc-fill-alternatif" id="alloc-bar-alternatif"
+                                            style="width: 15%"></div>
+                                    </div>
+                                    <span class="alloc-pct" id="alloc-pct-alternatif">15%</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="phase-indicators">
+                            <div class="indicator-chip" id="indicator-volatility">
+                                <i data-lucide="activity" style="width:14px;height:14px;"></i>
+                                <span>Volatilité : <strong>modérée</strong></span>
+                            </div>
+                            <div class="indicator-chip" id="indicator-horizon">
+                                <i data-lucide="clock" style="width:14px;height:14px;"></i>
+                                <span>Horizon : <strong>moyen terme</strong></span>
+                            </div>
+                        </div>
+
+                        <a href="#compas" class="cycle-to-compas-btn" id="cycle-to-compas-btn">
+                            <i data-lucide="compass" style="width:16px;height:16px;"></i>
+                            Simuler l'impact sur mon portefeuille
+                            <i data-lucide="arrow-down" style="width:14px;height:14px;"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 
@@ -1345,6 +1430,7 @@
     <script src="./js/app.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/compas.js"></script>
+    <script src="./js/cycle-v4.js"></script>
     <script>
         lucide.createIcons();
 
