@@ -747,3 +747,60 @@
         height: 30px !important;
     }
 }
+/*  Stronger visual bridge between Cycle & Compas  */
+.compas-connector {
+    text-align: center;
+    padding: 0 0 10px;
+    position: relative;
+    z-index: 2;
+    margin-top: -20px;
+}
+
+.connector-line {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(0, 119, 182, 0.25), rgba(0, 119, 182, 0.08));
+    margin: 0 auto 14px;
+    border-radius: 2px;
+    position: relative;
+}
+
+/* Animated dot traveling down the line */
+.connector-line::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #0077b6;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: connectorDotDrop 2.5s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(0, 119, 182, 0.4);
+}
+
+@keyframes connectorDotDrop {
+    0% { top: 0; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.connector-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #8ba3b5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.connector-text i,
+.connector-text svg {
+    width: 14px;
+    height: 14px;
+    color: #0077b6;
+}
