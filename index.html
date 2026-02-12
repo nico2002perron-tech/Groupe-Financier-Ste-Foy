@@ -457,13 +457,20 @@
         </div>
     </section>
 
-    <!-- ============ COMPAS PATRIMONIAL I.A. ============ -->
+    <!-- ============ COMPAS PATRIMONIAL I.A. (V2) ============ -->
     <section id="compas" class="compas-section">
         <!-- Decorative orbs -->
         <div class="compas-orb compas-orb-1"></div>
         <div class="compas-orb compas-orb-2"></div>
 
         <div class="container" style="position: relative; z-index: 2;">
+            <!-- Visual Connector -->
+            <div class="compas-connector fade-in-scroll">
+                <div class="connector-line"></div>
+                <div class="connector-text"><i data-lucide="arrow-down"></i> Appliquez le cycle à votre portefeuille
+                </div>
+            </div>
+
             <!-- Header -->
             <div class="compas-header fade-in-scroll">
                 <span class="compas-badge"><i data-lucide="compass"></i> Outil Interactif</span>
@@ -481,8 +488,10 @@
                         <div class="compas-cycle-indicator expansion" id="compas-cycle-indicator">
                             <span class="cycle-dot"></span>
                             <div class="cycle-indicator-text">
-                                <strong id="compas-cycle-name">Cycle détecté : Expansion</strong>
+                                <strong id="compas-cycle-name">Cycle actif : Expansion</strong>
                                 <span id="compas-cycle-desc">Phase de croissance économique soutenue</span>
+                                <span class="cycle-hint"><i data-lucide="arrow-up"></i> Cliquez pour changer le cycle
+                                    ci-dessus</span>
                             </div>
                         </div>
 
@@ -490,7 +499,11 @@
                         <div class="compas-slider-group">
                             <div class="slider-label">
                                 <span><i data-lucide="wallet" style="width:14px;height:14px;display:inline;"></i>
-                                    Montant à investir</span>
+                                    Montant à investir
+                                    <span class="tooltip-trigger">?<span class="tooltip-bubble">Le montant initial est
+                                            la base sur laquelle les intérêts composés travaillent. Plus il est élevé,
+                                            plus l'effet de levier est puissant sur le long terme.</span></span>
+                                </span>
                                 <span class="slider-value" id="compas-amount-value">100 000 $</span>
                             </div>
                             <input type="range" class="compas-range" id="compas-amount" min="10000" max="1000000"
@@ -501,7 +514,11 @@
                         <div class="compas-slider-group">
                             <div class="slider-label">
                                 <span><i data-lucide="hourglass" style="width:14px;height:14px;display:inline;"></i>
-                                    Horizon de placement</span>
+                                    Horizon de placement
+                                    <span class="tooltip-trigger">?<span class="tooltip-bubble">L'horizon est souvent
+                                            plus important que le montant. 10 ans de plus peuvent doubler votre
+                                            projection grâce à l'effet des intérêts composés.</span></span>
+                                </span>
                                 <span class="slider-value" id="compas-horizon-value">15 ans</span>
                             </div>
                             <input type="range" class="compas-range" id="compas-horizon" min="3" max="30" step="1"
@@ -512,7 +529,11 @@
                         <div class="compas-profile-group">
                             <div class="slider-label">
                                 <span><i data-lucide="shield-check" style="width:14px;height:14px;display:inline;"></i>
-                                    Profil de risque</span>
+                                    Profil de risque
+                                    <span class="tooltip-trigger">?<span class="tooltip-bubble">Votre profil détermine
+                                            le ratio actions/obligations. Un profil Croissance vise plus haut mais
+                                            accepte plus de turbulence en cours de route.</span></span>
+                                </span>
                             </div>
                             <div class="profile-buttons">
                                 <button class="profile-btn" data-profile="prudent">🛡️ Prudent</button>
@@ -520,6 +541,12 @@
                                 <button class="profile-btn" data-profile="croissance">🚀 Croissance</button>
                             </div>
                         </div>
+
+                        <!-- Discover Profile Button (V2) -->
+                        <button class="compas-discover-btn" id="compas-discover-btn">
+                            <i data-lucide="help-circle"></i>
+                            Quel est mon profil de risque?
+                        </button>
 
                         <!-- CTA -->
                         <a href="#contact" class="compas-cta">
@@ -589,6 +616,103 @@
             </div>
         </div>
     </section>
+
+    <!-- ============ QUIZ MODAL (V2) ============ -->
+    <div class="quiz-overlay" id="quiz-overlay">
+        <div class="quiz-modal">
+            <button class="quiz-close" id="quiz-close"><i data-lucide="x"></i></button>
+
+            <!-- Progress -->
+            <div class="quiz-progress">
+                <div class="progress-info">
+                    <span id="quiz-progress-text">Question 1 / 5</span>
+                    <span>Profil de risque</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress-fill" style="width:20%"></div>
+                </div>
+            </div>
+
+            <!-- Q1 -->
+            <div class="quiz-card active" data-question="0">
+                <h3>Quel est votre objectif principal?</h3>
+                <p class="quiz-subtitle">Choisissez ce qui vous représente le mieux.</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-score="1"><span class="option-emoji">🛡️</span> Protéger ce que j'ai
+                    </div>
+                    <div class="quiz-option" data-score="1"><span class="option-emoji">🏠</span> Acheter une maison
+                    </div>
+                    <div class="quiz-option" data-score="2"><span class="option-emoji">🏖️</span> Préparer ma retraite
+                    </div>
+                    <div class="quiz-option" data-score="3"><span class="option-emoji">📈</span> Faire croître mon
+                        capital</div>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-card" data-question="1">
+                <h3>Que feriez-vous si vos placements perdaient 20% en un mois?</h3>
+                <p class="quiz-subtitle">Soyez honnête, il n'y a pas de mauvaise réponse.</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-score="1"><span class="option-emoji">😰</span> Je vends tout
+                        immédiatement</div>
+                    <div class="quiz-option" data-score="2"><span class="option-emoji">⏳</span> J'attends sans rien
+                        faire</div>
+                    <div class="quiz-option" data-score="3"><span class="option-emoji">💪</span> J'investis davantage,
+                        c'est une opportunité</div>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-card" data-question="2">
+                <h3>Quel est votre horizon de temps?</h3>
+                <p class="quiz-subtitle">Quand aurez-vous besoin de cet argent?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-score="1"><span class="option-emoji">⏱️</span> Moins de 3 ans</div>
+                    <div class="quiz-option" data-score="2"><span class="option-emoji">📅</span> 3 à 10 ans</div>
+                    <div class="quiz-option" data-score="2"><span class="option-emoji">🗓️</span> 10 à 20 ans</div>
+                    <div class="quiz-option" data-score="3"><span class="option-emoji">♾️</span> Plus de 20 ans</div>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="quiz-card" data-question="3">
+                <h3>Comment décririez-vous vos connaissances financières?</h3>
+                <p class="quiz-subtitle">Votre expérience avec les investissements.</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-score="1"><span class="option-emoji">🌱</span> Débutant — je commence
+                        à peine</div>
+                    <div class="quiz-option" data-score="2"><span class="option-emoji">📊</span> Intermédiaire — je
+                        connais les bases</div>
+                    <div class="quiz-option" data-score="3"><span class="option-emoji">🎯</span> Avancé — je suis très à
+                        l'aise</div>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="quiz-card" data-question="4">
+                <h3>Quelle part de votre épargne êtes-vous prêt à investir?</h3>
+                <p class="quiz-subtitle">Le montant que vous pouvez placer à long terme.</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-score="1"><span class="option-emoji">💧</span> Moins de 25%</div>
+                    <div class="quiz-option" data-score="2"><span class="option-emoji">🌊</span> Entre 25% et 50%</div>
+                    <div class="quiz-option" data-score="3"><span class="option-emoji">🌊</span> Plus de 50%</div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="quiz-result" id="quiz-result">
+                <div class="result-icon" id="quiz-result-icon">⚖️</div>
+                <h3>Votre profil a été identifié!</h3>
+                <div class="result-profile" id="quiz-result-profile">Profil Équilibré</div>
+                <p id="quiz-result-desc">Vous recherchez un juste milieu entre croissance et sécurité.</p>
+                <button class="quiz-apply-btn" id="quiz-apply-btn">
+                    <i data-lucide="check-circle"></i>
+                    Appliquer à mon Compas
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Vapor Fog Divider -->
     <div class="chameleon-divider" onclick="document.getElementById('marches').scrollIntoView({behavior: 'smooth'})">
