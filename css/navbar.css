@@ -54,13 +54,13 @@
 }
 
 .logo-img {
-    height: 34px;
+    height: 40px;
     width: auto;
     transition: all 0.3s ease;
 }
 
 .navbar.scrolled .logo-img {
-    height: 30px;
+    height: 36px;
 }
 
 /* Nav Links */
