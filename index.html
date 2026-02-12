@@ -16,6 +16,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/ai-radar.css">
+    <link rel="stylesheet" href="./css/hero-v2.css">
 </head>
 
 <body>
@@ -51,25 +52,61 @@
     </div>
 
     <!-- Hero Section (Split Layout: Text Left / Image Right) -->
-    <header class="hero-section">
-        <div class="container hero-grid">
-            <div class="hero-text fade-in">
-                <span class="hero-label"><i data-lucide="shield-check"></i> Gestion de Patrimoine</span>
-                <h1>Votre avenir financier, <br><span class="text-gradient">notre priorité absolue.</span></h1>
-                <p class="hero-description">Depuis plusieurs années, le Groupe Financier Ste-Foy accompagne les familles
+    <header class="hero-v2">
+        <!-- Video Background -->
+        <div class="hero-video-wrap">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="./assets/hero-bg.mp4" type="video/mp4">
+            </video>
+            <div class="hero-video-overlay"></div>
+        </div>
+
+        <!-- Floating Particles -->
+        <div class="hero-particles" id="hero-particles"></div>
+
+        <!-- Content -->
+        <div class="container hero-v2-grid">
+            <!-- Left: Text -->
+            <div class="hero-v2-text">
+                <span class="hero-v2-label anim-fade-up" style="--delay: 0.1s">
+                    <i data-lucide="shield-check"></i> Gestion de Patrimoine
+                </span>
+                <h1 class="anim-fade-up" style="--delay: 0.25s">Votre avenir financier, <br><span
+                        class="text-gradient">notre priorité absolue.</span></h1>
+                <p class="hero-v2-desc anim-fade-up" style="--delay: 0.4s">Depuis plusieurs années, le Groupe Financier
+                    Ste-Foy accompagne les familles
                     et les entreprises de
                     Québec avec intégrité, transparence et une expertise reconnue.</p>
-                <div class="hero-actions">
-                    <a href="#contact" class="btn-primary"><i data-lucide="calendar"></i> Prendre Rendez-vous</a>
-                    <a href="#services" class="btn-link">Découvrir nos services <i data-lucide="arrow-right"></i></a>
+                <div class="hero-v2-actions anim-fade-up" style="--delay: 0.55s">
+                    <a href="#contact" class="btn-hero-primary"><i data-lucide="calendar"></i> Prendre Rendez-vous</a>
+                    <a href="#services" class="btn-hero-link">Découvrir nos services <i
+                            data-lucide="arrow-right"></i></a>
                 </div>
             </div>
-            <div class="hero-image fade-in delay-1">
-                <img src="./assets/team-photo.jpg" alt="L'équipe du Groupe Financier Ste-Foy" class="team-photo">
+
+            <!-- Right: Photo Carousel -->
+            <div class="hero-carousel-wrap anim-fade-up" style="--delay: 0.5s">
+                <div class="hero-carousel" id="hero-carousel">
+                    <div class="carousel-slide active">
+                        <img src="./assets/team-photo.jpg" alt="L'équipe du Groupe Financier Ste-Foy">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="./assets/team-photo.jpg" alt="Notre bureau">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="./assets/team-photo.jpg" alt="Nos services personnalisés">
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carousel-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
             </div>
         </div>
+
         <!-- Scroll Indicator -->
-        <a href="#services" class="scroll-indicator">
+        <a href="#stats" class="hero-scroll-indicator">
             <span>Découvrir</span>
             <i data-lucide="chevron-down"></i>
         </a>
@@ -1048,5 +1085,44 @@
     <script src="./js/main.js"></script>
     <script>
         lucide.createIcons();
+
+        // === HERO CAROUSEL ===
+        (function () {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dots .dot');
+            if (!slides.length) return;
+
+            let current = 0;
+
+            function goTo(index) {
+                slides[current].classList.remove('active');
+                dots[current].classList.remove('active');
+                current = index % slides.length;
+                slides[current].classList.add('active');
+                dots[current].classList.add('active');
+            }
+
+            // Auto-rotate every 4s
+            setInterval(() => goTo(current + 1), 4000);
+
+            // Click on dots
+            dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+        })();
+
+        // === FLOATING PARTICLES ===
+        (function () {
+            const container = document.getElementById('hero-particles');
+            if (!container) return;
+
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'hero-particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = (40 + Math.random() * 60) + '%';
+                p.style.setProperty('--duration', (6 + Math.random() * 8) + 's');
+                p.style.setProperty('--delay', (Math.random() * 6) + 's');
+                container.appendChild(p);
+            }
+        })();
     </script>
 </body>
