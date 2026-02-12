@@ -5908,3 +5908,20 @@ footer {
 .news-card:hover .read-article-btn {
  animation: pulse-btn 2s ease-in-out infinite;
 }
+
+/* USER OVERRIDE: Cycle Section Glass Container */
+#cycle-economique .container {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border-radius: 24px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow:
+        0 20px 60px rgba(0, 40, 80, 0.06),
+        0 4px 16px rgba(0, 40, 80, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
