@@ -5948,3 +5948,21 @@ footer {
         0 6px 20px rgba(0, 40, 80, 0.04),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
+
+/* USER OVERRIDE: Z-Index Fixes */
+#cycle-economique .container::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, transparent 30%, rgba(0, 119, 182, 0.15) 50%, transparent 70%);
+    background-size: 300% 300%;
+    animation: compasGlow 6s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#cycle-economique .container > * {
+    position: relative;
+    z-index: 1;
+}
