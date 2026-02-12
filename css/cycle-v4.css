@@ -826,3 +826,12 @@
         rgba(0, 119, 182, 0.2) 0%, 
         rgba(0, 119, 182, 0.08) 100%);
 }
+
+/* CTA Note */
+.cycle-cta-note {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 12px;
+    max-width: 400px;
+    line-height: 1.4;
+}
