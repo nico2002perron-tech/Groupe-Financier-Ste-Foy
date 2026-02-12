@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/ai-radar.css">
     <link rel="stylesheet" href="./css/hero-v2.css">
+    <link rel="stylesheet" href="./css/navbar.css">
 </head>
 
 <body>
@@ -1082,7 +1083,16 @@
     <script>
         lucide.createIcons();
 
-        // === VIDEO BACKGROUND CAROUSEL (8s) ===
+        // === NAVBAR SCROLL EFFECT ===
+        (function () {
+            const nav = document.getElementById('main-nav');
+            if (!nav) return;
+            window.addEventListener('scroll', () => {
+                nav.classList.toggle('scrolled', window.scrollY > 50);
+            }, { passive: true });
+        })();
+
+        // === VIDEO BACKGROUND CAROUSEL (12s) ===
         (function () {
             const videos = document.querySelectorAll('.hero-vid');
             if (videos.length < 2) return;
@@ -1106,6 +1116,7 @@
                 p.className = 'hero-particle';
                 p.style.left = Math.random() * 100 + '%';
                 p.style.top = (30 + Math.random() * 70) + '%';
+                p.style.width = p.style.height = (3 + Math.random() * 5) + 'px';
                 p.style.setProperty('--duration', (5 + Math.random() * 10) + 's');
                 p.style.setProperty('--delay', (Math.random() * 8) + 's');
                 container.appendChild(p);

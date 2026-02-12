@@ -1,0 +1,236 @@
+/* =========================================
+   NAVBAR — MODERN FLOATING GLASS
+   Rounded · Glassmorphism · Scroll-aware
+   ========================================= */
+
+/* ── Override base navbar ── */
+.navbar {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 1200px;
+    z-index: 1000;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+        0 4px 24px rgba(0, 40, 80, 0.06),
+        0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When scrolled — more transparent and slightly smaller */
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(24px) saturate(2);
+    -webkit-backdrop-filter: blur(24px) saturate(2);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 8px 32px rgba(0, 40, 80, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+    top: 10px;
+    border-radius: 18px;
+}
+
+/* Container */
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    gap: 20px;
+}
+
+/* Logo */
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 38px;
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled .logo-img {
+    height: 34px;
+}
+
+/* Nav Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-links a {
+    position: relative;
+    color: #1a3a52;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    letter-spacing: 0.01em;
+}
+
+.nav-links a:hover {
+    color: #0077b6;
+    background: rgba(0, 119, 182, 0.06);
+}
+
+/* Active link indicator — animated underline */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 18px;
+    height: 2px;
+    background: linear-gradient(90deg, #0077b6, #00b4d8);
+    border-radius: 1px;
+    transition: transform 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* CTA Button */
+.btn-nav {
+    background: linear-gradient(135deg, #0077b6, #00a8cc) !important;
+    color: #fff !important;
+    padding: 10px 22px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 12px rgba(0, 119, 182, 0.2);
+    transition: all 0.3s ease !important;
+}
+
+.btn-nav:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 20px rgba(0, 119, 182, 0.3) !important;
+    background: linear-gradient(135deg, #006aa3, #0097b8) !important;
+}
+
+.btn-nav::after {
+    display: none !important;
+}
+
+.btn-nav i,
+.btn-nav svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Hamburger */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #1a3a52;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.menu-toggle:hover {
+    background: rgba(0, 119, 182, 0.08);
+    color: #0077b6;
+}
+
+/* ── Mobile ── */
+@media (max-width: 968px) {
+    .navbar {
+        width: calc(100% - 24px);
+        top: 10px;
+        border-radius: 16px;
+    }
+
+    .nav-container {
+        padding: 10px 18px;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .logo-img {
+        height: 32px;
+    }
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.mobile-menu.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.mobile-menu a {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a3a52;
+    text-decoration: none;
+    padding: 14px 32px;
+    border-radius: 14px;
+    transition: all 0.25s;
+}
+
+.mobile-menu a:hover {
+    background: rgba(0, 119, 182, 0.08);
+    color: #0077b6;
+}
+
+.menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 40, 80, 0.06);
+    border: none;
+    padding: 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    color: #1a3a52;
+    transition: all 0.25s;
+}
+
+.menu-close:hover {
+    background: rgba(0, 119, 182, 0.1);
+    color: #0077b6;
+}
