@@ -408,47 +408,50 @@
             </div>
 
             <div class="cycle-layout-v2 fade-in-scroll delay-1">
-                <div class="radar-wrapper">
+                <!-- Glass Wrapper for Cycle -->
+                <div class="compas-glass" style="max-width: 900px; margin: 0 auto;">
+                    <div class="radar-wrapper">
 
-                    <!-- Core Radar (No Orbit) -->
-                    <div class="radar-core">
-                        <!-- Top Right: Expansion -->
-                        <div class="radar-quadrant active" data-phase="expansion">
-                            <div class="quadrant-content">
-                                <div class="icon-bubble"><i data-lucide="trending-up"></i></div>
-                                <span class="quadrant-label">Expansion</span>
+                        <!-- Core Radar (No Orbit) -->
+                        <div class="radar-core">
+                            <!-- Top Right: Expansion -->
+                            <div class="radar-quadrant active" data-phase="expansion">
+                                <div class="quadrant-content">
+                                    <div class="icon-bubble"><i data-lucide="trending-up"></i></div>
+                                    <span class="quadrant-label">Expansion</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Bottom Right: Surchauffe -->
-                        <div class="radar-quadrant" data-phase="surchauffe">
-                            <div class="quadrant-content">
-                                <div class="icon-bubble warning"><i data-lucide="flame"></i></div>
-                                <span class="quadrant-label">Surchauffe</span>
+                            <!-- Bottom Right: Surchauffe -->
+                            <div class="radar-quadrant" data-phase="surchauffe">
+                                <div class="quadrant-content">
+                                    <div class="icon-bubble warning"><i data-lucide="flame"></i></div>
+                                    <span class="quadrant-label">Surchauffe</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Bottom Left: Récession -->
-                        <div class="radar-quadrant" data-phase="recession">
-                            <div class="quadrant-content">
-                                <div class="icon-bubble dark"><i data-lucide="shield"></i></div>
-                                <span class="quadrant-label">Récession</span>
+                            <!-- Bottom Left: Récession -->
+                            <div class="radar-quadrant" data-phase="recession">
+                                <div class="quadrant-content">
+                                    <div class="icon-bubble dark"><i data-lucide="shield"></i></div>
+                                    <span class="quadrant-label">Récession</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Top Left: Reprise -->
-                        <div class="radar-quadrant" data-phase="reprise">
-                            <div class="quadrant-content">
-                                <div class="icon-bubble success"><i data-lucide="sunrise"></i></div>
-                                <span class="quadrant-label">Reprise</span>
+                            <!-- Top Left: Reprise -->
+                            <div class="radar-quadrant" data-phase="reprise">
+                                <div class="quadrant-content">
+                                    <div class="icon-bubble success"><i data-lucide="sunrise"></i></div>
+                                    <span class="quadrant-label">Reprise</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Central Info Hub (Glass) -->
-                        <div class="radar-center-glass">
-                            <div class="center-content">
-                                <h3 id="cycle-title" class="text-gradient-expansion">Expansion</h3>
-                                <p id="cycle-desc">Positionnement équilibré pour capturer la croissance.</p>
+                            <!-- Central Info Hub (Glass) -->
+                            <div class="radar-center-glass">
+                                <div class="center-content">
+                                    <h3 id="cycle-title" class="text-gradient-expansion">Expansion</h3>
+                                    <p id="cycle-desc">Positionnement équilibré pour capturer la croissance.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -536,9 +539,12 @@
                                 </span>
                             </div>
                             <div class="profile-buttons">
-                                <button class="profile-btn" data-profile="prudent">🛡️ Prudent</button>
-                                <button class="profile-btn active" data-profile="equilibre">⚖️ Équilibré</button>
-                                <button class="profile-btn" data-profile="croissance">🚀 Croissance</button>
+                                <button class="profile-btn" data-profile="prudent"><i data-lucide="shield"></i>
+                                    Prudent</button>
+                                <button class="profile-btn active" data-profile="equilibre"><i data-lucide="scale"></i>
+                                    Équilibré</button>
+                                <button class="profile-btn" data-profile="croissance"><i data-lucide="trending-up"></i>
+                                    Croissance</button>
                             </div>
                         </div>
 

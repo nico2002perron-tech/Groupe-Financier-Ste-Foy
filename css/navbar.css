@@ -10,7 +10,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 48px);
-    max-width: 1060px;
+    max-width: 1200px;
     z-index: 1000;
     padding: 0;
     background: rgba(255, 255, 255, 0.72);
