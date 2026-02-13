@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" href="./css/cycle-v4.css">
     <link rel="stylesheet" href="./css/compas.css">
+    <link rel="stylesheet" href="./css/marches-v2.css">
     <link rel="stylesheet" href="./css/conversion.css">
 </head>
 
@@ -910,179 +911,267 @@
 
     <!-- Live Markets Section -->
     <!-- Live Markets Section (Header Only) -->
-    <section id="marches" class="section-padding marches-live gradient-section gradient-cyan-to-light">
+    <!-- ============ MARCHÉS EN TEMPS RÉEL V2 — ÉDUCATIF ============ -->
+    <section id="marches" class="section-padding marches-v2">
+
         <div class="container">
-            <div class="section-header text-center fade-in-scroll">
-                <span class="section-tag"><i data-lucide="line-chart"></i> Marchés Mondiaux</span>
-                <h2>Indices en <span class="text-gradient">Temps Réel</span></h2>
-                <p class="mission-subtitle">Suivez l'évolution des principaux indices boursiers en direct.</p>
+            <!-- Header -->
+            <div class="marches-header fade-in-scroll">
+                <div class="marches-badge-row">
+                    <span class="marches-badge">
+                        <span class="live-dot"></span>
+                        Marchés mondiaux
+                    </span>
+                    <span class="market-status" id="market-status">
+                        <span class="status-dot status-closed"></span>
+                        <span id="market-status-text">Chargement...</span>
+                    </span>
+                </div>
+                <h2 class="marches-title">Les marchés en un <span class="cycle-gradient-word">coup d'œil</span></h2>
+                <p class="marches-sub">Comprendre les indices dans lesquels vous investissez.</p>
             </div>
 
-            <!-- Empty container for future content -->
-            <!-- Time Controls -->
-            <div class="chart-controls" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 30px;">
-                <button class="time-btn active" data-time="1D">1J</button>
-                <button class="time-btn" data-time="5D">5J</button>
-                <button class="time-btn" data-time="1M">1M</button>
-                <button class="time-btn" data-time="3M">3M</button>
-                <button class="time-btn" data-time="12M">1A</button>
-            </div>
+            <!-- Markets Grid -->
+            <div class="marches-edu-grid">
 
-            <!-- Custom TradingView Carousel -->
-            <div class="marches-wrapper">
-                <div class="marches-grid" id="marches-track">
-                    <!-- S&P 500 -->
-                    <div class="market-card fade-in-scroll">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>S&P 500</h3>
-                                <span class="market-symbol">SPX</span>
-                            </div>
-                            <div class="market-price" id="price-sp500">
-                                6,892.45 <span class="change up">+0.76%</span>
+                <!-- S&P/TSX -->
+                <div class="market-edu-card fade-in-scroll" data-symbol="TSX">
+                    <div class="mcard-top">
+                        <div class="mcard-header">
+                            <div class="mcard-flag">🇨🇦</div>
+                            <div class="mcard-title-group">
+                                <h3>S&P/TSX Composite</h3>
+                                <span class="mcard-symbol">TSX</span>
                             </div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="chartSP500"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Indice en direct</span>
+                        <div class="mcard-chart-wrap">
+                            <div class="tradingview-widget-container" id="tv-tsx">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- NASDAQ -->
-                    <div class="market-card fade-in-scroll delay-1">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>NASDAQ</h3>
-                                <span class="market-symbol">NDX</span>
-                            </div>
-                            <div class="market-price" id="price-nasdaq">
-                                23,412.80 <span class="change up">+1.50%</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartNASDAQ"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Tech & Croissance</span>
-                        </div>
-                    </div>
-
-                    <!-- DOW JONES -->
-                    <div class="market-card fade-in-scroll delay-2">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>Dow Jones</h3>
-                                <span class="market-symbol">DJI</span>
-                            </div>
-                            <div class="market-price" id="price-dji">
-                                49,520.10 <span class="change up">+0.80%</span>
+                    <div class="mcard-bottom">
+                        <p class="mcard-desc">L'indice phare du marché canadien. Il regroupe environ 230 entreprises
+                            cotées à la Bourse de Toronto, représentant l'économie canadienne dans son ensemble.</p>
+                        <div class="mcard-holdings">
+                            <span class="holdings-title"><i data-lucide="building-2"
+                                    style="width:12px;height:12px;"></i> Top holdings</span>
+                            <div class="holdings-chips">
+                                <span class="holding-chip">Royal Bank 6.3%</span>
+                                <span class="holding-chip">TD Bank 5.1%</span>
+                                <span class="holding-chip">Shopify 4.8%</span>
+                                <span class="holding-chip">Enbridge 3.9%</span>
+                                <span class="holding-chip">CN Rail 3.5%</span>
                             </div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="chartDOW"></canvas>
+                        <div class="mcard-sectors">
+                            <span class="sector-chip sector-finance">Finance 33%</span>
+                            <span class="sector-chip sector-energy">Énergie 17%</span>
+                            <span class="sector-chip sector-industry">Industrie 13%</span>
                         </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Industriel</span>
-                        </div>
-                    </div>
-
-                    <!-- DAX -->
-                    <div class="market-card fade-in-scroll">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>DAX 40</h3>
-                                <span class="market-symbol">GDAXI</span>
-                            </div>
-                            <div class="market-price" id="price-dax">
-                                24,950.00 <span class="change up">+1.10%</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartDAX"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Allemagne</span>
-                        </div>
-                    </div>
-
-                    <!-- FTSE 100 -->
-                    <div class="market-card fade-in-scroll">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>FTSE 100</h3>
-                                <span class="market-symbol">UKX</span>
-                            </div>
-                            <div class="market-price" id="price-ftse">
-                                7,890.50 <span class="change up">+1.15%</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartFTSE"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Royaume-Uni</span>
-                        </div>
-                    </div>
-
-                    <!-- Nikkei 225 -->
-                    <div class="market-card fade-in-scroll">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>Nikkei 225</h3>
-                                <span class="market-symbol">NI225</span>
-                            </div>
-                            <div class="market-price" id="price-nikkei">
-                                39,600.00 <span class="change up">+2.00%</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartNIKKEI"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Japon</span>
-                        </div>
-                    </div>
-
-                    <!-- GOLD -->
-                    <div class="market-card fade-in-scroll">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>OR (Gold)</h3>
-                                <span class="market-symbol">XAU</span>
-                            </div>
-                            <div class="market-price" id="price-gold">
-                                4,995.00 <span class="change up">+2.10%</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartGOLD"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Matières Prem.</span>
-                        </div>
-                    </div>
-
-                    <!-- OIL -->
-                    <div class="market-card fade-in-scroll">
-                        <div class="market-header">
-                            <div class="market-info">
-                                <h3>Pétrole</h3>
-                                <span class="market-symbol">WTI</span>
-                            </div>
-                            <div class="market-price" id="price-oil">
-                                65.50 <span class="change up">+1.50%</span>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="chartOIL"></canvas>
-                        </div>
-                        <div class="market-footer">
-                            <span class="market-disclaimer">Matières Prem.</span>
-                        </div>
+                        <span class="mcard-source">Source : S&P Dow Jones Indices / TMX</span>
                     </div>
                 </div>
+
+                <!-- S&P 500 -->
+                <div class="market-edu-card fade-in-scroll delay-1" data-symbol="SPX">
+                    <div class="mcard-top">
+                        <div class="mcard-header">
+                            <div class="mcard-flag">🇺🇸</div>
+                            <div class="mcard-title-group">
+                                <h3>S&P 500</h3>
+                                <span class="mcard-symbol">SPX</span>
+                            </div>
+                        </div>
+                        <div class="mcard-chart-wrap">
+                            <div class="tradingview-widget-container" id="tv-spx">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mcard-bottom">
+                        <p class="mcard-desc">Le baromètre de l'économie américaine. Les 500 plus grandes entreprises
+                            cotées aux États-Unis, couvrant environ 80% de la capitalisation boursière du pays.</p>
+                        <div class="mcard-holdings">
+                            <span class="holdings-title"><i data-lucide="building-2"
+                                    style="width:12px;height:12px;"></i> Top holdings</span>
+                            <div class="holdings-chips">
+                                <span class="holding-chip">Apple 7.1%</span>
+                                <span class="holding-chip">Microsoft 6.8%</span>
+                                <span class="holding-chip">NVIDIA 6.2%</span>
+                                <span class="holding-chip">Amazon 3.8%</span>
+                                <span class="holding-chip">Meta 2.7%</span>
+                            </div>
+                        </div>
+                        <div class="mcard-sectors">
+                            <span class="sector-chip sector-tech">Tech 32%</span>
+                            <span class="sector-chip sector-finance">Finance 13%</span>
+                            <span class="sector-chip sector-health">Santé 12%</span>
+                        </div>
+                        <span class="mcard-source">Source : S&P Dow Jones Indices</span>
+                    </div>
+                </div>
+
+                <!-- NASDAQ 100 -->
+                <div class="market-edu-card fade-in-scroll delay-2" data-symbol="NDX">
+                    <div class="mcard-top">
+                        <div class="mcard-header">
+                            <div class="mcard-flag">🇺🇸</div>
+                            <div class="mcard-title-group">
+                                <h3>NASDAQ 100</h3>
+                                <span class="mcard-symbol">NDX</span>
+                            </div>
+                        </div>
+                        <div class="mcard-chart-wrap">
+                            <div class="tradingview-widget-container" id="tv-ndx">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mcard-bottom">
+                        <p class="mcard-desc">L'indice de l'innovation. Les 100 plus grandes entreprises non financières
+                            du NASDAQ, fortement pondéré en technologie et croissance.</p>
+                        <div class="mcard-holdings">
+                            <span class="holdings-title"><i data-lucide="building-2"
+                                    style="width:12px;height:12px;"></i> Top holdings</span>
+                            <div class="holdings-chips">
+                                <span class="holding-chip">Apple 8.9%</span>
+                                <span class="holding-chip">Microsoft 8.1%</span>
+                                <span class="holding-chip">NVIDIA 7.6%</span>
+                                <span class="holding-chip">Broadcom 4.9%</span>
+                                <span class="holding-chip">Amazon 4.7%</span>
+                            </div>
+                        </div>
+                        <div class="mcard-sectors">
+                            <span class="sector-chip sector-tech">Tech 58%</span>
+                            <span class="sector-chip sector-consumer">Conso. 19%</span>
+                            <span class="sector-chip sector-health">Santé 7%</span>
+                        </div>
+                        <span class="mcard-source">Source : Nasdaq Inc.</span>
+                    </div>
+                </div>
+
+                <!-- Dow Jones -->
+                <div class="market-edu-card fade-in-scroll" data-symbol="DJI">
+                    <div class="mcard-top">
+                        <div class="mcard-header">
+                            <div class="mcard-flag">🇺🇸</div>
+                            <div class="mcard-title-group">
+                                <h3>Dow Jones</h3>
+                                <span class="mcard-symbol">DJIA</span>
+                            </div>
+                        </div>
+                        <div class="mcard-chart-wrap">
+                            <div class="tradingview-widget-container" id="tv-dji">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mcard-bottom">
+                        <p class="mcard-desc">Le plus ancien indice boursier au monde. 30 des plus grandes entreprises
+                            américaines, pondéré par prix. Un indicateur historique des blue chips.</p>
+                        <div class="mcard-holdings">
+                            <span class="holdings-title"><i data-lucide="building-2"
+                                    style="width:12px;height:12px;"></i> Top holdings</span>
+                            <div class="holdings-chips">
+                                <span class="holding-chip">UnitedHealth 8.4%</span>
+                                <span class="holding-chip">Goldman Sachs 7.2%</span>
+                                <span class="holding-chip">Microsoft 5.8%</span>
+                                <span class="holding-chip">Home Depot 5.6%</span>
+                                <span class="holding-chip">Caterpillar 5.1%</span>
+                            </div>
+                        </div>
+                        <div class="mcard-sectors">
+                            <span class="sector-chip sector-finance">Finance 22%</span>
+                            <span class="sector-chip sector-tech">Tech 20%</span>
+                            <span class="sector-chip sector-health">Santé 17%</span>
+                        </div>
+                        <span class="mcard-source">Source : S&P Dow Jones Indices</span>
+                    </div>
+                </div>
+
+                <!-- Or (Gold) -->
+                <div class="market-edu-card fade-in-scroll delay-1" data-symbol="GOLD">
+                    <div class="mcard-top">
+                        <div class="mcard-header">
+                            <div class="mcard-flag">🥇</div>
+                            <div class="mcard-title-group">
+                                <h3>Or (Gold)</h3>
+                                <span class="mcard-symbol">XAU/USD</span>
+                            </div>
+                        </div>
+                        <div class="mcard-chart-wrap">
+                            <div class="tradingview-widget-container" id="tv-gold">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mcard-bottom">
+                        <p class="mcard-desc">La valeur refuge par excellence. L'or est utilisé comme protection contre
+                            l'inflation et l'incertitude géopolitique. Son prix est coté en dollars US par once troy.
+                        </p>
+                        <div class="mcard-holdings">
+                            <span class="holdings-title"><i data-lucide="info" style="width:12px;height:12px;"></i> Bon
+                                à savoir</span>
+                            <div class="holdings-chips">
+                                <span class="holding-chip">1 once = 31.1g</span>
+                                <span class="holding-chip">Réserve de valeur</span>
+                                <span class="holding-chip">Anti-inflation</span>
+                                <span class="holding-chip">Non corrélé aux actions</span>
+                            </div>
+                        </div>
+                        <div class="mcard-sectors">
+                            <span class="sector-chip sector-commodity">Matière première</span>
+                            <span class="sector-chip sector-safe">Valeur refuge</span>
+                        </div>
+                        <span class="mcard-source">Source : LBMA / COMEX</span>
+                    </div>
+                </div>
+
+                <!-- Pétrole WTI -->
+                <div class="market-edu-card fade-in-scroll delay-2" data-symbol="OIL">
+                    <div class="mcard-top">
+                        <div class="mcard-header">
+                            <div class="mcard-flag">🛢️</div>
+                            <div class="mcard-title-group">
+                                <h3>Pétrole (WTI)</h3>
+                                <span class="mcard-symbol">CL/USD</span>
+                            </div>
+                        </div>
+                        <div class="mcard-chart-wrap">
+                            <div class="tradingview-widget-container" id="tv-oil">
+                                <div class="tradingview-widget-container__widget"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mcard-bottom">
+                        <p class="mcard-desc">Le West Texas Intermediate est la référence nord-américaine du pétrole
+                            brut. Particulièrement pertinent pour l'économie canadienne, 2e exportateur mondial.</p>
+                        <div class="mcard-holdings">
+                            <span class="holdings-title"><i data-lucide="info" style="width:12px;height:12px;"></i> Bon
+                                à savoir</span>
+                            <div class="holdings-chips">
+                                <span class="holding-chip">Coté en $/baril</span>
+                                <span class="holding-chip">Canada = 2e exportateur</span>
+                                <span class="holding-chip">Impact direct sur le TSX</span>
+                                <span class="holding-chip">Cyclique</span>
+                            </div>
+                        </div>
+                        <div class="mcard-sectors">
+                            <span class="sector-chip sector-commodity">Matière première</span>
+                            <span class="sector-chip sector-energy">Énergie</span>
+                        </div>
+                        <span class="mcard-source">Source : NYMEX / CME Group</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="marches-disclaimer fade-in-scroll">
+                <i data-lucide="info" style="width:14px;height:14px;"></i>
+                Les données de marché sont fournies par TradingView à titre informatif uniquement. Les rendements passés
+                ne garantissent pas les rendements futurs. Les compositions d'indices sont mises à jour périodiquement.
             </div>
         </div>
     </section>
@@ -1681,6 +1770,7 @@
         })();
     </script>
     <script src="./js/conversion.js"></script>
+    <script src="./js/marches-v2.js"></script>
     <!-- ============================================
      COMPOSANTE 1 : BOUTON FLOTTANT PERMANENT
      ============================================ -->
