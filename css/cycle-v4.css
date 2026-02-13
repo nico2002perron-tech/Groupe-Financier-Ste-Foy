@@ -1,9 +1,102 @@
 /* =========================================
-   CYCLE ÉCONOMIQUE V4 — SPLIT LAYOUT
-   Radar + Detail Panel · Glass · Sharp
+   CYCLE ÉCONOMIQUE V5 — SHARP EDITION
+   Ripple · Premium Header · Smart Disclaimer
    ========================================= */
 
-/* ── Glass Container (matches compas-glass) ── */
+/* =========================================
+   SECTION HEADER — STORYTELLING
+   ========================================= */
+
+.cycle-header-v5 {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 2;
+}
+
+.cycle-badge-v5 {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.06), rgba(0, 180, 216, 0.06));
+    border: 1px solid rgba(0, 119, 182, 0.12);
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #0077b6;
+    margin-bottom: 22px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.badge-pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0077b6;
+    animation: badgePulseDot 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes badgePulseDot {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 119, 182, 0.4);
+        opacity: 1;
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(0, 119, 182, 0);
+        opacity: 0.7;
+    }
+}
+
+.cycle-title-v5 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: #0a2540;
+    line-height: 1.15;
+    margin: 0 0 14px;
+    letter-spacing: -0.03em;
+}
+
+.cycle-gradient-word {
+    background: linear-gradient(135deg, #0077b6 0%, #00b4d8 40%, #48cae4 70%, #0077b6 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% center;
+    }
+
+    50% {
+        background-position: 100% center;
+    }
+
+    100% {
+        background-position: 0% center;
+    }
+}
+
+.cycle-sub-v5 {
+    font-size: 1.1rem;
+    color: #5a7d95;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+/* =========================================
+   GLASS CONTAINER — ENHANCED
+   ========================================= */
+
 .cycle-glass {
     position: relative;
     z-index: 2;
@@ -15,14 +108,12 @@
     box-shadow:
         0 20px 60px rgba(0, 40, 80, 0.06),
         0 4px 16px rgba(0, 40, 80, 0.03),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    padding: 48px 48px 24px 48px;
-    /* Adjusted to prevent shadow clipping */
-    overflow: visible;
-    /* Allow shadow to overflow */
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -4px 12px rgba(0, 40, 80, 0.02);
+    padding: 48px;
+    overflow: hidden;
 }
 
-/* Animated border glow */
 .cycle-glass::before {
     content: '';
     position: absolute;
@@ -34,15 +125,101 @@
     z-index: -1;
 }
 
-/* ── Split Layout ── */
+.cycle-glass-topline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 10%, #0077b6 30%, #00b4d8 50%, #48cae4 70%, transparent 90%);
+    opacity: 0.6;
+    border-radius: 24px 24px 0 0;
+    z-index: 5;
+}
+
+/* =========================================
+   RIPPLE EFFECT
+   ========================================= */
+
+.cycle-ripple {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+}
+
+.cycle-ripple.ripple-active {
+    animation: rippleExpand 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes rippleExpand {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0.35;
+    }
+
+    60% {
+        opacity: 0.15;
+    }
+
+    100% {
+        width: 200%;
+        height: 200%;
+        opacity: 0;
+    }
+}
+
+.cycle-ripple.ripple-expansion {
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.3) 0%, rgba(0, 119, 182, 0.1) 40%, transparent 70%);
+}
+
+.cycle-ripple.ripple-surchauffe {
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, rgba(230, 126, 34, 0.1) 40%, transparent 70%);
+}
+
+.cycle-ripple.ripple-recession {
+    background: radial-gradient(circle, rgba(155, 89, 182, 0.3) 0%, rgba(123, 44, 191, 0.1) 40%, transparent 70%);
+}
+
+.cycle-ripple.ripple-reprise {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(0, 107, 95, 0.1) 40%, transparent 70%);
+}
+
+/* =========================================
+   SECTION BOTTOM FADE
+   ========================================= */
+
+.cycle-section-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4));
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* =========================================
+   SPLIT LAYOUT
+   ========================================= */
+
 .cycle-split-layout {
     display: grid;
     grid-template-columns: 420px 1fr;
     gap: 48px;
     align-items: center;
+    position: relative;
+    z-index: 2;
 }
 
-/* ── LEFT: Radar Column ── */
 .cycle-radar-col {
     display: flex;
     align-items: center;
@@ -96,14 +273,15 @@
     text-transform: uppercase;
 }
 
-/* ── RIGHT: Detail Panel ── */
+/* ── Detail Panel ── */
 .cycle-detail-col {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    position: relative;
+    z-index: 2;
 }
 
-/* Phase Header */
 .phase-header {
     display: flex;
     align-items: center;
@@ -130,7 +308,6 @@
     height: 22px;
 }
 
-/* Phase colors */
 .phase-icon-wrap.phase-expansion {
     background: linear-gradient(135deg, #0077b6, #00b4d8);
     box-shadow: 0 4px 14px rgba(0, 119, 182, 0.25);
@@ -164,7 +341,6 @@
     transition: color 0.4s ease;
 }
 
-/* Phase name color variants */
 .phase-name.color-expansion {
     color: #0077b6;
 }
@@ -189,7 +365,6 @@
     letter-spacing: 0.04em;
 }
 
-/* Description */
 .phase-description {
     font-size: 0.95rem;
     line-height: 1.7;
@@ -197,10 +372,10 @@
     margin: 0;
     padding-bottom: 4px;
     border-bottom: 1px solid rgba(0, 119, 182, 0.06);
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* ── Allocation Bars ── */
+/* Allocation */
 .alloc-section {
     display: flex;
     flex-direction: column;
@@ -269,7 +444,6 @@
     background: rgba(0, 119, 182, 0.06);
     border-radius: 8px;
     overflow: hidden;
-    position: relative;
 }
 
 .alloc-fill {
@@ -302,7 +476,6 @@
     background: linear-gradient(90deg, #48cae4, #90e0ef);
 }
 
-/* Surchauffe variant */
 .alloc-section.alloc-surchauffe .alloc-dot-actions {
     background: #e67e22;
 }
@@ -327,7 +500,6 @@
     background: linear-gradient(90deg, #fbbf24, #fde68a);
 }
 
-/* Recession variant */
 .alloc-section.alloc-recession .alloc-dot-actions {
     background: #7b2cbf;
 }
@@ -352,7 +524,6 @@
     background: linear-gradient(90deg, #c084fc, #e9d5ff);
 }
 
-/* Reprise variant */
 .alloc-section.alloc-reprise .alloc-dot-actions {
     background: #006b5f;
 }
@@ -386,7 +557,57 @@
     transition: all 0.3s ease;
 }
 
-/* ── Indicator Chips ── */
+/* Smart Disclaimer */
+.alloc-disclaimer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(0, 119, 182, 0.03);
+    border: 1px solid rgba(0, 119, 182, 0.06);
+    border-radius: 10px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.alloc-disclaimer i,
+.alloc-disclaimer svg {
+    color: #0077b6;
+    opacity: 0.6;
+}
+
+.alloc-disclaimer span {
+    font-size: 0.72rem;
+    color: #8ba3b5;
+    line-height: 1.5;
+    flex: 1;
+    min-width: 160px;
+}
+
+.disclaimer-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #0077b6;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.disclaimer-cta:hover {
+    color: #005f8f;
+    gap: 6px;
+}
+
+.disclaimer-cta i,
+.disclaimer-cta svg {
+    opacity: 1 !important;
+    color: #0077b6 !important;
+}
+
+/* Indicators */
 .phase-indicators {
     display: flex;
     gap: 10px;
@@ -416,7 +637,6 @@
     color: #0a2540;
 }
 
-/* Chip color variants */
 .indicator-chip.chip-expansion i,
 .indicator-chip.chip-expansion svg {
     color: #0077b6;
@@ -437,7 +657,7 @@
     color: #006b5f;
 }
 
-/* ── CTA Button ── */
+/* CTA */
 .cycle-to-compas-btn {
     display: inline-flex;
     align-items: center;
@@ -462,7 +682,6 @@
     box-shadow: 0 8px 28px rgba(0, 119, 182, 0.3);
 }
 
-/* Pulse animation on phase change */
 .cycle-to-compas-btn.pulse-hint {
     animation: ctaPulse 0.6s ease;
 }
@@ -483,13 +702,13 @@
     }
 }
 
-/* ── Detail Panel Entrance Animation ── */
+/* Panel switch */
 .cycle-detail-col .phase-header,
 .cycle-detail-col .phase-description,
 .cycle-detail-col .alloc-section,
 .cycle-detail-col .phase-indicators,
 .cycle-detail-col .cycle-to-compas-btn {
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .cycle-detail-col.switching .phase-header,
@@ -502,8 +721,68 @@
 }
 
 /* =========================================
-   OVERRIDE — Remove old container card
+   NAVBAR — "Notre Stratégie"
    ========================================= */
+
+.nav-highlight-strategy {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    color: #006b5f !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, .08), rgba(0, 180, 216, .08)) !important;
+    border: 1px solid rgba(16, 185, 129, .12);
+    border-radius: 10px;
+    animation: strategyPulse 3s ease-in-out infinite;
+}
+
+.nav-highlight-strategy i,
+.nav-highlight-strategy svg {
+    width: 13px;
+    height: 13px;
+    color: #10b981;
+    animation: strategyBeat 2s ease-in-out infinite;
+}
+
+.nav-highlight-strategy::after {
+    display: none !important;
+}
+
+@keyframes strategyPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+
+    50% {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .06);
+    }
+}
+
+@keyframes strategyBeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.15);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    75% {
+        transform: scale(1.1);
+    }
+}
+
+/* =========================================
+   OVERRIDES
+   ========================================= */
+
 #cycle-economique .container {
     background: transparent !important;
     padding: 0 20px !important;
@@ -525,23 +804,19 @@
     box-shadow: none !important;
 }
 
-/* Hide old inner compas-glass wrapper */
-#cycle-economique .cycle-layout-v2>.compas-glass {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+#cycle-economique {
+    padding-bottom: 20px !important;
+    position: relative;
 }
 
-#cycle-economique .cycle-layout-v2>.compas-glass::before {
+.cycle-header {
     display: none;
 }
 
 /* =========================================
-   RESPONSIVE — TABLET
+   RESPONSIVE
    ========================================= */
+
 @media (max-width: 968px) {
     .cycle-glass {
         padding: 32px 24px;
@@ -604,11 +879,12 @@
     .phase-name {
         font-size: 1.3rem;
     }
+
+    .cycle-title-v5 {
+        font-size: 2rem;
+    }
 }
 
-/* =========================================
-   RESPONSIVE — MOBILE
-   ========================================= */
 @media (max-width: 600px) {
     .cycle-glass {
         padding: 24px 16px;
@@ -617,6 +893,23 @@
 
     .cycle-split-layout {
         gap: 24px;
+    }
+
+    .cycle-header-v5 {
+        margin-bottom: 32px;
+    }
+
+    .cycle-badge-v5 {
+        font-size: 0.72rem;
+        padding: 8px 16px;
+    }
+
+    .cycle-title-v5 {
+        font-size: 1.6rem;
+    }
+
+    .cycle-sub-v5 {
+        font-size: 0.92rem;
     }
 
     .cycle-radar-col .radar-wrapper {
@@ -663,7 +956,6 @@
         font-size: 0.62rem !important;
     }
 
-    /* Detail panel */
     .phase-icon-wrap {
         width: 42px;
         height: 42px;
@@ -701,6 +993,12 @@
         font-size: 0.8rem;
     }
 
+    .alloc-disclaimer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
     .phase-indicators {
         gap: 8px;
     }
@@ -717,9 +1015,12 @@
         padding: 12px 20px;
     }
 
-    /* Floating orbs — hide */
     .floating-orb {
         display: none !important;
+    }
+
+    .cycle-section-fade {
+        height: 50px;
     }
 }
 
@@ -748,122 +1049,8 @@
         width: 30px !important;
         height: 30px !important;
     }
-}
 
-/*  Stronger visual bridge between Cycle & Compas  */
-.compas-connector {
-    text-align: center;
-    padding: 0 0 10px;
-    position: relative;
-    z-index: 2;
-    margin-top: -20px;
-}
-
-.connector-line {
-    width: 2px;
-    height: 60px;
-    background: linear-gradient(to bottom, rgba(0, 119, 182, 0.25), rgba(0, 119, 182, 0.08));
-    margin: 0 auto 14px;
-    border-radius: 2px;
-    position: relative;
-}
-
-/* Animated dot traveling down the line */
-.connector-line::after {
-    content: '';
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #0077b6;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: connectorDotDrop 2.5s ease-in-out infinite;
-    box-shadow: 0 0 8px rgba(0, 119, 182, 0.4);
-}
-
-@keyframes connectorDotDrop {
-    0% {
-        top: 0;
-        opacity: 0;
+    .cycle-title-v5 {
+        font-size: 1.4rem;
     }
-
-    20% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    100% {
-        top: 100%;
-        opacity: 0;
-    }
-}
-
-.connector-text {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #8ba3b5;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.connector-text i,
-.connector-text svg {
-    width: 14px;
-    height: 14px;
-    color: #0077b6;
-}
-
-/*  Smooth transition into Compas  */
-#cycle-economique {
-    padding-bottom: 24px !important;
-    /* Reduced back to tight spacing */
-    overflow: visible !important;
-    position: relative;
-    z-index: 10;
-    /* Ensure it stays above compas */
-}
-
-.cycle-glass {
-    margin-bottom: 0;
-    position: relative;
-    z-index: 10;
-    /* Force glass on top */
-}
-
-/* Connector starts closer to the glass card */
-.compas-connector {
-    padding-top: 0;
-    margin-top: -10px;
-}
-
-.connector-line {
-    height: 80px;
-    background: linear-gradient(to bottom,
-            rgba(0, 119, 182, 0.2) 0%,
-            rgba(0, 119, 182, 0.08) 100%);
-}
-
-/* CTA Note - Attractive & Readable */
-.cycle-cta-note {
-    font-size: 0.8rem;
-    color: #475569;
-    background: rgba(255, 255, 255, 0.4);
-    border-left: 3px solid #0077b6;
-    padding: 12px 16px;
-    border-radius: 0 8px 8px 0;
-    margin-top: 18px;
-    max-width: 420px;
-    line-height: 1.5;
-    font-weight: 500;
-    text-align: left;
-    box-shadow: 0 2px 8px rgba(0, 119, 182, 0.05);
-    backdrop-filter: blur(4px);
 }

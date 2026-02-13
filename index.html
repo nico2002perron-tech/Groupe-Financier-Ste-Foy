@@ -36,6 +36,8 @@
 
             <div class="nav-links">
                 <a href="#services">Services</a>
+                <a href="#cycle-economique" class="nav-highlight-strategy"><i data-lucide="activity"></i> Notre
+                    Stratégie</a>
                 <a href="#marches">Marchés</a>
                 <a href="#conseils" class="nav-highlight"><i data-lucide="sparkles"></i> Actualités I.A.</a>
                 <a href="#equipe">Équipe</a>
@@ -56,6 +58,7 @@
     <div class="mobile-menu">
         <button class="menu-close"><i data-lucide="x"></i></button>
         <a href="#services">Services</a>
+        <a href="#cycle-economique"><i data-lucide="activity"></i> Notre Stratégie</a>
         <a href="#marches">Marchés</a>
         <a href="#conseils"><i data-lucide="sparkles"></i> Actualités I.A.</a>
         <a href="#equipe">Équipe</a>
@@ -392,22 +395,36 @@
         </div>
     </div>
 
-    <!-- Cycle Économique Interactive Section V4 (REFONTE) -->
+    <!-- Cycle Économique Interactive Section V5 (SHARP) -->
     <section id="cycle-economique" class="section-padding gradient-section gradient-light-to-cyan">
 
-        <!-- Floating Decorative Orbs Removed -->
+        <!-- Floating Decorative Orbs -->
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
 
         <div class="container" style="position: relative; z-index: 2;">
-            <!-- Premium Section Header -->
-            <div class="cycle-header fade-in-scroll">
-                <span class="section-badge"><i data-lucide="activity"></i> Notre Approche</span>
-                <h2>Une Vision Adaptée aux <span class="text-gradient">Cycles</span></h2>
-                <p class="cycle-subtitle">Un modèle de gestion proactif qui s'ajuste selon les phases
-                    économiques.<br>Cliquez sur chaque phase pour découvrir notre stratégie.</p>
+            <!-- Sharp Section Header -->
+            <div class="cycle-header-v5 fade-in-scroll">
+                <span class="cycle-badge-v5">
+                    <span class="badge-pulse-dot"></span>
+                    Comment on gère votre argent
+                </span>
+                <h2 class="cycle-title-v5">
+                    Chaque cycle a sa
+                    <span class="cycle-gradient-word">stratégie</span>
+                </h2>
+                <p class="cycle-sub-v5">Les marchés bougent. Votre portefeuille s'adapte.</p>
             </div>
 
             <!-- Main Glass Card -->
             <div class="cycle-glass fade-in-scroll delay-1">
+                <!-- Ripple effect container -->
+                <div class="cycle-ripple" id="cycle-ripple"></div>
+
+                <!-- Top glow line -->
+                <div class="cycle-glass-topline"></div>
+
                 <div class="cycle-split-layout">
 
                     <!-- LEFT: Radar Circle -->
@@ -511,6 +528,15 @@
                                     <span class="alloc-pct" id="alloc-pct-alternatif">15%</span>
                                 </div>
                             </div>
+
+                            <!-- Smart Disclaimer -->
+                            <div class="alloc-disclaimer">
+                                <i data-lucide="info" style="width:13px;height:13px;flex-shrink:0;"></i>
+                                <span>Ces pourcentages sont des orientations générales, ajustées selon votre profil et
+                                    les conditions du marché.</span>
+                                <a href="#compas" class="disclaimer-cta" id="disclaimer-cta">Simuler avec mes données <i
+                                        data-lucide="arrow-down" style="width:12px;height:12px;"></i></a>
+                            </div>
                         </div>
 
                         <div class="phase-indicators">
@@ -533,6 +559,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Bottom fade for smooth transition -->
+        <div class="cycle-section-fade"></div>
     </section>
 
     <!-- ============ COMPAS PATRIMONIAL I.A. (V2) ============ -->
