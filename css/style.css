@@ -2346,8 +2346,56 @@ footer {
     transform: translateX(5px);
 }
 
+/* Legal Disclaimer */
+.footer-legal {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #e1e8ed;
+    text-align: right;
+}
+
+.footer-legal-logos {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.legal-logo {
+    height: 55px;
+    width: auto;
+    opacity: 0.85;
+    object-fit: contain;
+}
+
+.footer-legal-text {
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    text-align: right;
+    max-width: 700px;
+    margin-left: auto;
+}
+
+.footer-legal-link {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.footer-legal-link a {
+    font-size: 0.8rem;
+    color: var(--brand-primary);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.footer-legal-link a:hover {
+    color: var(--brand-dark);
+}
+
 .footer-bottom {
-    margin-top: 60px;
+    margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #e1e8ed;
     text-align: center;
@@ -5416,7 +5464,7 @@ footer {
     }
 }
 /* =========================================
-   RADAR STRATÉGIQUE I.A. - VERSION AMÉLIORÉE
+   RADAR STRATï¿½GIQUE I.A. - VERSION AMï¿½LIORï¿½E
    ========================================= */
 
 .featured-radar-section {
@@ -5451,7 +5499,7 @@ footer {
     z-index: 0;
 }
 
-/* Header amélioré */
+/* Header amï¿½liorï¿½ */
 .radar-header-featured {
     display: flex;
     align-items: center;
@@ -5620,7 +5668,7 @@ footer {
     line-height: 1.4;
 }
 
-/* Résumé */
+/* Rï¿½sumï¿½ */
 .news-summary {
     font-size: 0.95rem;
     color: #64748b;
@@ -5654,7 +5702,7 @@ footer {
     height: 14px;
 }
 
-/* Variations boursières (comme l'image) */
+/* Variations boursiï¿½res (comme l'image) */
 .news-tickers {
     display: flex;
     gap: 12px;
@@ -5700,7 +5748,7 @@ footer {
     font-size: 0.75rem;
 }
 
-/* État de chargement */
+/* ï¿½tat de chargement */
 .news-loading {
     text-align: center;
     padding: 60px 20px;
@@ -5726,7 +5774,7 @@ footer {
     font-size: 0.95rem;
 }
 
-/* État vide */
+/* ï¿½tat vide */
 .news-empty {
     text-align: center;
     padding: 60px 20px;
@@ -5740,7 +5788,7 @@ footer {
     opacity: 0.5;
 }
 
-/* Dernière mise à jour */
+/* Derniï¿½re mise ï¿½ jour */
 .last-update {
     display: flex;
     align-items: center;
